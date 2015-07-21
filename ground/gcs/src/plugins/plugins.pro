@@ -233,6 +233,13 @@ KML {
     SUBDIRS += plugin_gcscontrolwidget
 }
 
+#ESC gadget
+plugin_esc.subdir = esc
+plugin_esc.depends = plugin_coreplugin
+plugin_esc.depends += plugin_uavobjects
+plugin_esc.depends += plugin_rawhid
+SUBDIRS += plugin_esc
+
 # UAV Object Utility plugin
 plugin_uavobjectutil.subdir = uavobjectutil
 plugin_uavobjectutil.depends = plugin_coreplugin
