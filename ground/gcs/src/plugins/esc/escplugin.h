@@ -32,9 +32,11 @@ class EscGadgetFactory;
 
 class EscPlugin : public ExtensionSystem::IPlugin
 {
+	Q_OBJECT
+	Q_PLUGIN_METADATA(IID "TauLabs.plugins.esc" FILE "esc.json")
 public:
-        EscPlugin();
-        ~EscPlugin();
+    EscPlugin();
+    ~EscPlugin();
 
 	void extensionsInitialized();
 	bool initialize(const QStringList & arguments, QString * errorString);

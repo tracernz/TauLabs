@@ -43,6 +43,8 @@ HEADERS += $$UAVOBJECT_SYNTHETICS/accels.h \
     $$UAVOBJECT_SYNTHETICS/brushlessgimbalsettings.h \
     $$UAVOBJECT_SYNTHETICS/cameradesired.h \
     $$UAVOBJECT_SYNTHETICS/camerastabsettings.h \
+    $$UAVOBJECT_SYNTHETICS/escsettings.h \
+    $$UAVOBJECT_SYNTHETICS/escstatus.h \
     $$UAVOBJECT_SYNTHETICS/faultsettings.h \
     $$UAVOBJECT_SYNTHETICS/firmwareiapobj.h \
     $$UAVOBJECT_SYNTHETICS/fixedwingairspeeds.h \
@@ -165,6 +167,8 @@ SOURCES += $$UAVOBJECT_SYNTHETICS/accels.cpp \
     $$UAVOBJECT_SYNTHETICS/brushlessgimbalsettings.cpp \
     $$UAVOBJECT_SYNTHETICS/cameradesired.cpp \
     $$UAVOBJECT_SYNTHETICS/camerastabsettings.cpp \
+    $$UAVOBJECT_SYNTHETICS/escsettings.cpp \
+    $$UAVOBJECT_SYNTHETICS/escstatus.cpp \
     $$UAVOBJECT_SYNTHETICS/faultsettings.cpp \
     $$UAVOBJECT_SYNTHETICS/firmwareiapobj.cpp \
     $$UAVOBJECT_SYNTHETICS/fixedwingairspeeds.cpp \

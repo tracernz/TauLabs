@@ -28,7 +28,7 @@
 #define ESCGADGETCONFIGURATION_H
 
 #include <coreplugin/iuavgadgetconfiguration.h>
-#include <qextserialport/src/qextserialport.h>
+#include <QtSerialPort/QSerialPort>
 
 using namespace Core;
 

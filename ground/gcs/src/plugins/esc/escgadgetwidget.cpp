@@ -91,9 +91,9 @@ void EscGadgetWidget::onComboBoxPorts_currentIndexChanged(int index)
     Q_UNUSED(index);
 }
 
-bool sortSerialPorts(const QextPortInfo &s1, const QextPortInfo &s2)
+bool sortSerialPorts(const QSerialPortInfo &s1, const QSerialPortInfo &s2)
 {
-    return (s1.portName < s2.portName);
+    return (s1.portName() < s2.portName());
 }
 
 void EscGadgetWidget::getPorts()
@@ -106,11 +106,11 @@ void EscGadgetWidget::getPorts()
     m_widget->comboBox_Ports->addItem("FlightController");
 
     // Populate the telemetry combo box with serial ports
-    QList<QextPortInfo> serial_ports = QextSerialEnumerator::getPorts();
+    QList<QSerialPortInfo> serial_ports = QSerialPortInfo::availablePorts();
     qSort(serial_ports.begin(), serial_ports.end(), sortSerialPorts);
     QStringList list;
-    foreach (QextPortInfo port, serial_ports)
-        m_widget->comboBox_Ports->addItem("com: " + port.friendName, SERIAL_PORT);
+    foreach (QSerialPortInfo port, serial_ports)
+        m_widget->comboBox_Ports->addItem("com: " + port.portName(), SERIAL_PORT);
 
     connect(m_widget->comboBox_Ports, SIGNAL(currentIndexChanged(int)), this, SLOT(onComboBoxPorts_currentIndexChanged(int)));
 
@@ -144,16 +144,16 @@ void EscGadgetWidget::sendSettings()
 
 QString EscGadgetWidget::getSerialPortDevice(const QString &friendName)
 {
-        QList<QextPortInfo> ports = QextSerialEnumerator::getPorts();
+        QList<QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
 
-        foreach (QextPortInfo port, ports)
+        foreach (QSerialPortInfo port, ports)
         {
 #ifdef Q_OS_WIN
-            if (port.friendName == friendName)
-                return port.portName;
+            if (port.portName() == friendName)
+                return port.portName();
 #else
-            if (port.friendName.trimmed() == friendName)
-                return port.physName;
+            if (port.portName().trimmed() == friendName)
+                return port.portName();
 #endif
         }
 
@@ -197,17 +197,15 @@ void EscGadgetWidget::connectPort()
         if (str.isEmpty())
             return;
 
-        PortSettings settings;
-        settings.BaudRate = BAUD115200;
-        settings.DataBits = DATA_8;
-        settings.Parity = PAR_NONE;
-        settings.StopBits = STOP_1;
-        settings.FlowControl = FLOW_OFF;
-        settings.Timeout_Millisec = 1000;
-
-        QextSerialPort *serial_dev = new QextSerialPort(str, settings);
+        QSerialPort *serial_dev = new QSerialPort(str);
         if (!serial_dev)
             return;
+
+        serial_dev->setBaudRate(QSerialPort::Baud115200);
+        serial_dev->setDataBits(QSerialPort::Data8);
+        serial_dev->setParity(QSerialPort::NoParity);
+        serial_dev->setStopBits(QSerialPort::OneStop);
+        serial_dev->setFlowControl(QSerialPort::NoFlowControl);
 
         if (!serial_dev->open(QIODevice::ReadWrite))
         {

@@ -24,7 +24,7 @@
  */
 
 #include "escgadgetconfiguration.h"
-#include <qextserialport/src/qextserialport.h>
+#include <QtSerialPort/QSerialPort>
 
 /**
  * Loads a saved configuration or defaults if non exist.

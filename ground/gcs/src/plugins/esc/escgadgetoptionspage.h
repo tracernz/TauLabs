@@ -26,7 +26,7 @@
 #ifndef ESCGADGETOPTIONSPAGE_H
 #define ESCGADGETOPTIONSPAGE_H
 
-#include <qextserialport/src/qextserialenumerator.h>
+#include <QtSerialPort/QSerialPortInfo>
 #include "coreplugin/dialogs/ioptionspage.h"
 #include "QString"
 #include <QStringList>

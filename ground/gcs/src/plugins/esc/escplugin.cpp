@@ -57,5 +57,3 @@ void EscPlugin::extensionsInitialized()
 void EscPlugin::shutdown()
 {
 }
-
-Q_EXPORT_PLUGIN(EscPlugin)

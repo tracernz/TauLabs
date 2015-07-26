@@ -3,14 +3,13 @@ TARGET = ESC
 
 QT += svg
 QT += opengl
+QT += serialport
 
-include(../../openpilotgcsplugin.pri)
+include(../../taulabsgcsplugin.pri)
 include(../../plugins/coreplugin/coreplugin.pri)
 include(../../plugins/uavobjects/uavobjects.pri)
 include(../../plugins/uavtalk/uavtalk.pri)
 include(../../plugins/rawhid/rawhid.pri)
-
-INCLUDEPATH += ../../libs/qextserialport/src
 
 HEADERS += escgadget.h \
     escgadgetconfiguration.h \

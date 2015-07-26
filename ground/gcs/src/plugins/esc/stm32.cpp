@@ -20,7 +20,7 @@
 
 #include <QtEndian>
 #include <QDebug>
-#include <qextserialport.h>
+#include <QtSerialPort/QSerialPort>
 
 #include "stm32.h"
 
@@ -125,19 +125,17 @@ Stm32Bl::~Stm32Bl()
 int Stm32Bl::openDevice(QString dev)
 {
 
-    PortSettings settings;
-    settings.BaudRate = BAUD57600;
-    settings.DataBits = DATA_8;
-    settings.Parity = PAR_EVEN;
-    settings.StopBits = STOP_1;
-    settings.FlowControl = FLOW_OFF;
-    settings.Timeout_Millisec = 1000;
-
-    QextSerialPort *serial_dev = new QextSerialPort(dev, settings);
+    QSerialPort *serial_dev = new QSerialPort(dev);
     if (!serial_dev) {
         qDebug() << "Failed to initial serial port";
         return -1;
     }
+
+    serial_dev->setBaudRate(QSerialPort::Baud57600);
+	serial_dev->setDataBits(QSerialPort::Data8);
+	serial_dev->setParity(QSerialPort::EvenParity);
+	serial_dev->setStopBits(QSerialPort::OneStop);
+	serial_dev->setFlowControl(QSerialPort::NoFlowControl);
 
     if (!serial_dev->open(QIODevice::ReadWrite))
     {

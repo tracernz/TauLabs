@@ -28,8 +28,8 @@
 
 #include "ui_esc.h"
 
-#include <qextserialport.h>
-#include <qextserialenumerator.h>
+#include <QtSerialPort/QSerialPort>
+#include <QtSerialPort/QSerialPortInfo>
 
 #include "uavtalk/telemetrymanager.h"
 #include "extensionsystem/pluginmanager.h"
@@ -41,7 +41,7 @@
 
 #include "rawhid/rawhidplugin.h"
 
-#include <QtGui/QWidget>
+//#include <QtGui/QWidget>
 #include <QLabel>
 #include <QLineEdit>
 #include <QThread>
