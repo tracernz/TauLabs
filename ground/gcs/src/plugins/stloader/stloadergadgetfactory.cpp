@@ -1,8 +1,8 @@
 /**
  ******************************************************************************
  *
- * @file       pipxtremegadgetoptionspage.h
- * @author     The OpenPilot Team, http://www.openpilot.org Copyright (C) 2010.
+ * @file       stloadergadgetfactory.cpp
+ * @author     Tau Labs Team, http://www.taulabs.org Copyright (C) 2015.
  * @addtogroup GCSPlugins GCS Plugins
  * @{
  * @{
@@ -23,40 +23,23 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#ifndef ESCGADGETOPTIONSPAGE_H
-#define ESCGADGETOPTIONSPAGE_H
+#include "stloadergadgetfactory.h"
+#include "stloadergadgetwidget.h"
+#include "stloadergadget.h"
+#include "stloadergadgetconfiguration.h"
+#include <coreplugin/iuavgadget.h>
 
-#include <QtSerialPort/QSerialPortInfo>
-#include "coreplugin/dialogs/ioptionspage.h"
-#include "QString"
-#include <QStringList>
-#include <QDebug>
-
-namespace Core {
-	class IUAVGadgetConfiguration;
-}
-
-class EscGadgetConfiguration;
-
-namespace Ui {
-        class EscGadgetOptionsPage;
-}
-
-using namespace Core;
-
-class EscGadgetOptionsPage : public IOptionsPage
+StLoaderGadgetFactory::StLoaderGadgetFactory(QObject *parent) :
+                IUAVGadgetFactory(QString("STLoader"), tr("STLoader"), parent)
 {
-Q_OBJECT
-public:
-    explicit EscGadgetOptionsPage(EscGadgetConfiguration *config, QObject *parent = 0);
+}
 
-    QWidget *createPage(QWidget *parent);
-    void apply();
-    void finish();
+StLoaderGadgetFactory::~StLoaderGadgetFactory()
+{
+}
 
-private:
-        Ui::EscGadgetOptionsPage *options_page;
-        EscGadgetConfiguration *m_config;
-};
-
-#endif
+Core::IUAVGadget* StLoaderGadgetFactory::createGadget(QWidget *parent)
+{
+        StLoaderGadgetWidget *gadgetWidget = new StLoaderGadgetWidget(parent);
+        return new StLoaderGadget(QString("STLoader"), gadgetWidget, parent);
+}

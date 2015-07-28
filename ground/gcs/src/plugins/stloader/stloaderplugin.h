@@ -1,8 +1,8 @@
 /**
  ******************************************************************************
  *
- * @file       pipxtremeplugin.h
- * @author     The OpenPilot Team, http://www.openpilot.org Copyright (C) 2010.
+ * @file       stloaderplugin.h
+ * @author     Tau Labs Team, http://www.taulabs.org Copyright (C) 2015.
  * @addtogroup GCSPlugins GCS Plugins
  * @{
  * @{
@@ -23,27 +23,27 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#ifndef ESCPLUGIN_H
-#define ESCPLUGIN_H
+#ifndef STLOADERPLUGIN_H
+#define STLOADERPLUGIN_H
 
 #include <extensionsystem/iplugin.h>
 
-class EscGadgetFactory;
+class StLoaderGadgetFactory;
 
-class EscPlugin : public ExtensionSystem::IPlugin
+class StLoaderPlugin : public ExtensionSystem::IPlugin
 {
 	Q_OBJECT
-	Q_PLUGIN_METADATA(IID "TauLabs.plugins.esc" FILE "esc.json")
+    Q_PLUGIN_METADATA(IID "TauLabs.plugins.esc" FILE "stloader.json")
 public:
-    EscPlugin();
-    ~EscPlugin();
+    StLoaderPlugin();
+    ~StLoaderPlugin();
 
 	void extensionsInitialized();
 	bool initialize(const QStringList & arguments, QString * errorString);
 	void shutdown();
 
 private:
-        EscGadgetFactory *mf;
+        StLoaderGadgetFactory *mf;
 
 };
 

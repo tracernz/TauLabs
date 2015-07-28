@@ -20,6 +20,7 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+#include <QSerialPort>
 #include <QIODevice>
 #include <stdint.h>
 
@@ -38,7 +39,7 @@ struct stm32 {
 
 struct stm32_dev {
         uint16_t	id;
-        char		*name;
+        const char  *name;
         uint32_t	ram_start, ram_end;
         uint32_t	fl_start, fl_end;
         uint16_t	fl_pps; // pages per sector
@@ -47,7 +48,8 @@ struct stm32_dev {
         uint32_t	mem_start, mem_end;
 };
 
-class Stm32Bl {
+class Stm32Bl: public QObject {
+    Q_OBJECT
 public:
     Stm32Bl();
     ~Stm32Bl();
@@ -66,7 +68,7 @@ public:
     void print_device();
 private:
     // Private variables
-    QIODevice   *qio;
+    QSerialPort *qio;
     stm32_t     *stm;
     double       uploaded;
 
@@ -82,6 +84,9 @@ private:
     static const quint8 STM32_CMD_INIT = 0x7F;
     static const quint8 STM32_CMD_GET =  0x00;	/* get the version and command supported */
     static const quint8 STM32_CMD_EE =   0x44;	/* extended erase */
+
+signals:
+    void uploadProgress(float progress);
 };
 
 

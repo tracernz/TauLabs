@@ -1,8 +1,8 @@
 /**
  ******************************************************************************
  *
- * @file       pipxtremegadgetwidget.h
- * @author     The OpenPilot Team, http://www.openpilot.org Copyright (C) 2010.
+ * @file       stloadergadgetwidget.h
+ * @author     Tau Labs Team, http://www.taulabs.org Copyright (C) 2015.
  * @addtogroup GCSPlugins GCS Plugins
  * @{
  * @{
@@ -23,10 +23,10 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#ifndef ESCGADGETWIDGET_H
-#define ESCGADGETWIDGET_H
+#ifndef STLOADERGADGETWIDGET_H
+#define STLOADERGADGETWIDGET_H
 
-#include "ui_esc.h"
+#include "ui_stloader.h"
 
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
@@ -52,55 +52,68 @@
 #include <QtCore/QLinkedList>
 #include <QMutex>
 #include <QMutexLocker>
-#include "widgetbar.h"
-#include "escserial.h"
 
-class EscGadgetWidget : public QWidget
+class StLoaderGadgetWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-    EscGadgetWidget(QWidget *parent = 0);
-    ~EscGadgetWidget();
+    StLoaderGadgetWidget(QWidget *parent = 0);
+    ~StLoaderGadgetWidget();
 
 public slots:
     void onComboBoxPorts_currentIndexChanged(int index);
 
 protected:
     void resizeEvent(QResizeEvent *event);
+    // Constants
+    static const int TYPE_MASK = 0xF8;
+    static const int TYPE_VER = 0x20;
+    static const int TYPE_OBJ = (TYPE_VER | 0x00);
+    static const int TYPE_OBJ_REQ = (TYPE_VER | 0x01);
+    static const int TYPE_OBJ_ACK = (TYPE_VER | 0x02);
+    static const int TYPE_ACK = (TYPE_VER | 0x03);
+    static const int TYPE_NACK = (TYPE_VER | 0x04);
+
+    static const int MIN_HEADER_LENGTH = 8; // sync(1), type (1), size(2), object ID(4)
+    static const int MAX_HEADER_LENGTH = 10; // sync(1), type (1), size(2), object ID (4), instance ID(2, not used in single objects)
+
+    static const int CHECKSUM_LENGTH = 1;
+
+    static const int MAX_PAYLOAD_LENGTH = 256;
+
+    static const int MAX_PACKET_LENGTH = (MAX_HEADER_LENGTH + MAX_PAYLOAD_LENGTH + CHECKSUM_LENGTH);
+
+    static const quint8 crc_table[256];
 
 private:
-    Ui_EscWidget	*m_widget;
-
-    EscSerial       *escSerial;
+    Ui_StLoaderWidget	*m_widget;
 
     QString getSerialPortDevice(const QString &friendName);
+    void setButtonsEnabled(bool);
 
-    QTimer refreshTimer;
-
-    void getSettings();
-    void sendSettings();
+    void disconnectPort();
+    int connectPort();
 
     UAVObjectManager * getObjectManager();
+    int enterDfu();
 
     bool connectedStatus;
+    quint8 txBuffer[MAX_PACKET_LENGTH];
+
+    QSerialPort *serial_dev;
+
+    quint8 updateCRC(quint8 crc, const quint8 data);
+    quint8 updateCRC(quint8 crc, const quint8* data, qint32 length);
 
 private slots:
-    void connectDisconnect();
-    void disconnectPort();
-    void connectPort();
     void getPorts();
-
-    void saveConfiguration();
-    void applyConfiguration();
-    void sendConfiguration(UAVObject*);
-    void refreshStatus();
-    void refreshConfiguration();
 
     void connected();
     void disconnected();
 
-    void queryDfuDevice();
+    void updateProgress(float);
+    void sendIapCommand(UAVObject*);
     void rescueCode();
     void updateCode();
 };

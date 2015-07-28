@@ -1,8 +1,8 @@
 /**
  ******************************************************************************
  *
- * @file       escgadgetfactory.h
- * @author     The OpenPilot Team, http://www.openpilot.org Copyright (C) 2010.
+ * @file       stloadergadgetconfiguration.cpp
+ * @author     Tau Labs Team, http://www.taulabs.org Copyright (C) 2015.
  * @addtogroup GCSPlugins GCS Plugins
  * @{
  * @{
@@ -23,28 +23,44 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#ifndef ESCGADGETFACTORY_H
-#define ESCGADGETFACTORY_H
+#include "stloadergadgetconfiguration.h"
+#include <QtSerialPort/QSerialPort>
 
-#include <coreplugin/iuavgadgetfactory.h>
-
-namespace Core {
-	class IUAVGadget;
-	class IUAVGadgetFactory;
+/**
+ * Loads a saved configuration or defaults if non exist.
+ *
+ */
+StLoaderGadgetConfiguration::StLoaderGadgetConfiguration(QString classId, QSettings* qSettings, QObject *parent) :
+	IUAVGadgetConfiguration(classId, parent)
+{
+    //if a saved configuration exists load it
+    if (qSettings != 0)
+    {
+    }
 }
 
-using namespace Core;
-
-class EscGadgetFactory : public Core::IUAVGadgetFactory
+StLoaderGadgetConfiguration::~StLoaderGadgetConfiguration()
 {
-    Q_OBJECT
+}
 
-public:
-    EscGadgetFactory(QObject *parent = 0);
-    ~EscGadgetFactory();
+/**
+ * Clones a configuration.
+ *
+ */
+IUAVGadgetConfiguration *StLoaderGadgetConfiguration::clone()
+{
+    StLoaderGadgetConfiguration *m = new StLoaderGadgetConfiguration(this->classId());
+    return m;
+}
 
-    Core::IUAVGadget * createGadget(QWidget *parent);
-    IUAVGadgetConfiguration * createConfiguration(QSettings *qSettings);
-};
+/**
+ * Saves a configuration.
+ *
+ */
+void StLoaderGadgetConfiguration::saveConfig(QSettings *qSettings) const
+{
+	if (qSettings)
+	{
 
-#endif
+	}
+}

@@ -20,6 +20,8 @@
 
 #include <QtEndian>
 #include <QDebug>
+#include <QEventLoop>
+#include <QTimer>
 #include <QtSerialPort/QSerialPort>
 
 #include "stm32.h"
@@ -50,7 +52,7 @@ const stm32_dev_t devices[] = {
     {0x420, "Medium-density VL" , 0x20000200, 0x20002000, 0x08000000, 0x08020000,  4, 1024, 0x1FFFF800, 0x1FFFF80F, 0x1FFFF000, 0x1FFFF800},
     {0x428, "High-density VL"   , 0x20000200, 0x20008000, 0x08000000, 0x08080000,  2, 2048, 0x1FFFF800, 0x1FFFF80F, 0x1FFFF000, 0x1FFFF800},
     {0x430, "XL-density"        , 0x20000800, 0x20018000, 0x08000000, 0x08100000,  2, 2048, 0x1FFFF800, 0x1FFFF80F, 0x1FFFE000, 0x1FFFF800},
-    {0x0}
+    {0x0, "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 };
 
 /**
@@ -135,15 +137,14 @@ int Stm32Bl::openDevice(QString dev)
 	serial_dev->setDataBits(QSerialPort::Data8);
 	serial_dev->setParity(QSerialPort::EvenParity);
 	serial_dev->setStopBits(QSerialPort::OneStop);
-	serial_dev->setFlowControl(QSerialPort::NoFlowControl);
+    serial_dev->setFlowControl(QSerialPort::NoFlowControl);
 
     if (!serial_dev->open(QIODevice::ReadWrite))
     {
         qDebug() << "Failed to open serial port";
         delete serial_dev;
         return -1;
-    }
-
+    }  
 
     qio = serial_dev;
     stm = stm32_init(1);
@@ -160,20 +161,35 @@ int Stm32Bl::openDevice(QString dev)
 void Stm32Bl::stm32_send_byte(uint8_t byte) {
     Q_UNUSED(stm);
 
-    qint64 bytes = qio->write((const char *) &byte,1);
-    if (bytes != 1)
+    qio->write((const char *) &byte,1);
+    if (!qio->waitForBytesWritten(100)) {
         qDebug() << "Failed to write";
-    //qDebug() << QString("Sent %1").arg(byte);
+    }
 }
 
 uint8_t Stm32Bl::stm32_read_byte() {
     uint8_t byte;
     qint64 bytes;
-    bytes = qio->read((char *) &byte,1);
-    if (bytes != 1)
-        qDebug() << "Failed to read";
-    //else
-    //    qDebug() << QString("Read %1").arg(byte);
+    QEventLoop loop;
+    QTimer timeout;
+    timeout.setSingleShot(true);
+
+    if(qio->bytesAvailable())
+        bytes = qio->read((char *)&byte, 1);
+    else {
+        connect(&timeout, SIGNAL(timeout()), &loop, SLOT(quit()));
+        connect(qio, SIGNAL(readyRead()), &loop, SLOT(quit()));
+        timeout.start(500);
+        loop.exec();
+        disconnect(&timeout, SIGNAL(timeout()), &loop, SLOT(quit()));
+        disconnect(qio, SIGNAL(readyRead()), &loop, SLOT(quit()));
+        if(timeout.isActive())
+            bytes = qio->read((char *)&byte, 1);
+        else
+            qDebug() << "Read timeout";
+        timeout.stop();
+    }
+
     return byte;
 }
 
@@ -194,6 +210,7 @@ stm32_t* Stm32Bl::stm32_init(const char init) {
     stm      = new stm32_t;
     stm->cmd = new stm32_cmd_t;
 
+
     if (init) {
         stm32_send_byte(STM32_CMD_INIT);
         if (stm32_read_byte() != STM32_ACK) {
@@ -206,6 +223,11 @@ stm32_t* Stm32Bl::stm32_init(const char init) {
     /* get the bootloader information */
     if (!stm32_send_command(STM32_CMD_GET)) return 0;
     len              = stm32_read_byte() + 1;
+    if(len < 12) {
+        fprintf(stderr, "Error: bootloader info length too short (%d)!\n", len);
+        stm32_close();
+        return NULL;
+    }
     stm->bl_version  = stm32_read_byte(); --len;
     stm->cmd->get    = stm32_read_byte(); --len;
     stm->cmd->gvr    = stm32_read_byte(); --len;
@@ -273,6 +295,8 @@ stm32_t* Stm32Bl::stm32_init(const char init) {
 
 void Stm32Bl::stm32_close()
 {
+    if(qio && qio->isOpen())
+        qio->close();
     if (stm) free(stm->cmd);
     free(stm);
     stm = NULL;
@@ -338,7 +362,6 @@ char Stm32Bl::stm32_write_memory(uint32_t address, uint8_t data[], unsigned int 
     /* send the address and checksum */
     if (!stm32_send_command(stm->cmd->wm)) return 0;
     qio->write((const char* ) &address, 4);
-    qDebug() << QString().sprintf("Writing to 0x%08x",address);
     stm32_send_byte(cs);
     if (stm32_read_byte() != STM32_ACK) return 0;
 
@@ -483,14 +506,14 @@ char Stm32Bl::stm32_reset_device() {
 }
 
 /**
-  * Upload new code to the ESC
+  * Upload new code to the device
   * @param[in] data code to upload
   * @return -1 for fail, 0 for success
   */
 int32_t Stm32Bl::uploadCode(QByteArray data)
 {
     off_t   offset = 0;
-    ssize_t r;
+    //ssize_t r;
     int spage = 0;
     int npages = 0xff;
     int len;
@@ -511,7 +534,7 @@ int32_t Stm32Bl::uploadCode(QByteArray data)
 
     uint8_t *buffer = (uint8_t *) data.data();
 
-    int idx = 0;
+    //int idx = 0;
 
     addr = stm->dev->fl_start + (spage * stm->dev->fl_ps);
 
@@ -520,19 +543,18 @@ int32_t Stm32Bl::uploadCode(QByteArray data)
         len             = 256 > left ? left : 256;
         len             = len > size - offset ? size - offset : len;
 
-        qDebug() << "Write memory";
         if (!stm32_write_memory(addr, buffer, len)) {
             qDebug() << QString().sprintf("Failed to write memory at address 0x%08x",addr);
             return -1;
         }
-        qDebug() << "Write memory done";
 
         addr    += len;
         offset  += len;
         buffer  += len;
 
-        uploaded = offset / (stm->dev->fl_end - stm->dev->fl_start);
-
-        qDebug() << QString().sprintf("Wrote address 0x%08x, completed %f",addr, uploaded);
+        uploaded = (float)offset / size;
+        emit uploadProgress(uploaded * 100.0f);
     }
+
+    return 0;
 }

@@ -1,9 +1,8 @@
-
 /**
  ******************************************************************************
  *
- * @file       escplugin.cpp
- * @author     The OpenPilot Team, http://www.openpilot.org Copyright (C) 2010.
+ * @file       stloadergadgetfactory.h
+ * @author     Tau Labs Team, http://www.taulabs.org Copyright (C) 2015.
  * @addtogroup GCSPlugins GCS Plugins
  * @{
  * @{
@@ -24,36 +23,27 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#include "escplugin.h"
-#include "escgadgetfactory.h"
-#include <QtPlugin>
-#include <QStringList>
-#include <extensionsystem/pluginmanager.h>
+#ifndef STLOADERGADGETFACTORY_H
+#define STLOADERGADGETFACTORY_H
 
-EscPlugin::EscPlugin()
-{
-	mf = NULL;
+#include <coreplugin/iuavgadgetfactory.h>
+
+namespace Core {
+	class IUAVGadget;
+	class IUAVGadgetFactory;
 }
 
-EscPlugin::~EscPlugin()
+using namespace Core;
+
+class StLoaderGadgetFactory : public Core::IUAVGadgetFactory
 {
-}
+    Q_OBJECT
 
-bool EscPlugin::initialize(const QStringList &args, QString *errMsg)
-{
-   Q_UNUSED(args);
-   Q_UNUSED(errMsg);
+public:
+    StLoaderGadgetFactory(QObject *parent = 0);
+    ~StLoaderGadgetFactory();
 
-   mf = new EscGadgetFactory(this);
-   addAutoReleasedObject(mf);
+    Core::IUAVGadget * createGadget(QWidget *parent);
+};
 
-   return true;
-}
-
-void EscPlugin::extensionsInitialized()
-{
-}
-
-void EscPlugin::shutdown()
-{
-}
+#endif

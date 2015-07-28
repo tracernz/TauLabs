@@ -1,12 +1,12 @@
 /**
  ******************************************************************************
  *
- * @file       escgadget.h
- * @author     The OpenPilot Team, http://www.openpilot.org Copyright (C) 2010.
+ * @file       stloadergadget.h
+ * @author     Tau Labs Team, http://www.taulabs.org Copyright (C) 2015.
  * @addtogroup GCSPlugins GCS Plugins
  * @{
  * @{
- * @brief Gadget for interfacing to the OpenPilot ESCs
+ * @brief Gadget for loading STM32 devices
  *****************************************************************************/
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -24,31 +24,31 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#ifndef ESCGADGET_H
-#define ESCGADGET_H
+#ifndef STLOADERGADGET_H
+#define STLOADERGADGET_H
 
 #include <coreplugin/iuavgadget.h>
-#include "escgadgetwidget.h"
+#include "stloadergadgetwidget.h"
 
 class IUAVGadget;
 class QWidget;
 class QString;
-class EscGadgetWidget;
+class StLoaderGadgetWidget;
 
 using namespace Core;
 
-class EscGadget : public Core::IUAVGadget
+class StLoaderGadget : public Core::IUAVGadget
 {
     Q_OBJECT
 public:
-    EscGadget(QString classId, EscGadgetWidget *widget, QWidget *parent = 0);
-    ~EscGadget();
+    StLoaderGadget(QString classId, StLoaderGadgetWidget *widget, QWidget *parent = 0);
+    ~StLoaderGadget();
 
     QWidget *widget() { return m_widget; }
     void loadConfiguration(IUAVGadgetConfiguration* config);
 
 private:
-    EscGadgetWidget *m_widget;
+    StLoaderGadgetWidget *m_widget;
 };
 
 #endif

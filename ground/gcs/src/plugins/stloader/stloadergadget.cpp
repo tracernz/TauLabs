@@ -1,12 +1,11 @@
 /**
  ******************************************************************************
  *
- * @file       escgadgetconfiguration.h
- * @author     The OpenPilot Team, http://www.openpilot.org Copyright (C) 2010.
+ * @file       stloadergadget.cpp
+ * @author     Tau Labs Team, http://www.taulabs.org Copyright (C) 2015.
  * @addtogroup GCSPlugins GCS Plugins
  * @{
  * @{
- * @brief Esc gadget configuration
  *****************************************************************************/
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -23,26 +22,25 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
+#include "stloadergadget.h"
+#include "stloadergadgetwidget.h"
+#include "stloadergadgetconfiguration.h"
 
-#ifndef ESCGADGETCONFIGURATION_H
-#define ESCGADGETCONFIGURATION_H
-
-#include <coreplugin/iuavgadgetconfiguration.h>
-#include <QtSerialPort/QSerialPort>
-
-using namespace Core;
-
-class EscGadgetConfiguration : public IUAVGadgetConfiguration
+StLoaderGadget::StLoaderGadget(QString classId,  StLoaderGadgetWidget *widget, QWidget *parent) :
+        IUAVGadget(classId, parent),
+        m_widget(widget)
 {
-Q_OBJECT
-public:
-    explicit EscGadgetConfiguration(QString classId, QSettings* qSettings = 0, QObject *parent = 0);
-        ~EscGadgetConfiguration();
+}
 
-	void saveConfig(QSettings *settings) const;
-    IUAVGadgetConfiguration *clone();
+StLoaderGadget::~StLoaderGadget()
+{
+   delete m_widget;
+   m_widget = NULL;
+}
 
-private:
-};
+// Loads a configuration.
+void StLoaderGadget::loadConfiguration(IUAVGadgetConfiguration* config)
+{
+    Q_UNUSED(config);
+}
 
-#endif

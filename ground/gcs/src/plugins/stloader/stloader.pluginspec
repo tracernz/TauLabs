@@ -1,8 +1,8 @@
-<plugin name="ESC" version="1.0.0" compatVersion="1.0.0">
+<plugin name="STLoader" version="1.0.0" compatVersion="1.0.0">
     <vendor>Tau Labs</vendor>
-    <copyright>(C) 2011 The OpenPilot Project</copyright>
+    <copyright>(C) 2015 Tau Labs</copyright>
     <license>The GNU Public License (GPL) Version 3</license>
-    <description>A plugin to configure the Tau Labs ESC via either Serial Port or the FlightController</description>
+    <description>A plugin to load devices in ST bootloader mode via serial</description>
     <url>http://taulabs.org</url>
     <dependencyList>
         <dependency name="Core" version="1.0.0"/>

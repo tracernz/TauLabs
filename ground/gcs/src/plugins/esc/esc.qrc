@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/esc">
-        <file>images/view-refresh.svg</file>
-    </qresource>
-</RCC>

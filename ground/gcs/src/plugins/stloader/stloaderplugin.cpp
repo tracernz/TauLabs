@@ -1,8 +1,9 @@
+
 /**
  ******************************************************************************
  *
- * @file       pipxtremegadgetconfiguration.cpp
- * @author     The OpenPilot Team, http://www.openpilot.org Copyright (C) 2010.
+ * @file       stloaderplugin.cpp
+ * @author     Tau Labs Team, http://www.taulabs.org Copyright (C) 2015.
  * @addtogroup GCSPlugins GCS Plugins
  * @{
  * @{
@@ -23,44 +24,36 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#include "escgadgetconfiguration.h"
-#include <QtSerialPort/QSerialPort>
+#include "stloaderplugin.h"
+#include "stloadergadgetfactory.h"
+#include <QtPlugin>
+#include <QStringList>
+#include <extensionsystem/pluginmanager.h>
 
-/**
- * Loads a saved configuration or defaults if non exist.
- *
- */
-EscGadgetConfiguration::EscGadgetConfiguration(QString classId, QSettings* qSettings, QObject *parent) :
-	IUAVGadgetConfiguration(classId, parent)
+StLoaderPlugin::StLoaderPlugin()
 {
-    //if a saved configuration exists load it
-    if (qSettings != 0)
-    {
-    }
+	mf = NULL;
 }
 
-EscGadgetConfiguration::~EscGadgetConfiguration()
+StLoaderPlugin::~StLoaderPlugin()
 {
 }
 
-/**
- * Clones a configuration.
- *
- */
-IUAVGadgetConfiguration *EscGadgetConfiguration::clone()
+bool StLoaderPlugin::initialize(const QStringList &args, QString *errMsg)
 {
-    EscGadgetConfiguration *m = new EscGadgetConfiguration(this->classId());
-    return m;
+   Q_UNUSED(args);
+   Q_UNUSED(errMsg);
+
+   mf = new StLoaderGadgetFactory(this);
+   addAutoReleasedObject(mf);
+
+   return true;
 }
 
-/**
- * Saves a configuration.
- *
- */
-void EscGadgetConfiguration::saveConfig(QSettings *qSettings) const
+void StLoaderPlugin::extensionsInitialized()
 {
-	if (qSettings)
-	{
+}
 
-	}
+void StLoaderPlugin::shutdown()
+{
 }
