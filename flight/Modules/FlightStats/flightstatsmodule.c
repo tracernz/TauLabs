@@ -1,9 +1,9 @@
 /**
  ******************************************************************************
  * @addtogroup TauLabsModules Tau Labs Modules
- * @{ 
+ * @{
  * @addtogroup Flight Stats Module
- * @{ 
+ * @{
  *
  * @file       flightstatsmodule.c
  * @author     Tau Labs, http://taulabs.org, Copyright (C) 2015
@@ -115,7 +115,7 @@ int32_t FlightStatModuleStart(void)
 	flightStatsTaskHandle = PIOS_Thread_Create(flightStatsTask, "FlightStats", STACK_SIZE_BYTES, NULL, TASK_PRIORITY);
 
 	TaskMonitorAdd(TASKINFO_RUNNING_FLIGHTSTATS, flightStatsTaskHandle);
-	
+
 	return 0;
 }
 
@@ -134,57 +134,56 @@ static void flightStatsTask(void *parameters)
 		// Update stats at about 10Hz
 		PIOS_Thread_Sleep(100);
 		switch (flightStatsData.State) {
-			case FLIGHTSTATS_STATE_IDLE:
-				if (isArmed()) {
-					switch (settings.StatsBehavior) {
-					case FLIGHTSTATSSETTINGS_STATSBEHAVIOR_RESETONBOOT:
-						flightStatsData.State = FLIGHTSTATS_STATE_COLLECTING;
-						break;
-					case FLIGHTSTATSSETTINGS_STATSBEHAVIOR_RESETONARM:
-						flightStatsData.State = FLIGHTSTATS_STATE_RESET;
-						break;
+		case FLIGHTSTATS_STATE_IDLE:
+			if (isArmed()) {
+				switch (settings.StatsBehavior) {
+				case FLIGHTSTATSSETTINGS_STATSBEHAVIOR_RESETONBOOT:
+					flightStatsData.State = FLIGHTSTATS_STATE_COLLECTING;
+					break;
+				case FLIGHTSTATSSETTINGS_STATSBEHAVIOR_RESETONARM:
+					flightStatsData.State = FLIGHTSTATS_STATE_RESET;
+					break;
+				}
+				first_run = true;
+			}
+			break;
+		case FLIGHTSTATS_STATE_RESET:
+			resetStats(&flightStatsData);
+			flightStatsData.State = FLIGHTSTATS_STATE_COLLECTING;
+			break;
+		case FLIGHTSTATS_STATE_COLLECTING:
+			if (first_run) { // get some initial values
+				// initial position
+				PositionActualGet(&lastPositionActual);
+
+				// get the initial battery voltage and consumed energy
+				if (FlightBatteryStateHandle()) {
+					FlightBatteryStateConsumedEnergyGet(&initial_consumed_energy);
+
+					// either start a new calculation of consumed energy, or combine with data
+					// from previous flight
+					if (settings.StatsBehavior == FLIGHTSTATSSETTINGS_STATSBEHAVIOR_RESETONARM) {
+						previous_consumed_energy = 0.f;
+					} else {
+						previous_consumed_energy = flightStatsData.ConsumedEnergy;
 					}
-					first_run = true;
-				}
-				break;
-			case FLIGHTSTATS_STATE_RESET:
-				resetStats(&flightStatsData);
-				flightStatsData.State = FLIGHTSTATS_STATE_COLLECTING;
-				break;
-			case FLIGHTSTATS_STATE_COLLECTING:
-				if (first_run) { // get some initial values
-					// initial position
-					PositionActualGet(&lastPositionActual);
 
-					// get the initial battery voltage and consumed energy
-					if (FlightBatteryStateHandle()) {
-						FlightBatteryStateConsumedEnergyGet(&initial_consumed_energy);
-
-						// either start a new calculation of consumed energy, or combine with data
-						// from previous flight
-						if (settings.StatsBehavior == FLIGHTSTATSSETTINGS_STATSBEHAVIOR_RESETONARM) {
-							previous_consumed_energy = 0.f;
-						}
-						else {
-							previous_consumed_energy = flightStatsData.ConsumedEnergy;
-						}
-
-						// only get the initial voltage if we reset on arm or if it is uninitialized
-						if ((settings.StatsBehavior == FLIGHTSTATSSETTINGS_STATSBEHAVIOR_RESETONARM)\
-							|| (flightStatsData.InitialBatteryVoltage == 0)){
-							float voltage;
-							FlightBatteryStateVoltageGet(&voltage);
-							flightStatsData.InitialBatteryVoltage = roundf(1000.f * voltage);
-						}
+					// only get the initial voltage if we reset on arm or if it is uninitialized
+					if ((settings.StatsBehavior == FLIGHTSTATSSETTINGS_STATSBEHAVIOR_RESETONARM)\
+					    || (flightStatsData.InitialBatteryVoltage == 0)) {
+						float voltage;
+						FlightBatteryStateVoltageGet(&voltage);
+						flightStatsData.InitialBatteryVoltage = roundf(1000.f * voltage);
 					}
-					first_run = false;
 				}
-				collectStats(&flightStatsData);
-				if (!isArmed()) {
-					flightStatsData.State = FLIGHTSTATS_STATE_IDLE;
-				}
-				FlightStatsSet(&flightStatsData);
-				break;
+				first_run = false;
+			}
+			collectStats(&flightStatsData);
+			if (!isArmed()) {
+				flightStatsData.State = FLIGHTSTATS_STATE_IDLE;
+			}
+			FlightStatsSet(&flightStatsData);
+			break;
 		}
 	}
 }
@@ -228,7 +227,7 @@ static void collectStats(FlightStatsData *stats)
 
 	// Total (horizontal) distance
 	stats->DistanceTravelled  += sqrtf(powf(positionActual.North - lastPositionActual.North, 2.f) \
-									   + powf(positionActual.East - lastPositionActual.East, 2.f));
+	                                   + powf(positionActual.East - lastPositionActual.East, 2.f));
 
 	// Max distance to home
 	tmp =  sqrtf(powf(positionActual.North, 2.f) + powf(positionActual.East, 2.f));

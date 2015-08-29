@@ -141,7 +141,7 @@ struct pios_i2c_adapter {
 	volatile enum i2c_adapter_state state;
 	const struct pios_i2c_txn *active_txn;
 	const struct pios_i2c_txn *last_txn;
-	
+
 	uint8_t *active_byte;
 	uint8_t *last_byte;
 

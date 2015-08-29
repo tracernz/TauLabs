@@ -5,13 +5,13 @@
  * @addtogroup Naze32 family support files
  * @{
  *
- * @file       board_hw_defs.c 
+ * @file       board_hw_defs.c
  * @author     The OpenPilot Team, http://www.openpilot.org Copyright (C) 2011.
  * @author     Tau Labs, http://taulabs.org, Copyright (C) 2012-2015
- * @brief      Defines board specific static initializers for hardware for the 
+ * @brief      Defines board specific static initializers for hardware for the
  *             Naze32 family of boards.
  * @see        The GNU Public License (GPL) Version 3
- * 
+ *
  *****************************************************************************/
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -28,7 +28,7 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
- 
+
 #include <pios_config.h>
 #include <pios_board_info.h>
 
@@ -76,8 +76,8 @@ const struct pios_led_cfg * PIOS_BOARD_HW_DEFS_GetLedCfg (uint32_t board_revisio
 #include <pios_spi_priv.h>
 
 /* Flash/Accel Interface
- * 
- * NOTE: Leave this declared as const data so that it ends up in the 
+ *
+ * NOTE: Leave this declared as const data so that it ends up in the
  * .rodata section (ie. Flash) rather than in the .bss section (RAM).
  */
 void PIOS_SPI_generic_irq_handler(void);
@@ -94,12 +94,12 @@ static const struct pios_spi_cfg pios_spi_generic_cfg = {
 		.SPI_CRCPolynomial     = 7,
 		.SPI_CPOL              = SPI_CPOL_High,
 		.SPI_CPHA              = SPI_CPHA_2Edge,
-		.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_8, 
+		.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_8,
 	},
 	.use_crc = false,
 	.dma = {
 		.ahb_clk  = RCC_AHBPeriph_DMA1,
-		
+
 		.irq = {
 			.flags   = (DMA1_FLAG_TC4 | DMA1_FLAG_TE4 | DMA1_FLAG_HT4 | DMA1_FLAG_GL4),
 			.init    = {
@@ -109,7 +109,7 @@ static const struct pios_spi_cfg pios_spi_generic_cfg = {
 				.NVIC_IRQChannelCmd                = ENABLE,
 			},
 		},
-		
+
 		.rx = {
 			.channel = DMA1_Channel4,
 			.init    = {
@@ -165,13 +165,14 @@ static const struct pios_spi_cfg pios_spi_generic_cfg = {
 	},
 	.slave_count = 1,
 	.ssel = {{
-		.gpio = GPIOB,
-		.init = {
-			.GPIO_Pin   = GPIO_Pin_12,
-			.GPIO_Speed = GPIO_Speed_50MHz,
-			.GPIO_Mode  = GPIO_Mode_Out_PP,
-		},
-	}},
+			.gpio = GPIOB,
+			.init = {
+				.GPIO_Pin   = GPIO_Pin_12,
+				.GPIO_Speed = GPIO_Speed_50MHz,
+				.GPIO_Mode  = GPIO_Mode_Out_PP,
+			},
+		}
+	},
 };
 
 static uint32_t pios_spi_generic_id;
@@ -547,7 +548,7 @@ static const struct pios_tim_channel pios_tim_servoport_rcvrport_pins[] = {
 			},
 		},
 	},
-	
+
 	// Receiver port pins
 	// inputs are used as outputs in this case
 	{
@@ -597,7 +598,7 @@ static const struct pios_tim_channel pios_tim_servoport_rcvrport_pins[] = {
 				.GPIO_Speed = GPIO_Speed_2MHz,
 			},
 		},
-	}, 
+	},
 	{
 		.timer = TIM3,
 		.timer_chan = TIM_Channel_1,
@@ -812,8 +813,8 @@ void PIOS_RTC_IRQ_Handler (void)
 #endif
 
 #if defined(PIOS_INCLUDE_SERVO) && defined(PIOS_INCLUDE_TIM)
-/* 
- * Servo outputs 
+/*
+ * Servo outputs
  */
 #include <pios_servo_priv.h>
 
@@ -869,8 +870,8 @@ const struct pios_ppm_cfg pios_ppm_cfg = {
 
 #endif	/* PIOS_INCLUDE_PPM */
 
-/* 
- * PWM Inputs 
+/*
+ * PWM Inputs
  */
 #if defined(PIOS_INCLUDE_PWM)
 #include <pios_pwm_priv.h>

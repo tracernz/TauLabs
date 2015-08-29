@@ -145,8 +145,7 @@ static void manualControlTask(void *parameters)
 			transmitter_control_select(reset_controller);
 			control_events = transmitter_control_get_events();
 			break;
-		case FLIGHTSTATUS_CONTROLSOURCE_TABLET:
-		{
+		case FLIGHTSTATUS_CONTROLSOURCE_TABLET: {
 			static bool tablet_previously_succeeded = false;
 			if (tablet_control_select(reset_controller) == 0) {
 				control_events = tablet_control_get_events();
@@ -277,12 +276,10 @@ static bool ok_to_arm(void)
 	SystemAlarmsGet(&alarms);
 
 	// Check each alarm
-	for (int i = 0; i < SYSTEMALARMS_ALARM_NUMELEM; i++)
-	{
+	for (int i = 0; i < SYSTEMALARMS_ALARM_NUMELEM; i++) {
 		if (alarms.Alarm[i] >= SYSTEMALARMS_ALARM_ERROR &&
-			i != SYSTEMALARMS_ALARM_GPS &&
-			i != SYSTEMALARMS_ALARM_TELEMETRY)
-		{
+		    i != SYSTEMALARMS_ALARM_GPS &&
+		    i != SYSTEMALARMS_ALARM_TELEMETRY) {
 			return false;
 		}
 	}

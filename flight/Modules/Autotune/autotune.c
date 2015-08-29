@@ -9,7 +9,7 @@
  * @author     The OpenPilot Team, http://www.openpilot.org Copyright (C) 2012.
  * @author     Tau Labs, http://taulabs.org, Copyright (C) 2013-2014
  * @brief      State machine to run autotuning. Low level work done by @ref
- *             StabilizationModule 
+ *             StabilizationModule
  *
  * @see        The GNU Public License (GPL) Version 3
  *
@@ -108,7 +108,8 @@ int32_t AutotuneStart(void)
 MODULE_INITCALL(AutotuneInitialize, AutotuneStart)
 
 static void UpdateSystemIdent(const float *X, const float *noise,
-		float dT_s) {
+                              float dT_s)
+{
 	SystemIdentData relay;
 	relay.Beta[SYSTEMIDENT_BETA_ROLL]    = X[6];
 	relay.Beta[SYSTEMIDENT_BETA_PITCH]   = X[7];
@@ -126,7 +127,8 @@ static void UpdateSystemIdent(const float *X, const float *noise,
 	SystemIdentSet(&relay);
 }
 
-static void UpdateStabilizationDesired(bool doingIdent) {
+static void UpdateStabilizationDesired(bool doingIdent)
+{
 	StabilizationDesiredData stabDesired;
 	StabilizationDesiredGet(&stabDesired);
 
@@ -206,98 +208,98 @@ static void AutotuneTask(void *parameters)
 		float throttle;
 
 		ManualControlCommandThrottleGet(&throttle);
-				
+
 		switch(state) {
-			case AT_INIT:
+		case AT_INIT:
 
+			lastUpdateTime = PIOS_Thread_Systime();
+
+			// Only start when armed and flying
+			if (flightStatus.Armed == FLIGHTSTATUS_ARMED_ARMED && throttle > 0) {
+
+				af_init(X,P);
+
+				UpdateSystemIdent(X, NULL, 0.0f);
+
+				state = AT_START;
+			}
+			break;
+
+		case AT_START:
+
+			diffTime = PIOS_Thread_Systime() - lastUpdateTime;
+
+			// Spend the first block of time in normal rate mode to get airborne
+			if (diffTime > PREPARE_TIME) {
+				state = AT_RUN;
 				lastUpdateTime = PIOS_Thread_Systime();
-
-				// Only start when armed and flying
-				if (flightStatus.Armed == FLIGHTSTATUS_ARMED_ARMED && throttle > 0) {
-
-					af_init(X,P);
-
-					UpdateSystemIdent(X, NULL, 0.0f);
-
-					state = AT_START;
-				}
-				break;
-
-			case AT_START:
-
-				diffTime = PIOS_Thread_Systime() - lastUpdateTime;
-
-				// Spend the first block of time in normal rate mode to get airborne
-				if (diffTime > PREPARE_TIME) {
-					state = AT_RUN;
-					lastUpdateTime = PIOS_Thread_Systime();
-				}
+			}
 
 
-				last_time = PIOS_DELAY_GetRaw();
+			last_time = PIOS_DELAY_GetRaw();
 
-				break;
+			break;
 
-			case AT_RUN:
+		case AT_RUN:
 
-				diffTime = PIOS_Thread_Systime() - lastUpdateTime;
+			diffTime = PIOS_Thread_Systime() - lastUpdateTime;
 
-				doingIdent = true;
+			doingIdent = true;
 
-				// Update the system identification, but only when throttle is applied
-				// so bad values don't result when landing
-				if (throttle > 0) {
-					float y[3];
-					GyrosxGet(y+0);
-					GyrosyGet(y+1);
-					GyroszGet(y+2);
+			// Update the system identification, but only when throttle is applied
+			// so bad values don't result when landing
+			if (throttle > 0) {
+				float y[3];
+				GyrosxGet(y+0);
+				GyrosyGet(y+1);
+				GyroszGet(y+2);
 
-					float u[3];
-					ActuatorDesiredRollGet(u+0);
-					ActuatorDesiredPitchGet(u+1);
-					ActuatorDesiredYawGet(u+2);
+				float u[3];
+				ActuatorDesiredRollGet(u+0);
+				ActuatorDesiredPitchGet(u+1);
+				ActuatorDesiredYawGet(u+2);
 
-					float dT_s = PIOS_DELAY_DiffuS(last_time) * 1.0e-6f;
+				float dT_s = PIOS_DELAY_DiffuS(last_time) * 1.0e-6f;
 
-					af_predict(X,P,u,y, DT_MS * 0.001f);
-					for (uint32_t i = 0; i < 3; i++) {
-						const float NOISE_ALPHA = 0.9997f;  // 10 second time constant at 300 Hz
-						noise[i] = NOISE_ALPHA * noise[i] + (1-NOISE_ALPHA) * (y[i] - X[i]) * (y[i] - X[i]);
-					}
-
-					UpdateSystemIdent(X, noise, dT_s);
+				af_predict(X,P,u,y, DT_MS * 0.001f);
+				for (uint32_t i = 0; i < 3; i++) {
+					const float NOISE_ALPHA = 0.9997f;  // 10 second time constant at 300 Hz
+					noise[i] = NOISE_ALPHA * noise[i] + (1-NOISE_ALPHA) * (y[i] - X[i]) * (y[i] - X[i]);
 				}
 
-				if (diffTime > MEASURE_TIME) { // Move on to next state
-					state = AT_FINISHED;
-					lastUpdateTime = PIOS_Thread_Systime();
-				}
+				UpdateSystemIdent(X, noise, dT_s);
+			}
 
-				last_time = PIOS_DELAY_GetRaw();
+			if (diffTime > MEASURE_TIME) { // Move on to next state
+				state = AT_FINISHED;
+				lastUpdateTime = PIOS_Thread_Systime();
+			}
 
-				break;
+			last_time = PIOS_DELAY_GetRaw();
 
-			case AT_FINISHED:
+			break;
 
-				// Wait until disarmed and landed before updating the settings
-				if (flightStatus.Armed == FLIGHTSTATUS_ARMED_DISARMED && throttle <= 0)
-					state = AT_SET;
+		case AT_FINISHED:
 
-				break;
+			// Wait until disarmed and landed before updating the settings
+			if (flightStatus.Armed == FLIGHTSTATUS_ARMED_DISARMED && throttle <= 0)
+				state = AT_SET;
 
-			case AT_SET:
-				// If at some point we want to store the settings at the end of
-				// autotune, that can be done here. However, that will await further
-				// testing.
+			break;
 
-				// Save the settings locally. Note this is done after disarming.
-				UAVObjSave(SystemIdentHandle(), 0);
-				state = AT_INIT;
-				break;
+		case AT_SET:
+			// If at some point we want to store the settings at the end of
+			// autotune, that can be done here. However, that will await further
+			// testing.
 
-			default:
-				// Set an alarm or some shit like that
-				break;
+			// Save the settings locally. Note this is done after disarming.
+			UAVObjSave(SystemIdentHandle(), 0);
+			state = AT_INIT;
+			break;
+
+		default:
+			// Set an alarm or some shit like that
+			break;
 		}
 
 		// Update based on manual controls
@@ -336,7 +338,7 @@ __attribute__((always_inline)) static inline void af_predict(float X[AF_NUMX], f
 	float w1 = X[0];           // roll rate estimate
 	float w2 = X[1];           // pitch rate estimate
 	float w3 = X[2];           // yaw rate estimate
-	float u1 = X[3];           // scaled roll torque 
+	float u1 = X[3];           // scaled roll torque
 	float u2 = X[4];           // scaled pitch torque
 	float u3 = X[5];           // scaled yaw torque
 	const float e_b1 = expf(X[6]);   // roll torque scale
@@ -369,7 +371,7 @@ __attribute__((always_inline)) static inline void af_predict(float X[AF_NUMX], f
 	u1 = X[3] = (Ts*u1_in)/(Ts + e_tau) + (u1*e_tau)/(Ts + e_tau);
 	u2 = X[4] = (Ts*u2_in)/(Ts + e_tau) + (u2*e_tau)/(Ts + e_tau);
 	u3 = X[5] = (Ts*u3_in)/(Ts + e_tau) + (u3*e_tau)/(Ts + e_tau);
-    // X[6] to X[12] unchanged
+	// X[6] to X[12] unchanged
 
 	/**** filter parameters ****/
 	const float q_w = 1e-4f;
@@ -383,15 +385,15 @@ __attribute__((always_inline)) static inline void af_predict(float X[AF_NUMX], f
 
 	float D[AF_NUMP];
 	for (uint32_t i = 0; i < AF_NUMP; i++)
-        D[i] = P[i];
+		D[i] = P[i];
 
-    const float e_tau2    = e_tau * e_tau;
-    const float e_tau3    = e_tau * e_tau2;
-    const float e_tau4    = e_tau2 * e_tau2;
-    const float Ts_e_tau2 = (Ts + e_tau) * (Ts + e_tau);
-    const float Ts_e_tau4 = Ts_e_tau2 * Ts_e_tau2;
+	const float e_tau2    = e_tau * e_tau;
+	const float e_tau3    = e_tau * e_tau2;
+	const float e_tau4    = e_tau2 * e_tau2;
+	const float Ts_e_tau2 = (Ts + e_tau) * (Ts + e_tau);
+	const float Ts_e_tau4 = Ts_e_tau2 * Ts_e_tau2;
 
-	// covariance propagation - D is stored copy of covariance	
+	// covariance propagation - D is stored copy of covariance
 	P[0] = D[0] + Q[0] + 2*Ts*e_b1*(D[3] - D[28] - D[9]*bias1 + D[9]*u1) + Tsq*(e_b1*e_b1)*(D[4] - 2*D[29] + D[32] - 2*D[10]*bias1 + 2*D[30]*bias1 + 2*D[10]*u1 - 2*D[30]*u1 + D[11]*(bias1*bias1) + D[11]*(u1*u1) - 2*D[11]*bias1*u1);
 	P[1] = D[1] + Q[1] + 2*Ts*e_b2*(D[5] - D[33] - D[12]*bias2 + D[12]*u2) + Tsq*(e_b2*e_b2)*(D[6] - 2*D[34] + D[37] - 2*D[13]*bias2 + 2*D[35]*bias2 + 2*D[13]*u2 - 2*D[35]*u2 + D[14]*(bias2*bias2) + D[14]*(u2*u2) - 2*D[14]*bias2*u2);
 	P[2] = D[2] + Q[2] + 2*Ts*e_b3*(D[7] - D[38] - D[15]*bias3 + D[15]*u3) + Tsq*(e_b3*e_b3)*(D[8] - 2*D[39] + D[42] - 2*D[16]*bias3 + 2*D[40]*bias3 + 2*D[16]*u3 - 2*D[40]*u3 + D[17]*(bias3*bias3) + D[17]*(u3*u3) - 2*D[17]*bias3*u3);
@@ -436,10 +438,10 @@ __attribute__((always_inline)) static inline void af_predict(float X[AF_NUMX], f
 	P[41] = D[41];
 	P[42] = D[42] + Q[12];
 
-    
+
 	/********* this is the update part of the equation ***********/
 
-    float S[3] = {P[0] + s_a, P[1] + s_a, P[2] + s_a};
+	float S[3] = {P[0] + s_a, P[1] + s_a, P[2] + s_a};
 
 	X[0] = w1 + (P[0]*(gyro_x - w1))/S[0];
 	X[1] = w2 + (P[1]*(gyro_y - w2))/S[1];
@@ -457,8 +459,8 @@ __attribute__((always_inline)) static inline void af_predict(float X[AF_NUMX], f
 
 	// update the duplicate cache
 	for (uint32_t i = 0; i < AF_NUMP; i++)
-        D[i] = P[i];
-    
+		D[i] = P[i];
+
 	// This is an approximation that removes some cross axis uncertainty but
 	// substantially reduces the number of calculations
 	P[0] = -D[0]*(D[0]/S[0] - 1);
@@ -508,21 +510,21 @@ __attribute__((always_inline)) static inline void af_predict(float X[AF_NUMX], f
 
 	// apply limits to some of the state variables
 	if (X[9] > -1.5f)
-	    X[9] = -1.5f;
+		X[9] = -1.5f;
 	if (X[9] < -5.0f)
-	    X[9] = -5.0f;
+		X[9] = -5.0f;
 	if (X[10] > 0.5f)
-	    X[10] = 0.5f;
+		X[10] = 0.5f;
 	if (X[10] < -0.5f)
-	    X[10] = -0.5f;
+		X[10] = -0.5f;
 	if (X[11] > 0.5f)
-	    X[11] = 0.5f;
+		X[11] = 0.5f;
 	if (X[11] < -0.5f)
-	    X[11] = -0.5f;
+		X[11] = -0.5f;
 	if (X[12] > 0.5f)
-	    X[12] = 0.5f;
+		X[12] = 0.5f;
 	if (X[12] < -0.5f)
-	    X[12] = -0.5f;
+		X[12] = -0.5f;
 }
 
 /**

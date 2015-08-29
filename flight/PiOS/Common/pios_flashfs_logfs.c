@@ -75,7 +75,7 @@ static uintptr_t logfs_get_addr(const struct logfs_state *logfs, uint8_t arena_i
 	PIOS_Assert(slot_id < (logfs->cfg->arena_size / logfs->cfg->slot_size));
 
 	return ((arena_id * logfs->cfg->arena_size) +
-		(slot_id  * logfs->cfg->slot_size));
+	        (slot_id  * logfs->cfg->slot_size));
 }
 
 /*
@@ -130,9 +130,9 @@ static int32_t logfs_erase_arena(const struct logfs_state *logfs, uint8_t arena_
 	};
 
 	if (PIOS_FLASH_write_data(logfs->partition_id,
-					arena_addr,
-					(uint8_t *)&arena_hdr,
-					sizeof(arena_hdr)) != 0) {
+	                          arena_addr,
+	                          (uint8_t *)&arena_hdr,
+	                          sizeof(arena_hdr)) != 0) {
 		return -2;
 	}
 
@@ -153,9 +153,9 @@ static int32_t logfs_reserve_arena (const struct logfs_state *logfs, uint8_t are
 	/* Read in the current arena header */
 	struct arena_header arena_hdr;
 	if (PIOS_FLASH_read_data(logfs->partition_id,
-					arena_addr,
-					(uint8_t *)&arena_hdr,
-					sizeof(arena_hdr)) != 0) {
+	                         arena_addr,
+	                         (uint8_t *)&arena_hdr,
+	                         sizeof(arena_hdr)) != 0) {
 		return -1;
 	}
 	if (arena_hdr.state != ARENA_STATE_ERASED) {
@@ -168,9 +168,9 @@ static int32_t logfs_reserve_arena (const struct logfs_state *logfs, uint8_t are
 
 	/* Write the arena header back to flash */
 	if (PIOS_FLASH_write_data(logfs->partition_id,
-					arena_addr,
-					(uint8_t *)&arena_hdr,
-					sizeof(arena_hdr)) != 0) {
+	                          arena_addr,
+	                          (uint8_t *)&arena_hdr,
+	                          sizeof(arena_hdr)) != 0) {
 		return -3;
 	}
 
@@ -208,14 +208,14 @@ static int32_t logfs_activate_arena(const struct logfs_state *logfs, uint8_t are
 	/* Make sure this arena has been previously erased */
 	struct arena_header arena_hdr;
 	if (PIOS_FLASH_read_data(logfs->partition_id,
-					arena_addr,
-					(uint8_t *)&arena_hdr,
-					sizeof (arena_hdr)) != 0) {
+	                         arena_addr,
+	                         (uint8_t *)&arena_hdr,
+	                         sizeof (arena_hdr)) != 0) {
 		/* Failed to read arena header */
 		return -1;
 	}
 	if ((arena_hdr.state != ARENA_STATE_RESERVED) &&
-		(arena_hdr.state != ARENA_STATE_ERASED)) {
+	    (arena_hdr.state != ARENA_STATE_ERASED)) {
 		/* Arena was not erased or reserved, can't activate it */
 		return -2;
 	}
@@ -223,9 +223,9 @@ static int32_t logfs_activate_arena(const struct logfs_state *logfs, uint8_t are
 	/* Mark this arena as active */
 	arena_hdr.state = ARENA_STATE_ACTIVE;
 	if (PIOS_FLASH_write_data(logfs->partition_id,
-					arena_addr,
-					(uint8_t *)&arena_hdr,
-					sizeof(arena_hdr)) != 0) {
+	                          arena_addr,
+	                          (uint8_t *)&arena_hdr,
+	                          sizeof(arena_hdr)) != 0) {
 		return -3;
 	}
 
@@ -249,9 +249,9 @@ static int32_t logfs_obsolete_arena(const struct logfs_state *logfs, uint8_t are
 	/* Make sure this arena was previously active */
 	struct arena_header arena_hdr;
 	if (PIOS_FLASH_read_data(logfs->partition_id,
-					arena_addr,
-					(uint8_t *)&arena_hdr,
-					sizeof (arena_hdr)) != 0) {
+	                         arena_addr,
+	                         (uint8_t *)&arena_hdr,
+	                         sizeof (arena_hdr)) != 0) {
 		/* Failed to read arena header */
 		return -1;
 	}
@@ -264,9 +264,9 @@ static int32_t logfs_obsolete_arena(const struct logfs_state *logfs, uint8_t are
 	/* Mark this arena as obsolete */
 	arena_hdr.state = ARENA_STATE_OBSOLETE;
 	if (PIOS_FLASH_write_data(logfs->partition_id,
-					arena_addr,
-					(uint8_t *)&arena_hdr,
-					sizeof(arena_hdr)) != 0) {
+	                          arena_addr,
+	                          (uint8_t *)&arena_hdr,
+	                          sizeof(arena_hdr)) != 0) {
 		return -3;
 	}
 
@@ -291,13 +291,13 @@ static int32_t logfs_find_active_arena(const struct logfs_state *logfs)
 		/* Load the arena header */
 		struct arena_header arena_hdr;
 		if (PIOS_FLASH_read_data(logfs->partition_id,
-						arena_addr,
-						(uint8_t *)&arena_hdr,
-						sizeof (arena_hdr)) != 0) {
+		                         arena_addr,
+		                         (uint8_t *)&arena_hdr,
+		                         sizeof (arena_hdr)) != 0) {
 			return -2;
 		}
 		if ((arena_hdr.state == ARENA_STATE_ACTIVE) &&
-			(arena_hdr.magic == logfs->cfg->fs_magic)) {
+		    (arena_hdr.magic == logfs->cfg->fs_magic)) {
 			/* This is the first active arena */
 			return arena_id;
 		}
@@ -353,18 +353,18 @@ static int32_t logfs_raw_copy_bytes (const struct logfs_state *logfs, uintptr_t 
 
 		/* Read a block of data from source */
 		if (PIOS_FLASH_read_data(logfs->partition_id,
-						src_addr,
-						data_block,
-						blk_size) != 0) {
+		                         src_addr,
+		                         data_block,
+		                         blk_size) != 0) {
 			/* Failed to read next chunk from source */
 			return -1;
 		}
 
 		/* Write a block of data to destination */
 		if (PIOS_FLASH_write_data(logfs->partition_id,
-						dst_addr,
-						data_block,
-						blk_size) != 0) {
+		                          dst_addr,
+		                          data_block,
+		                          blk_size) != 0) {
 			/* Failed to write chunk to destination */
 			return -2;
 		}
@@ -424,9 +424,9 @@ static int32_t logfs_mount_log(struct logfs_state *logfs, uint8_t arena_id)
 		struct slot_header slot_hdr;
 		uintptr_t slot_addr = logfs_get_addr (logfs, logfs->active_arena_id, slot_id);
 		if (PIOS_FLASH_read_data(logfs->partition_id,
-						slot_addr,
-						(uint8_t *)&slot_hdr,
-						sizeof (slot_hdr)) != 0) {
+		                         slot_addr,
+		                         (uint8_t *)&slot_hdr,
+		                         sizeof (slot_hdr)) != 0) {
 			return -1;
 		}
 
@@ -435,7 +435,7 @@ static int32_t logfs_mount_log(struct logfs_state *logfs, uint8_t arena_id)
 		 * end of the arena.
 		 */
 		PIOS_Assert (slot_hdr.state == SLOT_STATE_EMPTY ||
-			logfs->num_free_slots == 0);
+		             logfs->num_free_slots == 0);
 
 		switch (slot_hdr.state) {
 		case SLOT_STATE_EMPTY:
@@ -529,20 +529,20 @@ int32_t PIOS_FLASHFS_Logfs_Init(uintptr_t *fs_id, const struct flashfs_logfs_cfg
 	bool found = false;
 	int32_t arena_id;
 	for (uint8_t try = 0; !found && try < 2; try++) {
-		/* Find the active arena */
-		arena_id = logfs_find_active_arena(logfs);
-		if (arena_id >= 0) {
-			/* Found the active arena */
-			found = true;
-			break;
-		} else {
-			/* No active arena found, erase and activate arena 0 */
-			if (logfs_erase_arena(logfs, 0) != 0)
-				break;
-			if (logfs_activate_arena(logfs, 0) != 0)
-				break;
-		}
-	}
+					/* Find the active arena */
+					arena_id = logfs_find_active_arena(logfs);
+					if (arena_id >= 0) {
+						/* Found the active arena */
+						found = true;
+						break;
+					} else {
+						/* No active arena found, erase and activate arena 0 */
+						if (logfs_erase_arena(logfs, 0) != 0)
+							break;
+						if (logfs_activate_arena(logfs, 0) != 0)
+							break;
+					}
+				}
 
 	if (!found) {
 		/* Still no active arena, something is broken */
@@ -588,7 +588,8 @@ out_exit:
 }
 
 /* NOTE: Must be called while holding the flash transaction lock */
-static int32_t logfs_garbage_collect (struct logfs_state *logfs) {
+static int32_t logfs_garbage_collect (struct logfs_state *logfs)
+{
 	PIOS_Assert (logfs->mounted);
 
 	/* Source arena is the active arena */
@@ -616,18 +617,18 @@ static int32_t logfs_garbage_collect (struct logfs_state *logfs) {
 		struct slot_header slot_hdr;
 		uintptr_t src_addr = logfs_get_addr (logfs, src_arena_id, src_slot_id);
 		if (PIOS_FLASH_read_data(logfs->partition_id,
-						src_addr,
-						(uint8_t *)&slot_hdr,
-						sizeof (slot_hdr)) != 0) {
+		                         src_addr,
+		                         (uint8_t *)&slot_hdr,
+		                         sizeof (slot_hdr)) != 0) {
 			return -3;
 		}
 
 		if (slot_hdr.state == SLOT_STATE_ACTIVE) {
 			uintptr_t dst_addr = logfs_get_addr (logfs, dst_arena_id, dst_slot_id);
 			if (logfs_raw_copy_bytes(logfs,
-							src_addr,
-							sizeof(slot_hdr) + slot_hdr.obj_size,
-							dst_addr) != 0) {
+			                         src_addr,
+			                         sizeof(slot_hdr) + slot_hdr.obj_size,
+			                         dst_addr) != 0) {
 				/* Failed to copy all bytes */
 				return -4;
 			}
@@ -673,9 +674,9 @@ static int16_t logfs_object_find_next (const struct logfs_state *logfs, struct s
 		uintptr_t slot_addr = logfs_get_addr (logfs, logfs->active_arena_id, slot_id);
 
 		if (PIOS_FLASH_read_data(logfs->partition_id,
-						slot_addr,
-						(uint8_t *)slot_hdr,
-						sizeof (*slot_hdr)) != 0) {
+		                         slot_addr,
+		                         (uint8_t *)slot_hdr,
+		                         sizeof (*slot_hdr)) != 0) {
 			return -2;
 		}
 		if (slot_hdr->state == SLOT_STATE_EMPTY) {
@@ -683,8 +684,8 @@ static int16_t logfs_object_find_next (const struct logfs_state *logfs, struct s
 			break;
 		}
 		if (slot_hdr->state == SLOT_STATE_ACTIVE &&
-			slot_hdr->obj_id      == obj_id &&
-			slot_hdr->obj_inst_id == obj_inst_id) {
+		    slot_hdr->obj_id      == obj_id &&
+		    slot_hdr->obj_inst_id == obj_inst_id) {
 			/* Found what we were looking for */
 			*curr_slot = slot_id;
 			return 0;
@@ -712,9 +713,9 @@ static int8_t logfs_delete_object (struct logfs_state *logfs, uint32_t obj_id, u
 			uintptr_t slot_addr = logfs_get_addr (logfs, logfs->active_arena_id, curr_slot_id);
 
 			if (PIOS_FLASH_write_data(logfs->partition_id,
-							slot_addr,
-							(uint8_t *)&slot_hdr,
-							sizeof(slot_hdr)) != 0) {
+			                          slot_addr,
+			                          (uint8_t *)&slot_hdr,
+			                          sizeof(slot_hdr)) != 0) {
 				rc = -2;
 				goto out_exit;
 			}
@@ -759,9 +760,9 @@ static int8_t logfs_reserve_free_slot (struct logfs_state *logfs, uint16_t *slot
 	uintptr_t slot_addr = logfs_get_addr (logfs, logfs->active_arena_id, candidate_slot_id);
 
 	if (PIOS_FLASH_read_data(logfs->partition_id,
-					slot_addr,
-					(uint8_t *)slot_hdr,
-					sizeof (*slot_hdr)) != 0) {
+	                         slot_addr,
+	                         (uint8_t *)slot_hdr,
+	                         sizeof (*slot_hdr)) != 0) {
 		/* Failed to read slot header for candidate slot */
 		return -3;
 	}
@@ -779,9 +780,9 @@ static int8_t logfs_reserve_free_slot (struct logfs_state *logfs, uint16_t *slot
 	slot_hdr->obj_size    = obj_size;
 
 	if (PIOS_FLASH_write_data(logfs->partition_id,
-					slot_addr,
-					(uint8_t *)slot_hdr,
-					sizeof(*slot_hdr)) != 0) {
+	                          slot_addr,
+	                          (uint8_t *)slot_hdr,
+	                          sizeof(*slot_hdr)) != 0) {
 		/* Failed to write the slot header */
 		return -5;
 	}
@@ -812,9 +813,9 @@ static int8_t logfs_append_to_log (struct logfs_state *logfs, uint32_t obj_id, u
 		uintptr_t slot_offset = sizeof(slot_hdr);
 
 		if (PIOS_FLASH_write_data(logfs->partition_id,
-						slot_addr + slot_offset,
-						obj_data,
-						obj_size) != 0) {
+		                          slot_addr + slot_offset,
+		                          obj_data,
+		                          obj_size) != 0) {
 			/* Failed to write the object data to the slot */
 			return -2;
 		}
@@ -823,9 +824,9 @@ static int8_t logfs_append_to_log (struct logfs_state *logfs, uint32_t obj_id, u
 	/* Mark this slot active in one atomic step */
 	slot_hdr.state = SLOT_STATE_ACTIVE;
 	if (PIOS_FLASH_write_data(logfs->partition_id,
-					slot_addr,
-					(uint8_t *)&slot_hdr,
-					sizeof(slot_hdr)) != 0) {
+	                          slot_addr,
+	                          (uint8_t *)&slot_hdr,
+	                          sizeof(slot_hdr)) != 0) {
 		/* Failed to mark the slot active */
 		return -4;
 	}
@@ -983,9 +984,9 @@ int32_t PIOS_FLASHFS_ObjLoad(uintptr_t fs_id, uint32_t obj_id, uint16_t obj_inst
 	if (obj_size > 0) {
 		uintptr_t slot_addr = logfs_get_addr (logfs, logfs->active_arena_id, slot_id);
 		if (PIOS_FLASH_read_data(logfs->partition_id,
-						slot_addr + sizeof(slot_hdr),
-						(uint8_t *)obj_data,
-						obj_size) != 0) {
+		                         slot_addr + sizeof(slot_hdr),
+		                         (uint8_t *)obj_data,
+		                         obj_size) != 0) {
 			/* Failed to read object data from the log */
 			rc = -5;
 			goto out_end_trans;

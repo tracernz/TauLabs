@@ -39,8 +39,8 @@
 #endif
 
 struct rtc_callback_entry {
-  void (*fn)(uintptr_t);
-  uintptr_t data;
+	void (*fn)(uintptr_t);
+	uintptr_t data;
 };
 
 #define PIOS_RTC_MAX_CALLBACKS 3
@@ -50,9 +50,9 @@ static uint8_t rtc_callback_next = 0;
 void PIOS_RTC_Init(const struct pios_rtc_cfg * cfg)
 {
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_BKP | RCC_APB1Periph_PWR,
-			       ENABLE);
+	                       ENABLE);
 	PWR_BackupAccessCmd(ENABLE);
-	
+
 	RCC_RTCCLKConfig(cfg->clksrc);
 	RCC_RTCCLKCmd(ENABLE);
 	RTC_WaitForLastTask();
@@ -83,7 +83,7 @@ float PIOS_RTC_Rate()
 	return (float) (8e6 / 128) / (1 + PIOS_RTC_PRESCALER);
 }
 
-float PIOS_RTC_MsPerTick() 
+float PIOS_RTC_MsPerTick()
 {
 	return 1000.0f / PIOS_RTC_Rate();
 }
@@ -105,8 +105,7 @@ bool PIOS_RTC_RegisterTickCallback(void (*fn)(uintptr_t id), uintptr_t data)
 
 void PIOS_RTC_irq_handler (void)
 {
-	if (RTC_GetITStatus(RTC_IT_SEC))
-	{
+	if (RTC_GetITStatus(RTC_IT_SEC)) {
 		/* Call all registered callbacks */
 		for (uint8_t i = 0; i < rtc_callback_next; i++) {
 			struct rtc_callback_entry * cb = &rtc_callback_list[i];
@@ -123,7 +122,7 @@ void PIOS_RTC_irq_handler (void)
 }
 #endif
 
-/** 
+/**
  * @}
  * @}
  */

@@ -1,9 +1,9 @@
 /**
  ******************************************************************************
  * @addtogroup TauLabsModules Tau Labs Modules
- * @{ 
+ * @{
  * @addtogroup GSPModule GPS Module
- * @{ 
+ * @{
  *
  * @file       GPS.c
  * @author     The OpenPilot Team, http://www.openpilot.org Copyright (C) 2010.
@@ -64,9 +64,9 @@ static void updateSettings();
 
 
 #if defined(PIOS_GPS_MINIMAL)
-	#define STACK_SIZE_BYTES            500
+#define STACK_SIZE_BYTES            500
 #else
-	#define STACK_SIZE_BYTES            850
+#define STACK_SIZE_BYTES            850
 #endif // PIOS_GPS_MINIMAL
 
 #define TASK_PRIORITY                   PIOS_THREAD_PRIO_LOW
@@ -151,14 +151,14 @@ int32_t GPSInitialize(void)
 	if (gpsPort && module_enabled) {
 		ModuleSettingsGPSDataProtocolGet(&gpsProtocol);
 		switch (gpsProtocol) {
-			case MODULESETTINGS_GPSDATAPROTOCOL_NMEA:
-				gps_rx_buffer = PIOS_malloc(NMEA_MAX_PACKET_LENGTH);
-				break;
-			case MODULESETTINGS_GPSDATAPROTOCOL_UBX:
-				gps_rx_buffer = PIOS_malloc(sizeof(struct UBXPacket));
-				break;
-			default:
-				gps_rx_buffer = NULL;
+		case MODULESETTINGS_GPSDATAPROTOCOL_NMEA:
+			gps_rx_buffer = PIOS_malloc(NMEA_MAX_PACKET_LENGTH);
+			break;
+		case MODULESETTINGS_GPSDATAPROTOCOL_UBX:
+			gps_rx_buffer = PIOS_malloc(sizeof(struct UBXPacket));
+			break;
+		default:
+			gps_rx_buffer = NULL;
 		}
 		PIOS_Assert(gps_rx_buffer);
 
@@ -184,32 +184,31 @@ static void gpsConfigure(uint8_t gpsProtocol)
 #if !defined(PIOS_GPS_MINIMAL)
 	switch (gpsProtocol) {
 #if defined(PIOS_INCLUDE_GPS_UBX_PARSER)
-		case MODULESETTINGS_GPSDATAPROTOCOL_UBX:
-		{
-			// Runs through a number of possible GPS baud rates to
-			// configure the ublox baud rate. This uses a NMEA string
-			// so could work for either UBX or NMEA actually. This is
-			// somewhat redundant with updateSettings below, but that
-			// is only called on startup and is not an issue.
+	case MODULESETTINGS_GPSDATAPROTOCOL_UBX: {
+		// Runs through a number of possible GPS baud rates to
+		// configure the ublox baud rate. This uses a NMEA string
+		// so could work for either UBX or NMEA actually. This is
+		// somewhat redundant with updateSettings below, but that
+		// is only called on startup and is not an issue.
 
-			ModuleSettingsGPSSpeedOptions baud_rate;
-			ModuleSettingsGPSConstellationOptions constellation;
-			ModuleSettingsGPSSBASConstellationOptions sbas_const;
-			ModuleSettingsGPSDynamicsModeOptions dyn_mode;
+		ModuleSettingsGPSSpeedOptions baud_rate;
+		ModuleSettingsGPSConstellationOptions constellation;
+		ModuleSettingsGPSSBASConstellationOptions sbas_const;
+		ModuleSettingsGPSDynamicsModeOptions dyn_mode;
 
-			ModuleSettingsGPSSpeedGet(&baud_rate);
-			ModuleSettingsGPSConstellationGet(&constellation);
-			ModuleSettingsGPSSBASConstellationGet(&sbas_const);
-			ModuleSettingsGPSDynamicsModeGet(&dyn_mode);
+		ModuleSettingsGPSSpeedGet(&baud_rate);
+		ModuleSettingsGPSConstellationGet(&constellation);
+		ModuleSettingsGPSSBASConstellationGet(&sbas_const);
+		ModuleSettingsGPSDynamicsModeGet(&dyn_mode);
 
-			ubx_cfg_set_baudrate(gpsPort, baud_rate);
+		ubx_cfg_set_baudrate(gpsPort, baud_rate);
 
-			PIOS_Thread_Sleep(1000);
+		PIOS_Thread_Sleep(1000);
 
-			ubx_cfg_send_configuration(gpsPort, gps_rx_buffer,
-					constellation, sbas_const, dyn_mode);
-		}
-		break;
+		ubx_cfg_send_configuration(gpsPort, gps_rx_buffer,
+		                           constellation, sbas_const, dyn_mode);
+	}
+	break;
 #endif
 	}
 #endif /* PIOS_GPS_MINIMAL */
@@ -256,23 +255,22 @@ static void gpsTask(void *parameters)
 		uint8_t c;
 
 		// This blocks the task until there is something on the buffer
-		while (PIOS_COM_ReceiveBuffer(gpsPort, &c, 1, xDelay) > 0)
-		{
+		while (PIOS_COM_ReceiveBuffer(gpsPort, &c, 1, xDelay) > 0) {
 			int res;
 			switch (gpsProtocol) {
 #if defined(PIOS_INCLUDE_GPS_NMEA_PARSER)
-				case MODULESETTINGS_GPSDATAPROTOCOL_NMEA:
-					res = parse_nmea_stream (c,gps_rx_buffer, &gpsposition, &gpsRxStats);
-					break;
+			case MODULESETTINGS_GPSDATAPROTOCOL_NMEA:
+				res = parse_nmea_stream (c,gps_rx_buffer, &gpsposition, &gpsRxStats);
+				break;
 #endif
 #if defined(PIOS_INCLUDE_GPS_UBX_PARSER)
-				case MODULESETTINGS_GPSDATAPROTOCOL_UBX:
-					res = parse_ubx_stream (c,gps_rx_buffer, &gpsposition, &gpsRxStats);
-					break;
+			case MODULESETTINGS_GPSDATAPROTOCOL_UBX:
+				res = parse_ubx_stream (c,gps_rx_buffer, &gpsposition, &gpsRxStats);
+				break;
 #endif
-				default:
-					res = NO_PARSER; // this should not happen
-					break;
+			default:
+				res = NO_PARSER; // this should not happen
+				break;
 			}
 
 			if (res == PARSER_COMPLETE) {
@@ -280,7 +278,7 @@ static void gpsTask(void *parameters)
 			}
 
 			xDelay = 0;	// For now on, don't block / wait,
-					// but consume what we can from the fifo
+			// but consume what we can from the fifo
 		}
 
 		// Check for GPS timeout
@@ -297,16 +295,16 @@ static void gpsTask(void *parameters)
 		} else {
 			// we appear to be receiving GPS sentences OK, we've had an update
 			//criteria for GPS-OK taken from this post
-			if (gpsposition.PDOP < 3.5f && 
+			if (gpsposition.PDOP < 3.5f &&
 			    gpsposition.Satellites >= 7 &&
 			    (gpsposition.Status == GPSPOSITION_STATUS_FIX3D ||
-			         gpsposition.Status == GPSPOSITION_STATUS_DIFF3D)) {
+			     gpsposition.Status == GPSPOSITION_STATUS_DIFF3D)) {
 				AlarmsClear(SYSTEMALARMS_ALARM_GPS);
 			} else if (gpsposition.Status == GPSPOSITION_STATUS_FIX3D ||
 			           gpsposition.Status == GPSPOSITION_STATUS_DIFF3D)
-						AlarmsSet(SYSTEMALARMS_ALARM_GPS, SYSTEMALARMS_ALARM_WARNING);
-					else
-						AlarmsSet(SYSTEMALARMS_ALARM_GPS, SYSTEMALARMS_ALARM_CRITICAL);
+				AlarmsSet(SYSTEMALARMS_ALARM_GPS, SYSTEMALARMS_ALARM_WARNING);
+			else
+				AlarmsSet(SYSTEMALARMS_ALARM_GPS, SYSTEMALARMS_ALARM_CRITICAL);
 		}
 
 	}
@@ -354,7 +352,7 @@ static void updateSettings()
 	}
 }
 
-/** 
+/**
   * @}
   * @}
   */

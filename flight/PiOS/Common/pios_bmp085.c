@@ -12,19 +12,19 @@
  * @see        The GNU Public License (GPL) Version 3
  ******************************************************************************/
 
-/* 
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 3 of the License, or 
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
  * for more details.
- * 
- * You should have received a copy of the GNU General Public License along 
- * with this program; if not, write to the Free Software Foundation, Inc., 
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
@@ -110,7 +110,7 @@ static struct bmp085_dev *dev;
  */
 static struct bmp085_dev *PIOS_BMP085_alloc(void)
 {
-   struct bmp085_dev *bmp085_dev;
+	struct bmp085_dev *bmp085_dev;
 
 	bmp085_dev = (struct bmp085_dev *)PIOS_malloc(sizeof(*bmp085_dev));
 	if (!bmp085_dev) return (NULL);
@@ -186,7 +186,7 @@ int32_t PIOS_BMP085_Init(const struct pios_bmp085_cfg *cfg, int32_t i2c_device)
 	dev->MD  = (data[20] << 8) | data[21];
 
 	dev->task = PIOS_Thread_Create(
-		PIOS_BMP085_Task, "pios_bmp085", BMP085_TASK_STACK, NULL, BMP085_TASK_PRIORITY);
+	                PIOS_BMP085_Task, "pios_bmp085", BMP085_TASK_STACK, NULL, BMP085_TASK_PRIORITY);
 	if (dev->task == NULL)
 		return -3;
 
@@ -252,21 +252,22 @@ static int32_t PIOS_BMP085_StartADC(enum conversion_type type)
 /**
  * @brief Return the delay for the current osr
  */
-static int32_t PIOS_BMP085_GetDelay() {
+static int32_t PIOS_BMP085_GetDelay()
+{
 	if (PIOS_BMP085_Validate(dev) != 0)
 		return 100;
 
 	switch(dev->oversampling) {
-		case BMP085_OSR_0:
-			return 5;
-		case BMP085_OSR_1:
-			return 8;
-		case BMP085_OSR_2:
-			return 14;
-		case BMP085_OSR_3:
-			return 26;
-		default:
-			break;
+	case BMP085_OSR_0:
+		return 5;
+	case BMP085_OSR_1:
+		return 8;
+	case BMP085_OSR_2:
+		return 14;
+	case BMP085_OSR_3:
+		return 26;
+	default:
+		break;
 	}
 	return 26;
 }
@@ -347,12 +348,12 @@ static int32_t PIOS_BMP085_Read(uint8_t address, uint8_t *buffer, uint8_t len)
 		}
 		,
 		{
-		 .info = __func__,
-		 .addr = BMP085_I2C_ADDR,
-		 .rw = PIOS_I2C_TXN_READ,
-		 .len = len,
-		 .buf = buffer,
-		 }
+			.info = __func__,
+			.addr = BMP085_I2C_ADDR,
+			.rw = PIOS_I2C_TXN_READ,
+			.len = len,
+			.buf = buffer,
+		}
 	};
 
 	return PIOS_I2C_Transfer(dev->i2c_id, txn_list, NELEMENTS(txn_list));
@@ -377,12 +378,12 @@ static int32_t PIOS_BMP085_WriteCommand(uint8_t address, uint8_t buffer)
 
 	const struct pios_i2c_txn txn_list[] = {
 		{
-		 .info = __func__,
-		 .addr = BMP085_I2C_ADDR,
-		 .rw = PIOS_I2C_TXN_WRITE,
-		 .len = sizeof(data),
-		 .buf = data,
-		 }
+			.info = __func__,
+			.addr = BMP085_I2C_ADDR,
+			.rw = PIOS_I2C_TXN_WRITE,
+			.len = sizeof(data),
+			.buf = data,
+		}
 		,
 	};
 
@@ -431,8 +432,7 @@ static void PIOS_BMP085_Task(void *parameters)
 	while (1) {
 
 		temp_press_interleave_count --;
-		if(temp_press_interleave_count <= 0)
-		{
+		if(temp_press_interleave_count <= 0) {
 			// Update the temperature data
 			PIOS_BMP085_ClaimDevice();
 			PIOS_BMP085_StartADC(TEMPERATURE_CONV);

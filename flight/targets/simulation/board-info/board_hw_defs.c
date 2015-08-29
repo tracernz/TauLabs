@@ -5,27 +5,27 @@
  * @addtogroup Revolution OpenPilot Revolution support files
  * @{
  *
- * @file       board_hw_defs.c 
+ * @file       board_hw_defs.c
  * @author     The OpenPilot Team, http://www.openpilot.org Copyright (C) 2011.
  * @author     Tau Labs, http://taulabs.org, Copyright (C) 2012-2013
  * @brief      Defines board specific static initializers for hardware for the
  *             Revolution board.
  * @see        The GNU Public License (GPL) Version 3
- * 
+ *
  *****************************************************************************/
-/* 
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 3 of the License, or 
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
  * for more details.
- * 
- * You should have received a copy of the GNU General Public License along 
- * with this program; if not, write to the Free Software Foundation, Inc., 
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 #include <pios_config.h>
@@ -106,11 +106,11 @@ static const struct pios_spi_cfg pios_spi_accel_cfg = {
 				.NVIC_IRQChannelCmd                = ENABLE,
 			},
 		},
-		
+
 		.rx = {
 			.channel = DMA2_Stream0,
 			.init    = {
-                .DMA_Channel            = DMA_Channel_3,
+				.DMA_Channel            = DMA_Channel_3,
 				.DMA_PeripheralBaseAddr = (uint32_t)&(SPI1->DR),
 				.DMA_DIR                = DMA_DIR_PeripheralToMemory,
 				.DMA_PeripheralInc      = DMA_PeripheralInc_Disable,
@@ -120,15 +120,15 @@ static const struct pios_spi_cfg pios_spi_accel_cfg = {
 				.DMA_Mode               = DMA_Mode_Normal,
 				.DMA_Priority           = DMA_Priority_Medium,
 				.DMA_FIFOMode           = DMA_FIFOMode_Disable,
-                /* .DMA_FIFOThreshold */
-                .DMA_MemoryBurst        = DMA_MemoryBurst_Single,
-                .DMA_PeripheralBurst    = DMA_PeripheralBurst_Single,
+				/* .DMA_FIFOThreshold */
+				.DMA_MemoryBurst        = DMA_MemoryBurst_Single,
+				.DMA_PeripheralBurst    = DMA_PeripheralBurst_Single,
 			},
 		},
 		.tx = {
 			.channel = DMA2_Stream3,
 			.init    = {
-                .DMA_Channel            = DMA_Channel_3,
+				.DMA_Channel            = DMA_Channel_3,
 				.DMA_PeripheralBaseAddr = (uint32_t)&(SPI1->DR),
 				.DMA_DIR                = DMA_DIR_MemoryToPeripheral,
 				.DMA_PeripheralInc      = DMA_PeripheralInc_Disable,
@@ -138,9 +138,9 @@ static const struct pios_spi_cfg pios_spi_accel_cfg = {
 				.DMA_Mode               = DMA_Mode_Normal,
 				.DMA_Priority           = DMA_Priority_High,
 				.DMA_FIFOMode           = DMA_FIFOMode_Disable,
-                /* .DMA_FIFOThreshold */
-                .DMA_MemoryBurst        = DMA_MemoryBurst_Single,
-                .DMA_PeripheralBurst    = DMA_PeripheralBurst_Single,
+				/* .DMA_FIFOThreshold */
+				.DMA_MemoryBurst        = DMA_MemoryBurst_Single,
+				.DMA_PeripheralBurst    = DMA_PeripheralBurst_Single,
 			},
 		},
 	},
@@ -176,14 +176,15 @@ static const struct pios_spi_cfg pios_spi_accel_cfg = {
 	},
 	.slave_count = 2,
 	.ssel = { {
-		.gpio = GPIOA,
-		.init = {
-			.GPIO_Pin   = GPIO_Pin_4,
-			.GPIO_Speed = GPIO_Speed_50MHz,
-			.GPIO_Mode  = GPIO_Mode_OUT,
-			.GPIO_OType = GPIO_OType_PP,
-			.GPIO_PuPd = GPIO_PuPd_UP
-		} },
+			.gpio = GPIOA,
+			.init = {
+				.GPIO_Pin   = GPIO_Pin_4,
+				.GPIO_Speed = GPIO_Speed_50MHz,
+				.GPIO_Mode  = GPIO_Mode_OUT,
+				.GPIO_OType = GPIO_OType_PP,
+				.GPIO_PuPd = GPIO_PuPd_UP
+			}
+		},
 		{
 			.gpio = GPIOC,
 			.init = {
@@ -192,7 +193,8 @@ static const struct pios_spi_cfg pios_spi_accel_cfg = {
 				.GPIO_Mode  = GPIO_Mode_OUT,
 				.GPIO_OType = GPIO_OType_PP,
 				.GPIO_PuPd = GPIO_PuPd_UP
-			} },
+			}
+		},
 	}
 };
 
@@ -236,7 +238,7 @@ static const struct pios_spi_cfg pios_spi_gyro_cfg = {
 				.NVIC_IRQChannelCmd = ENABLE,
 			},
 		},
-		
+
 		.rx = {
 			.channel = DMA1_Stream3,
 			.init = {
@@ -251,9 +253,9 @@ static const struct pios_spi_cfg pios_spi_gyro_cfg = {
 				.DMA_Priority           = DMA_Priority_Medium,
 				//TODO: Enable FIFO
 				.DMA_FIFOMode           = DMA_FIFOMode_Disable,
-                .DMA_FIFOThreshold      = DMA_FIFOThreshold_Full,
-                .DMA_MemoryBurst        = DMA_MemoryBurst_Single,
-                .DMA_PeripheralBurst    = DMA_PeripheralBurst_Single,
+				.DMA_FIFOThreshold      = DMA_FIFOThreshold_Full,
+				.DMA_MemoryBurst        = DMA_MemoryBurst_Single,
+				.DMA_PeripheralBurst    = DMA_PeripheralBurst_Single,
 			},
 		},
 		.tx = {
@@ -269,9 +271,9 @@ static const struct pios_spi_cfg pios_spi_gyro_cfg = {
 				.DMA_Mode               = DMA_Mode_Normal,
 				.DMA_Priority           = DMA_Priority_Medium,
 				.DMA_FIFOMode           = DMA_FIFOMode_Disable,
-                .DMA_FIFOThreshold      = DMA_FIFOThreshold_Full,
-                .DMA_MemoryBurst        = DMA_MemoryBurst_Single,
-                .DMA_PeripheralBurst    = DMA_PeripheralBurst_Single,
+				.DMA_FIFOThreshold      = DMA_FIFOThreshold_Full,
+				.DMA_MemoryBurst        = DMA_MemoryBurst_Single,
+				.DMA_PeripheralBurst    = DMA_PeripheralBurst_Single,
 			},
 		},
 	},
@@ -307,15 +309,16 @@ static const struct pios_spi_cfg pios_spi_gyro_cfg = {
 	},
 	.slave_count = 1,
 	.ssel = { {
-		.gpio = GPIOB,
-		.init = {
-			.GPIO_Pin = GPIO_Pin_12,
-			.GPIO_Speed = GPIO_Speed_50MHz,
-			.GPIO_Mode  = GPIO_Mode_OUT,
-			.GPIO_OType = GPIO_OType_PP,
-			.GPIO_PuPd = GPIO_PuPd_UP
-		},
-	} },
+			.gpio = GPIOB,
+			.init = {
+				.GPIO_Pin = GPIO_Pin_12,
+				.GPIO_Speed = GPIO_Speed_50MHz,
+				.GPIO_Mode  = GPIO_Mode_OUT,
+				.GPIO_OType = GPIO_OType_PP,
+				.GPIO_PuPd = GPIO_PuPd_UP
+			},
+		}
+	},
 };
 
 uint32_t pios_spi_gyro_id;
@@ -359,7 +362,7 @@ static const struct pios_spi_cfg pios_spi_flash_cfg = {
 				.NVIC_IRQChannelCmd = ENABLE,
 			},
 		},
-		
+
 		.rx = {
 			.channel = DMA1_Stream0,
 			.init = {
@@ -374,9 +377,9 @@ static const struct pios_spi_cfg pios_spi_flash_cfg = {
 				.DMA_Priority           = DMA_Priority_Medium,
 				//TODO: Enable FIFO
 				.DMA_FIFOMode           = DMA_FIFOMode_Disable,
-                .DMA_FIFOThreshold      = DMA_FIFOThreshold_Full,
-                .DMA_MemoryBurst        = DMA_MemoryBurst_Single,
-                .DMA_PeripheralBurst    = DMA_PeripheralBurst_Single,
+				.DMA_FIFOThreshold      = DMA_FIFOThreshold_Full,
+				.DMA_MemoryBurst        = DMA_MemoryBurst_Single,
+				.DMA_PeripheralBurst    = DMA_PeripheralBurst_Single,
 			},
 		},
 		.tx = {
@@ -392,9 +395,9 @@ static const struct pios_spi_cfg pios_spi_flash_cfg = {
 				.DMA_Mode               = DMA_Mode_Normal,
 				.DMA_Priority           = DMA_Priority_Medium,
 				.DMA_FIFOMode           = DMA_FIFOMode_Disable,
-                .DMA_FIFOThreshold      = DMA_FIFOThreshold_Full,
-                .DMA_MemoryBurst        = DMA_MemoryBurst_Single,
-                .DMA_PeripheralBurst    = DMA_PeripheralBurst_Single,
+				.DMA_FIFOThreshold      = DMA_FIFOThreshold_Full,
+				.DMA_MemoryBurst        = DMA_MemoryBurst_Single,
+				.DMA_PeripheralBurst    = DMA_PeripheralBurst_Single,
 			},
 		},
 	},
@@ -430,15 +433,16 @@ static const struct pios_spi_cfg pios_spi_flash_cfg = {
 	},
 	.slave_count = 1,
 	.ssel = { {
-		.gpio = GPIOD,
-		.init = {
-			.GPIO_Pin = GPIO_Pin_2,
-			.GPIO_Speed = GPIO_Speed_50MHz,
-			.GPIO_Mode  = GPIO_Mode_OUT,
-			.GPIO_OType = GPIO_OType_PP,
-			.GPIO_PuPd = GPIO_PuPd_UP
-		},
-	} },
+			.gpio = GPIOD,
+			.init = {
+				.GPIO_Pin = GPIO_Pin_2,
+				.GPIO_Speed = GPIO_Speed_50MHz,
+				.GPIO_Mode  = GPIO_Mode_OUT,
+				.GPIO_OType = GPIO_OType_PP,
+				.GPIO_PuPd = GPIO_PuPd_UP
+			},
+		}
+	},
 };
 
 uint32_t pios_spi_flash_id;
@@ -614,7 +618,7 @@ static const struct pios_overo_cfg pios_overo_cfg = {
 		.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_2,
 	},
 	.use_crc = false,
-	.dma = {		
+	.dma = {
 		.irq = {
 			// Note this is the stream ID that triggers interrupts (in this case TX)
 			.flags = (DMA_IT_TCIF7),
@@ -625,7 +629,7 @@ static const struct pios_overo_cfg pios_overo_cfg = {
 				.NVIC_IRQChannelCmd = ENABLE,
 			},
 		},
-		
+
 		.rx = {
 			.channel = DMA1_Stream0,
 			.init = {
@@ -696,15 +700,16 @@ static const struct pios_overo_cfg pios_overo_cfg = {
 	},
 	.slave_count = 1,
 	.ssel = { {
-		.gpio = GPIOA,
-		.init = {
-			.GPIO_Pin = GPIO_Pin_15,
-			.GPIO_Speed = GPIO_Speed_50MHz,
-			.GPIO_Mode  = GPIO_Mode_OUT,
-			.GPIO_OType = GPIO_OType_PP,
-			.GPIO_PuPd = GPIO_PuPd_UP
-		},
-	} },
+			.gpio = GPIOA,
+			.init = {
+				.GPIO_Pin = GPIO_Pin_15,
+				.GPIO_Speed = GPIO_Speed_50MHz,
+				.GPIO_Mode  = GPIO_Mode_OUT,
+				.GPIO_OType = GPIO_OType_PP,
+				.GPIO_PuPd = GPIO_PuPd_UP
+			},
+		}
+	},
 };
 uintptr_t pios_overo_id = 0;
 void PIOS_OVERO_irq_handler(void)
@@ -1247,20 +1252,20 @@ static const struct pios_i2c_adapter_cfg pios_i2c_mag_adapter_cfg = {
 		.gpio = GPIOB,
 		.init = {
 			.GPIO_Pin = GPIO_Pin_6,
-            .GPIO_Mode  = GPIO_Mode_AF,
-            .GPIO_Speed = GPIO_Speed_50MHz,
-            .GPIO_OType = GPIO_OType_OD,
-            .GPIO_PuPd  = GPIO_PuPd_NOPULL,
+			.GPIO_Mode  = GPIO_Mode_AF,
+			.GPIO_Speed = GPIO_Speed_50MHz,
+			.GPIO_OType = GPIO_OType_OD,
+			.GPIO_PuPd  = GPIO_PuPd_NOPULL,
 		},
 	},
 	.sda = {
 		.gpio = GPIOB,
 		.init = {
 			.GPIO_Pin = GPIO_Pin_7,
-            .GPIO_Mode  = GPIO_Mode_AF,
-            .GPIO_Speed = GPIO_Speed_50MHz,
-            .GPIO_OType = GPIO_OType_OD,
-            .GPIO_PuPd  = GPIO_PuPd_NOPULL,
+			.GPIO_Mode  = GPIO_Mode_AF,
+			.GPIO_Speed = GPIO_Speed_50MHz,
+			.GPIO_OType = GPIO_OType_OD,
+			.GPIO_PuPd  = GPIO_PuPd_NOPULL,
 		},
 	},
 	.event = {
@@ -1318,20 +1323,20 @@ static const struct pios_i2c_adapter_cfg pios_i2c_flexiport_adapter_cfg = {
 		.gpio = GPIOB,
 		.init = {
 			.GPIO_Pin   = GPIO_Pin_10,
-            .GPIO_Mode  = GPIO_Mode_AF,
-            .GPIO_Speed = GPIO_Speed_50MHz,
-            .GPIO_OType = GPIO_OType_OD,
-            .GPIO_PuPd  = GPIO_PuPd_NOPULL,
+			.GPIO_Mode  = GPIO_Mode_AF,
+			.GPIO_Speed = GPIO_Speed_50MHz,
+			.GPIO_OType = GPIO_OType_OD,
+			.GPIO_PuPd  = GPIO_PuPd_NOPULL,
 		},
 	},
 	.sda = {
 		.gpio = GPIOB,
 		.init = {
 			.GPIO_Pin   = GPIO_Pin_11,
-            .GPIO_Mode  = GPIO_Mode_AF,
-            .GPIO_Speed = GPIO_Speed_50MHz,
-            .GPIO_OType = GPIO_OType_OD,
-            .GPIO_PuPd  = GPIO_PuPd_NOPULL,
+			.GPIO_Mode  = GPIO_Mode_AF,
+			.GPIO_Speed = GPIO_Speed_50MHz,
+			.GPIO_OType = GPIO_OType_OD,
+			.GPIO_PuPd  = GPIO_PuPd_NOPULL,
 		},
 	},
 	.event = {
@@ -1389,20 +1394,20 @@ static const struct pios_i2c_adapter_cfg pios_i2c_pressure_adapter_cfg = {
 		.gpio = GPIOA,
 		.init = {
 			.GPIO_Pin   = GPIO_Pin_8,
-            .GPIO_Mode  = GPIO_Mode_AF,
-            .GPIO_Speed = GPIO_Speed_50MHz,
-            .GPIO_OType = GPIO_OType_OD,
-            .GPIO_PuPd  = GPIO_PuPd_NOPULL,
+			.GPIO_Mode  = GPIO_Mode_AF,
+			.GPIO_Speed = GPIO_Speed_50MHz,
+			.GPIO_OType = GPIO_OType_OD,
+			.GPIO_PuPd  = GPIO_PuPd_NOPULL,
 		},
 	},
 	.sda = {
 		.gpio = GPIOC,
 		.init = {
 			.GPIO_Pin   = GPIO_Pin_9,
-            .GPIO_Mode  = GPIO_Mode_AF,
-            .GPIO_Speed = GPIO_Speed_50MHz,
-            .GPIO_OType = GPIO_OType_OD,
-            .GPIO_PuPd  = GPIO_PuPd_NOPULL,
+			.GPIO_Mode  = GPIO_Mode_AF,
+			.GPIO_Speed = GPIO_Speed_50MHz,
+			.GPIO_OType = GPIO_OType_OD,
+			.GPIO_PuPd  = GPIO_PuPd_NOPULL,
 		},
 	},
 	.event = {
@@ -1648,7 +1653,7 @@ static const struct pios_tim_channel pios_tim_servoport_all_pins[] = {
 			},
 			.pin_source = GPIO_PinSource6,
 		},
-		.remap = GPIO_AF_TIM9,		
+		.remap = GPIO_AF_TIM9,
 	},
 	{
 		.timer = TIM11,
@@ -2074,7 +2079,7 @@ void DMA2_Stream4_IRQHandler(void) __attribute__((alias("PIOS_ADC_DMA_irq_handle
 void PIOS_ADC_DMA_irq_handler(void)
 {
 	/* Call into the generic code to handle the IRQ for this specific device */
-        PIOS_INTERNAL_ADC_DMA_Handler();
+	PIOS_INTERNAL_ADC_DMA_Handler();
 }
 #endif /* PIOS_INCLUDE_ADC */
 

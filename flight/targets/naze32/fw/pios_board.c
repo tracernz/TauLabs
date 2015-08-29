@@ -10,28 +10,28 @@
  * @author     Tau Labs, http://taulabs.org, Copyright (C) 2012-2015
  * @brief      The board specific initialization routines
  * @see        The GNU Public License (GPL) Version 3
- * 
+ *
  *****************************************************************************/
-/* 
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 3 of the License, or 
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
  * for more details.
- * 
- * You should have received a copy of the GNU General Public License along 
- * with this program; if not, write to the Free Software Foundation, Inc., 
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
 /* Pull in the board-specific static HW definitions.
  * Including .c files is a bit ugly but this allows all of
  * the HW definitions to be const and static to limit their
- * scope.  
+ * scope.
  *
  * NOTE: THIS IS THE ONLY PLACE THAT SHOULD EVER INCLUDE THIS FILE
  */
@@ -82,7 +82,7 @@ static struct pios_exti_cfg pios_exti_hmc5883_cfg __exti_config = {
 };
 
 static struct pios_exti_cfg pios_exti_hmc5883_cfg_v5 __exti_config = {
-        // MAG_DRDY output on rev5 hardware PC14
+	// MAG_DRDY output on rev5 hardware PC14
 	.vector = PIOS_HMC5883_IRQHandler,
 	.line = EXTI_Line14,
 	.pin = {
@@ -230,7 +230,8 @@ uintptr_t pios_internal_adc_id;
  * 5 pulses - flash
  * 6 pulses - hmc5883l
  */
-void panic(int32_t code) {
+void panic(int32_t code)
+{
 	PIOS_HAL_Panic(PIOS_LED_ALARM, code);
 }
 
@@ -244,19 +245,20 @@ void panic(int32_t code) {
 //from flight/targets/naze32/board-info/system_stm32f10x.c
 extern uint32_t hse_value;
 
-void PIOS_Board_Init(void) {
+void PIOS_Board_Init(void)
+{
 
 	/* Delay system */
 	PIOS_DELAY_Init();
 
 	bool board_v5;
 	if (hse_value == 12000000)
- 		board_v5 = true;
+		board_v5 = true;
 	else
 		board_v5 = false;
 
 	//TODO: Buzzer
-	//rev5 needs inverted beeper. 
+	//rev5 needs inverted beeper.
 
 	//const struct pios_board_info * bdinfo = &pios_board_info_blob;
 
@@ -351,7 +353,7 @@ void PIOS_Board_Init(void) {
 
 	/* UART1 Port */
 #if defined(PIOS_INCLUDE_TELEMETRY) && defined(PIOS_INCLUDE_USART) && defined(PIOS_INCLUDE_COM)
-        PIOS_HAL_ConfigureCom(&pios_usart_main_cfg, PIOS_COM_TELEM_RF_RX_BUF_LEN, PIOS_COM_TELEM_RF_TX_BUF_LEN, &pios_usart_com_driver, &pios_com_telem_serial_id);
+	PIOS_HAL_ConfigureCom(&pios_usart_main_cfg, PIOS_COM_TELEM_RF_RX_BUF_LEN, PIOS_COM_TELEM_RF_TX_BUF_LEN, &pios_usart_com_driver, &pios_com_telem_serial_id);
 #endif /* PIOS_INCLUDE_TELEMETRY */
 
 	/* Configure the rcvr port */
@@ -363,79 +365,78 @@ void PIOS_Board_Init(void) {
 		break;
 	case HWNAZE_RCVRPORT_PWM:
 #if defined(PIOS_INCLUDE_PWM)
-		{
-			uintptr_t pios_pwm_id;
-			PIOS_PWM_Init(&pios_pwm_id, &pios_pwm_cfg);
+	{
+		uintptr_t pios_pwm_id;
+		PIOS_PWM_Init(&pios_pwm_id, &pios_pwm_cfg);
 
-			uintptr_t pios_pwm_rcvr_id;
-			if (PIOS_RCVR_Init(&pios_pwm_rcvr_id, &pios_pwm_rcvr_driver, pios_pwm_id)) {
-				PIOS_Assert(0);
-			}
-			pios_rcvr_group_map[MANUALCONTROLSETTINGS_CHANNELGROUPS_PWM] = pios_pwm_rcvr_id;
+		uintptr_t pios_pwm_rcvr_id;
+		if (PIOS_RCVR_Init(&pios_pwm_rcvr_id, &pios_pwm_rcvr_driver, pios_pwm_id)) {
+			PIOS_Assert(0);
 		}
+		pios_rcvr_group_map[MANUALCONTROLSETTINGS_CHANNELGROUPS_PWM] = pios_pwm_rcvr_id;
+	}
 #endif	/* PIOS_INCLUDE_PWM */
-		break;
-	case HWNAZE_RCVRPORT_PPMSERIAL:
-		{
-			uint8_t hw_rcvrserial;
-			HwNazeRcvrSerialGet(&hw_rcvrserial);
-			uint8_t hw_DSMxBind;
-			HwNazeDSMxBindGet(&hw_DSMxBind);
-			PIOS_HAL_ConfigurePort(hw_rcvrserial, 
-					&pios_usart_rcvrserial_cfg,
-					&pios_usart_com_driver,
-					NULL, NULL, NULL,
-					PIOS_LED_ALARM,
-					&pios_usart_dsm_hsum_rcvrserial_cfg,
-					&pios_dsm_rcvrserial_cfg,
-					hw_DSMxBind,
-					NULL, NULL, false);
-		}
+	break;
+	case HWNAZE_RCVRPORT_PPMSERIAL: {
+		uint8_t hw_rcvrserial;
+		HwNazeRcvrSerialGet(&hw_rcvrserial);
+		uint8_t hw_DSMxBind;
+		HwNazeDSMxBindGet(&hw_DSMxBind);
+		PIOS_HAL_ConfigurePort(hw_rcvrserial,
+		                       &pios_usart_rcvrserial_cfg,
+		                       &pios_usart_com_driver,
+		                       NULL, NULL, NULL,
+		                       PIOS_LED_ALARM,
+		                       &pios_usart_dsm_hsum_rcvrserial_cfg,
+		                       &pios_dsm_rcvrserial_cfg,
+		                       hw_DSMxBind,
+		                       NULL, NULL, false);
+	}
 
-		// Fall through to set up PPM.
+	// Fall through to set up PPM.
 
 	case HWNAZE_RCVRPORT_PPM:
 	case HWNAZE_RCVRPORT_PPMOUTPUTS:
 #if defined(PIOS_INCLUDE_PPM)
-		{
-			uintptr_t pios_ppm_id;
-			PIOS_PPM_Init(&pios_ppm_id, &pios_ppm_cfg);
+	{
+		uintptr_t pios_ppm_id;
+		PIOS_PPM_Init(&pios_ppm_id, &pios_ppm_cfg);
 
-			uintptr_t pios_ppm_rcvr_id;
-			if (PIOS_RCVR_Init(&pios_ppm_rcvr_id, &pios_ppm_rcvr_driver, pios_ppm_id)) {
-				PIOS_Assert(0);
-			}
-			pios_rcvr_group_map[MANUALCONTROLSETTINGS_CHANNELGROUPS_PPM] = pios_ppm_rcvr_id;
+		uintptr_t pios_ppm_rcvr_id;
+		if (PIOS_RCVR_Init(&pios_ppm_rcvr_id, &pios_ppm_rcvr_driver, pios_ppm_id)) {
+			PIOS_Assert(0);
 		}
+		pios_rcvr_group_map[MANUALCONTROLSETTINGS_CHANNELGROUPS_PPM] = pios_ppm_rcvr_id;
+	}
 #endif	/* PIOS_INCLUDE_PPM */
-		break;
+	break;
 	case HWNAZE_RCVRPORT_PPMPWM:
 		/* This is a combination of PPM and PWM inputs */
 #if defined(PIOS_INCLUDE_PPM)
-		{
-			uintptr_t pios_ppm_id;
-			PIOS_PPM_Init(&pios_ppm_id, &pios_ppm_cfg);
+	{
+		uintptr_t pios_ppm_id;
+		PIOS_PPM_Init(&pios_ppm_id, &pios_ppm_cfg);
 
-			uintptr_t pios_ppm_rcvr_id;
-			if (PIOS_RCVR_Init(&pios_ppm_rcvr_id, &pios_ppm_rcvr_driver, pios_ppm_id)) {
-				PIOS_Assert(0);
-			}
-			pios_rcvr_group_map[MANUALCONTROLSETTINGS_CHANNELGROUPS_PPM] = pios_ppm_rcvr_id;
+		uintptr_t pios_ppm_rcvr_id;
+		if (PIOS_RCVR_Init(&pios_ppm_rcvr_id, &pios_ppm_rcvr_driver, pios_ppm_id)) {
+			PIOS_Assert(0);
 		}
+		pios_rcvr_group_map[MANUALCONTROLSETTINGS_CHANNELGROUPS_PPM] = pios_ppm_rcvr_id;
+	}
 #endif	/* PIOS_INCLUDE_PPM */
 #if defined(PIOS_INCLUDE_PWM)
-		{
-			uintptr_t pios_pwm_id;
-			PIOS_PWM_Init(&pios_pwm_id, &pios_pwm_with_ppm_cfg);
+	{
+		uintptr_t pios_pwm_id;
+		PIOS_PWM_Init(&pios_pwm_id, &pios_pwm_with_ppm_cfg);
 
-			uintptr_t pios_pwm_rcvr_id;
-			if (PIOS_RCVR_Init(&pios_pwm_rcvr_id, &pios_pwm_rcvr_driver, pios_pwm_id)) {
-				PIOS_Assert(0);
-			}
-			pios_rcvr_group_map[MANUALCONTROLSETTINGS_CHANNELGROUPS_PWM] = pios_pwm_rcvr_id;
+		uintptr_t pios_pwm_rcvr_id;
+		if (PIOS_RCVR_Init(&pios_pwm_rcvr_id, &pios_pwm_rcvr_driver, pios_pwm_id)) {
+			PIOS_Assert(0);
 		}
+		pios_rcvr_group_map[MANUALCONTROLSETTINGS_CHANNELGROUPS_PWM] = pios_pwm_rcvr_id;
+	}
 #endif	/* PIOS_INCLUDE_PWM */
-		break;
+	break;
 	}
 
 #if defined(PIOS_INCLUDE_GCSRCVR)
@@ -455,17 +456,17 @@ void PIOS_Board_Init(void) {
 #ifndef PIOS_DEBUG_ENABLE_DEBUG_PINS
 #ifdef PIOS_INCLUDE_SERVO
 	switch (hw_rcvrport) {
-		case HWNAZE_RCVRPORT_DISABLED:
-		case HWNAZE_RCVRPORT_PWM:
-		case HWNAZE_RCVRPORT_PPM:
-		case HWNAZE_RCVRPORT_PPMPWM:
-		case HWNAZE_RCVRPORT_PPMSERIAL:
-			PIOS_Servo_Init(&pios_servo_cfg);
-			break;
-		case HWNAZE_RCVRPORT_PPMOUTPUTS:
-		case HWNAZE_RCVRPORT_OUTPUTS:
-			PIOS_Servo_Init(&pios_servo_rcvr_cfg);
-			break;
+	case HWNAZE_RCVRPORT_DISABLED:
+	case HWNAZE_RCVRPORT_PWM:
+	case HWNAZE_RCVRPORT_PPM:
+	case HWNAZE_RCVRPORT_PPMPWM:
+	case HWNAZE_RCVRPORT_PPMSERIAL:
+		PIOS_Servo_Init(&pios_servo_cfg);
+		break;
+	case HWNAZE_RCVRPORT_PPMOUTPUTS:
+	case HWNAZE_RCVRPORT_OUTPUTS:
+		PIOS_Servo_Init(&pios_servo_rcvr_cfg);
+		break;
 	}
 #endif
 #else
@@ -484,7 +485,7 @@ void PIOS_Board_Init(void) {
 	GPIO_PinRemapConfig(GPIO_Remap_SWJ_JTAGDisable, ENABLE);
 
 #if defined(PIOS_INCLUDE_MPU6050)
-	if(board_v5) { 
+	if(board_v5) {
 		// rev5 hardware use PC13 instead of PB13 for MPU_INT
 		pios_mpu6050_cfg.exti_cfg = &pios_exti_mpu6050_cfg_v5;
 	}
@@ -497,35 +498,35 @@ void PIOS_Board_Init(void) {
 	uint8_t hw_gyro_range;
 	HwNazeGyroRangeGet(&hw_gyro_range);
 	switch(hw_gyro_range) {
-		case HWNAZE_GYRORANGE_250:
-			PIOS_MPU6050_SetGyroRange(PIOS_MPU60X0_SCALE_250_DEG);
-			break;
-		case HWNAZE_GYRORANGE_500:
-			PIOS_MPU6050_SetGyroRange(PIOS_MPU60X0_SCALE_500_DEG);
-			break;
-		case HWNAZE_GYRORANGE_1000:
-			PIOS_MPU6050_SetGyroRange(PIOS_MPU60X0_SCALE_1000_DEG);
-			break;
-		case HWNAZE_GYRORANGE_2000:
-			PIOS_MPU6050_SetGyroRange(PIOS_MPU60X0_SCALE_2000_DEG);
-			break;
+	case HWNAZE_GYRORANGE_250:
+		PIOS_MPU6050_SetGyroRange(PIOS_MPU60X0_SCALE_250_DEG);
+		break;
+	case HWNAZE_GYRORANGE_500:
+		PIOS_MPU6050_SetGyroRange(PIOS_MPU60X0_SCALE_500_DEG);
+		break;
+	case HWNAZE_GYRORANGE_1000:
+		PIOS_MPU6050_SetGyroRange(PIOS_MPU60X0_SCALE_1000_DEG);
+		break;
+	case HWNAZE_GYRORANGE_2000:
+		PIOS_MPU6050_SetGyroRange(PIOS_MPU60X0_SCALE_2000_DEG);
+		break;
 	}
 
 	uint8_t hw_accel_range;
 	HwNazeAccelRangeGet(&hw_accel_range);
 	switch(hw_accel_range) {
-		case HWNAZE_ACCELRANGE_2G:
-			PIOS_MPU6050_SetAccelRange(PIOS_MPU60X0_ACCEL_2G);
-			break;
-		case HWNAZE_ACCELRANGE_4G:
-			PIOS_MPU6050_SetAccelRange(PIOS_MPU60X0_ACCEL_4G);
-			break;
-		case HWNAZE_ACCELRANGE_8G:
-			PIOS_MPU6050_SetAccelRange(PIOS_MPU60X0_ACCEL_8G);
-			break;
-		case HWNAZE_ACCELRANGE_16G:
-			PIOS_MPU6050_SetAccelRange(PIOS_MPU60X0_ACCEL_16G);
-			break;
+	case HWNAZE_ACCELRANGE_2G:
+		PIOS_MPU6050_SetAccelRange(PIOS_MPU60X0_ACCEL_2G);
+		break;
+	case HWNAZE_ACCELRANGE_4G:
+		PIOS_MPU6050_SetAccelRange(PIOS_MPU60X0_ACCEL_4G);
+		break;
+	case HWNAZE_ACCELRANGE_8G:
+		PIOS_MPU6050_SetAccelRange(PIOS_MPU60X0_ACCEL_8G);
+		break;
+	case HWNAZE_ACCELRANGE_16G:
+		PIOS_MPU6050_SetAccelRange(PIOS_MPU60X0_ACCEL_16G);
+		break;
 	}
 
 #endif /* PIOS_INCLUDE_MPU6050 */
@@ -544,7 +545,7 @@ void PIOS_Board_Init(void) {
 	//TODO: if(board_v5) { /* use PC14 instead of PB12 for MAG_DRDY (exti) */ }
 	if (PIOS_HMC5883_Init(pios_i2c_internal_id, &pios_hmc5883_cfg) != 0)
 		panic(6);
-        if (PIOS_HMC5883_Test() != 0)
+	if (PIOS_HMC5883_Test() != 0)
 		panic(6);
 #endif
 

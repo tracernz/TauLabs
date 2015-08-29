@@ -5,12 +5,12 @@
  * @addtogroup CopterControl OpenPilot coptercontrol support files
  * @{
  *
- * @file       STM32103CB_CC_Rev1.h 
+ * @file       STM32103CB_CC_Rev1.h
  * @author     The OpenPilot Team, http://www.openpilot.org Copyright (C) 2011.
  * @author     Tau Labs, http://taulabs.org, Copyright (C) 2012-2013
  * @brief      Board header file for CopterControl
  * @see        The GNU Public License (GPL) Version 3
- * 
+ *
  *****************************************************************************/
 /*
  * This program is free software; you can redistribute it and/or modify

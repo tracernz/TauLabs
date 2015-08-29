@@ -308,7 +308,7 @@ bool PIOS_Semaphore_Take(struct pios_semaphore *sema, uint32_t timeout_ms)
 			--sema->sema_count;
 		PIOS_IRQ_Enable();
 	} while (temp_sema_count == 0 &&
-		PIOS_DELAY_DiffuS(start) < timeout_ms * 1000);
+	         PIOS_DELAY_DiffuS(start) < timeout_ms * 1000);
 
 	return temp_sema_count != 0;
 }

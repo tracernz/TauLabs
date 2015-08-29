@@ -5,32 +5,32 @@
  * @addtogroup Sparky2 Tau Labs Sparky2 support files
  * @{
  *
- * @file       pios_board.c 
+ * @file       pios_board.c
  * @author     Tau Labs, http://taulabs.org, Copyright (C) 2012-2015
  * @brief      Board initialization file
  * @see        The GNU Public License (GPL) Version 3
- * 
+ *
  *****************************************************************************/
-/* 
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 3 of the License, or 
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
  * for more details.
- * 
- * You should have received a copy of the GNU General Public License along 
- * with this program; if not, write to the Free Software Foundation, Inc., 
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
 /* Pull in the board-specific static HW definitions.
  * Including .c files is a bit ugly but this allows all of
  * the HW definitions to be const and static to limit their
- * scope.  
+ * scope.
  *
  * NOTE: THIS IS THE ONLY PLACE THAT SHOULD EVER INCLUDE THIS FILE
  */
@@ -49,7 +49,7 @@
 #include <pios_openlrs_rcvr_priv.h>
 
 /**
- * Sensor configurations 
+ * Sensor configurations
  */
 
 /**
@@ -147,7 +147,8 @@ uintptr_t streamfs_id;
  * 4 pulses - MS5611
  * 6 pulses - external mag
  */
-static void panic(int32_t code) {
+static void panic(int32_t code)
+{
 	PIOS_HAL_Panic(PIOS_LED_ALARM, code);
 }
 
@@ -228,23 +229,24 @@ void set_vtx_channel(HwSparky2VTX_ChOptions channel)
  */
 void check_bor()
 {
-    uint8_t bor = FLASH_OB_GetBOR();
+	uint8_t bor = FLASH_OB_GetBOR();
 
-    if (bor != OB_BOR_LEVEL3) {
-        FLASH_OB_Unlock();
-        FLASH_OB_BORConfig(OB_BOR_LEVEL3);
-        FLASH_OB_Launch();
-        while (FLASH_WaitForLastOperation() == FLASH_BUSY) {
-            ;
-        }
-        FLASH_OB_Lock();
-        while (FLASH_WaitForLastOperation() == FLASH_BUSY) {
-            ;
-        }
-    }
+	if (bor != OB_BOR_LEVEL3) {
+		FLASH_OB_Unlock();
+		FLASH_OB_BORConfig(OB_BOR_LEVEL3);
+		FLASH_OB_Launch();
+		while (FLASH_WaitForLastOperation() == FLASH_BUSY) {
+			;
+		}
+		FLASH_OB_Lock();
+		while (FLASH_WaitForLastOperation() == FLASH_BUSY) {
+			;
+		}
+	}
 }
 
-void PIOS_Board_Init(void) {
+void PIOS_Board_Init(void)
+{
 
 	check_bor();
 
@@ -428,28 +430,28 @@ void PIOS_Board_Init(void) {
 	/* Configure IO ports */
 	uint8_t hw_DSMxBind;
 	HwSparky2DSMxBindGet(&hw_DSMxBind);
-	
+
 	/* Configure main USART port */
 	uint8_t hw_mainport;
 	HwSparky2MainPortGet(&hw_mainport);
 
 	PIOS_HAL_ConfigurePort(hw_mainport, &pios_usart_main_cfg,
-			&pios_usart_com_driver, NULL, NULL, NULL,
-			PIOS_LED_ALARM,
-			&pios_usart_dsm_hsum_main_cfg, &pios_dsm_main_cfg,
-			0, NULL, NULL, false);
+	                       &pios_usart_com_driver, NULL, NULL, NULL,
+	                       PIOS_LED_ALARM,
+	                       &pios_usart_dsm_hsum_main_cfg, &pios_dsm_main_cfg,
+	                       0, NULL, NULL, false);
 
 	/* Configure FlexiPort */
 	uint8_t hw_flexiport;
 	HwSparky2FlexiPortGet(&hw_flexiport);
 
 	PIOS_HAL_ConfigurePort(hw_flexiport, &pios_usart_flexi_cfg,
-			&pios_usart_com_driver,
-			&pios_i2c_flexiport_adapter_id,
-			&pios_i2c_flexiport_adapter_cfg, NULL,
-			PIOS_LED_ALARM,
-			&pios_usart_dsm_hsum_flexi_cfg, &pios_dsm_flexi_cfg,
-			hw_DSMxBind, NULL, NULL, false);
+	                       &pios_usart_com_driver,
+	                       &pios_i2c_flexiport_adapter_id,
+	                       &pios_i2c_flexiport_adapter_cfg, NULL,
+	                       PIOS_LED_ALARM,
+	                       &pios_usart_dsm_hsum_flexi_cfg, &pios_dsm_flexi_cfg,
+	                       hw_DSMxBind, NULL, NULL, false);
 
 #if defined(PIOS_INCLUDE_RFM22B)
 	HwSparky2Data hwSparky2;
@@ -460,11 +462,11 @@ void PIOS_Board_Init(void) {
 	const struct pios_openlrs_cfg *openlrs_cfg = PIOS_BOARD_HW_DEFS_GetOpenLRSCfg(bdinfo->board_rev);
 
 	PIOS_HAL_ConfigureRFM22B(hwSparky2.Radio,
-			bdinfo->board_type, bdinfo->board_rev,
-			hwSparky2.MaxRfPower, hwSparky2.MaxRfSpeed,
-			openlrs_cfg, rfm22b_cfg,
-			hwSparky2.MinChannel, hwSparky2.MaxChannel,
-			hwSparky2.CoordID, 1);
+	                         bdinfo->board_type, bdinfo->board_rev,
+	                         hwSparky2.MaxRfPower, hwSparky2.MaxRfSpeed,
+	                         openlrs_cfg, rfm22b_cfg,
+	                         hwSparky2.MinChannel, hwSparky2.MaxChannel,
+	                         hwSparky2.CoordID, 1);
 
 #endif /* PIOS_INCLUDE_RFM22B */
 
@@ -477,15 +479,15 @@ void PIOS_Board_Init(void) {
 	}
 
 	PIOS_HAL_ConfigurePort(hw_rcvrport,
-			NULL, /* XXX TODO: fix as part of DSM refactor */
-			&pios_usart_com_driver,
-			NULL, NULL,
-			&pios_ppm_cfg, 
-			PIOS_LED_ALARM,
-			&pios_usart_dsm_hsum_rcvr_cfg,
-			&pios_dsm_rcvr_cfg,
-			hw_DSMxBind, get_sbus_rcvr_cfg(bdinfo->board_rev),
-			&pios_sbus_cfg, get_sbus_toggle(bdinfo->board_rev));
+	                       NULL, /* XXX TODO: fix as part of DSM refactor */
+	                       &pios_usart_com_driver,
+	                       NULL, NULL,
+	                       &pios_ppm_cfg,
+	                       PIOS_LED_ALARM,
+	                       &pios_usart_dsm_hsum_rcvr_cfg,
+	                       &pios_dsm_rcvr_cfg,
+	                       hw_DSMxBind, get_sbus_rcvr_cfg(bdinfo->board_rev),
+	                       &pios_sbus_cfg, get_sbus_toggle(bdinfo->board_rev));
 
 #if defined(PIOS_INCLUDE_GCSRCVR)
 	GCSReceiverInitialize();
@@ -504,7 +506,7 @@ void PIOS_Board_Init(void) {
 #else
 	PIOS_DEBUG_Init(&pios_tim_servo_all_channels, NELEMENTS(pios_tim_servo_all_channels));
 #endif
-	
+
 	if (PIOS_I2C_Init(&pios_i2c_mag_pressure_adapter_id, &pios_i2c_mag_pressure_adapter_cfg)) {
 		PIOS_DEBUG_Assert(0);
 	}
@@ -535,9 +537,9 @@ void PIOS_Board_Init(void) {
 	uint32_t internal_adc_id;
 	PIOS_INTERNAL_ADC_Init(&internal_adc_id, &pios_adc_cfg);
 	PIOS_ADC_Init(&pios_internal_adc_id, &pios_internal_adc_driver, internal_adc_id);
- 
-        // configure the pullup for PA8 (inhibit pullups from current/sonar shared pin)
-        GPIO_Init(pios_current_sonar_pin.gpio, &pios_current_sonar_pin.init);
+
+	// configure the pullup for PA8 (inhibit pullups from current/sonar shared pin)
+	GPIO_Init(pios_current_sonar_pin.gpio, &pios_current_sonar_pin.init);
 #endif
 
 #if defined(PIOS_INCLUDE_MS5611)
@@ -562,71 +564,71 @@ void PIOS_Board_Init(void) {
 	uint8_t hw_gyro_range;
 	HwSparky2GyroRangeGet(&hw_gyro_range);
 	switch(hw_gyro_range) {
-		case HWSPARKY2_GYRORANGE_250:
-			PIOS_MPU9250_SetGyroRange(PIOS_MPU60X0_SCALE_250_DEG);
-			break;
-		case HWSPARKY2_GYRORANGE_500:
-			PIOS_MPU9250_SetGyroRange(PIOS_MPU60X0_SCALE_500_DEG);
-			break;
-		case HWSPARKY2_GYRORANGE_1000:
-			PIOS_MPU9250_SetGyroRange(PIOS_MPU60X0_SCALE_1000_DEG);
-			break;
-		case HWSPARKY2_GYRORANGE_2000:
-			PIOS_MPU9250_SetGyroRange(PIOS_MPU60X0_SCALE_2000_DEG);
-			break;
+	case HWSPARKY2_GYRORANGE_250:
+		PIOS_MPU9250_SetGyroRange(PIOS_MPU60X0_SCALE_250_DEG);
+		break;
+	case HWSPARKY2_GYRORANGE_500:
+		PIOS_MPU9250_SetGyroRange(PIOS_MPU60X0_SCALE_500_DEG);
+		break;
+	case HWSPARKY2_GYRORANGE_1000:
+		PIOS_MPU9250_SetGyroRange(PIOS_MPU60X0_SCALE_1000_DEG);
+		break;
+	case HWSPARKY2_GYRORANGE_2000:
+		PIOS_MPU9250_SetGyroRange(PIOS_MPU60X0_SCALE_2000_DEG);
+		break;
 	}
 
 	uint8_t hw_accel_range;
 	HwSparky2AccelRangeGet(&hw_accel_range);
 	switch(hw_accel_range) {
-		case HWSPARKY2_ACCELRANGE_2G:
-			PIOS_MPU9250_SetAccelRange(PIOS_MPU60X0_ACCEL_2G);
-			break;
-		case HWSPARKY2_ACCELRANGE_4G:
-			PIOS_MPU9250_SetAccelRange(PIOS_MPU60X0_ACCEL_4G);
-			break;
-		case HWSPARKY2_ACCELRANGE_8G:
-			PIOS_MPU9250_SetAccelRange(PIOS_MPU60X0_ACCEL_8G);
-			break;
-		case HWSPARKY2_ACCELRANGE_16G:
-			PIOS_MPU9250_SetAccelRange(PIOS_MPU60X0_ACCEL_16G);
-			break;
+	case HWSPARKY2_ACCELRANGE_2G:
+		PIOS_MPU9250_SetAccelRange(PIOS_MPU60X0_ACCEL_2G);
+		break;
+	case HWSPARKY2_ACCELRANGE_4G:
+		PIOS_MPU9250_SetAccelRange(PIOS_MPU60X0_ACCEL_4G);
+		break;
+	case HWSPARKY2_ACCELRANGE_8G:
+		PIOS_MPU9250_SetAccelRange(PIOS_MPU60X0_ACCEL_8G);
+		break;
+	case HWSPARKY2_ACCELRANGE_16G:
+		PIOS_MPU9250_SetAccelRange(PIOS_MPU60X0_ACCEL_16G);
+		break;
 	}
 
 	// the filter has to be set before rate else divisor calculation will fail
 	uint8_t hw_mpu9250_dlpf;
 	HwSparky2MPU9250GyroLPFGet(&hw_mpu9250_dlpf);
 	enum pios_mpu9250_gyro_filter mpu9250_gyro_lpf = \
-	    (hw_mpu9250_dlpf == HWSPARKY2_MPU9250GYROLPF_184) ? PIOS_MPU9250_GYRO_LOWPASS_184_HZ : \
-	    (hw_mpu9250_dlpf == HWSPARKY2_MPU9250GYROLPF_92) ? PIOS_MPU9250_GYRO_LOWPASS_92_HZ : \
-	    (hw_mpu9250_dlpf == HWSPARKY2_MPU9250GYROLPF_41) ? PIOS_MPU9250_GYRO_LOWPASS_41_HZ : \
-	    (hw_mpu9250_dlpf == HWSPARKY2_MPU9250GYROLPF_20) ? PIOS_MPU9250_GYRO_LOWPASS_20_HZ : \
-	    (hw_mpu9250_dlpf == HWSPARKY2_MPU9250GYROLPF_10) ? PIOS_MPU9250_GYRO_LOWPASS_10_HZ : \
-	    (hw_mpu9250_dlpf == HWSPARKY2_MPU9250GYROLPF_5) ? PIOS_MPU9250_GYRO_LOWPASS_5_HZ : \
-	    pios_mpu9250_cfg.default_gyro_filter;
+	        (hw_mpu9250_dlpf == HWSPARKY2_MPU9250GYROLPF_184) ? PIOS_MPU9250_GYRO_LOWPASS_184_HZ : \
+	        (hw_mpu9250_dlpf == HWSPARKY2_MPU9250GYROLPF_92) ? PIOS_MPU9250_GYRO_LOWPASS_92_HZ : \
+	        (hw_mpu9250_dlpf == HWSPARKY2_MPU9250GYROLPF_41) ? PIOS_MPU9250_GYRO_LOWPASS_41_HZ : \
+	        (hw_mpu9250_dlpf == HWSPARKY2_MPU9250GYROLPF_20) ? PIOS_MPU9250_GYRO_LOWPASS_20_HZ : \
+	        (hw_mpu9250_dlpf == HWSPARKY2_MPU9250GYROLPF_10) ? PIOS_MPU9250_GYRO_LOWPASS_10_HZ : \
+	        (hw_mpu9250_dlpf == HWSPARKY2_MPU9250GYROLPF_5) ? PIOS_MPU9250_GYRO_LOWPASS_5_HZ : \
+	        pios_mpu9250_cfg.default_gyro_filter;
 	PIOS_MPU9250_SetGyroLPF(mpu9250_gyro_lpf);
 
 	HwSparky2MPU9250AccelLPFGet(&hw_mpu9250_dlpf);
 	enum pios_mpu9250_accel_filter mpu9250_accel_lpf = \
-	    (hw_mpu9250_dlpf == HWSPARKY2_MPU9250ACCELLPF_460) ? PIOS_MPU9250_ACCEL_LOWPASS_460_HZ : \
-	    (hw_mpu9250_dlpf == HWSPARKY2_MPU9250ACCELLPF_184) ? PIOS_MPU9250_ACCEL_LOWPASS_184_HZ : \
-	    (hw_mpu9250_dlpf == HWSPARKY2_MPU9250ACCELLPF_92) ? PIOS_MPU9250_ACCEL_LOWPASS_92_HZ : \
-	    (hw_mpu9250_dlpf == HWSPARKY2_MPU9250ACCELLPF_41) ? PIOS_MPU9250_ACCEL_LOWPASS_41_HZ : \
-	    (hw_mpu9250_dlpf == HWSPARKY2_MPU9250ACCELLPF_20) ? PIOS_MPU9250_ACCEL_LOWPASS_20_HZ : \
-	    (hw_mpu9250_dlpf == HWSPARKY2_MPU9250ACCELLPF_10) ? PIOS_MPU9250_ACCEL_LOWPASS_10_HZ : \
-	    (hw_mpu9250_dlpf == HWSPARKY2_MPU9250ACCELLPF_5) ? PIOS_MPU9250_ACCEL_LOWPASS_5_HZ : \
-	    pios_mpu9250_cfg.default_accel_filter;
+	        (hw_mpu9250_dlpf == HWSPARKY2_MPU9250ACCELLPF_460) ? PIOS_MPU9250_ACCEL_LOWPASS_460_HZ : \
+	        (hw_mpu9250_dlpf == HWSPARKY2_MPU9250ACCELLPF_184) ? PIOS_MPU9250_ACCEL_LOWPASS_184_HZ : \
+	        (hw_mpu9250_dlpf == HWSPARKY2_MPU9250ACCELLPF_92) ? PIOS_MPU9250_ACCEL_LOWPASS_92_HZ : \
+	        (hw_mpu9250_dlpf == HWSPARKY2_MPU9250ACCELLPF_41) ? PIOS_MPU9250_ACCEL_LOWPASS_41_HZ : \
+	        (hw_mpu9250_dlpf == HWSPARKY2_MPU9250ACCELLPF_20) ? PIOS_MPU9250_ACCEL_LOWPASS_20_HZ : \
+	        (hw_mpu9250_dlpf == HWSPARKY2_MPU9250ACCELLPF_10) ? PIOS_MPU9250_ACCEL_LOWPASS_10_HZ : \
+	        (hw_mpu9250_dlpf == HWSPARKY2_MPU9250ACCELLPF_5) ? PIOS_MPU9250_ACCEL_LOWPASS_5_HZ : \
+	        pios_mpu9250_cfg.default_accel_filter;
 	PIOS_MPU9250_SetAccelLPF(mpu9250_accel_lpf);
 
 	uint8_t hw_mpu9250_samplerate;
 	HwSparky2MPU9250RateGet(&hw_mpu9250_samplerate);
 	uint16_t mpu9250_samplerate = \
-	    (hw_mpu9250_samplerate == HWSPARKY2_MPU9250RATE_200) ? 200 : \
-	    (hw_mpu9250_samplerate == HWSPARKY2_MPU9250RATE_250) ? 250 : \
-	    (hw_mpu9250_samplerate == HWSPARKY2_MPU9250RATE_333) ? 333 : \
-	    (hw_mpu9250_samplerate == HWSPARKY2_MPU9250RATE_500) ? 500 : \
-	    (hw_mpu9250_samplerate == HWSPARKY2_MPU9250RATE_1000) ? 1000 : \
-	    pios_mpu9250_cfg.default_samplerate;
+	                              (hw_mpu9250_samplerate == HWSPARKY2_MPU9250RATE_200) ? 200 : \
+	                              (hw_mpu9250_samplerate == HWSPARKY2_MPU9250RATE_250) ? 250 : \
+	                              (hw_mpu9250_samplerate == HWSPARKY2_MPU9250RATE_333) ? 333 : \
+	                              (hw_mpu9250_samplerate == HWSPARKY2_MPU9250RATE_500) ? 500 : \
+	                              (hw_mpu9250_samplerate == HWSPARKY2_MPU9250RATE_1000) ? 1000 : \
+	                              pios_mpu9250_cfg.default_samplerate;
 	PIOS_MPU9250_SetSampleRate(mpu9250_samplerate);
 #endif /* PIOS_INCLUDE_MPU9250_SPI */
 
@@ -638,8 +640,7 @@ void PIOS_Board_Init(void) {
 		uint8_t Magnetometer;
 		HwSparky2MagnetometerGet(&Magnetometer);
 
-		if (Magnetometer == HWSPARKY2_MAGNETOMETER_EXTERNALI2CFLEXIPORT)
-		{
+		if (Magnetometer == HWSPARKY2_MAGNETOMETER_EXTERNALI2CFLEXIPORT) {
 			if (PIOS_HMC5883_Init(pios_i2c_flexiport_adapter_id, &pios_hmc5883_external_cfg) != 0)
 				panic(6);
 			if (PIOS_HMC5883_Test() != 0)
@@ -656,15 +657,15 @@ void PIOS_Board_Init(void) {
 			uint8_t ExtMagOrientation;
 			HwSparky2ExtMagOrientationGet(&ExtMagOrientation);
 			enum pios_hmc5883_orientation hmc5883_orientation = \
-				(ExtMagOrientation == HWSPARKY2_EXTMAGORIENTATION_TOP0DEGCW)      ? PIOS_HMC5883_TOP_0DEG      : \
-				(ExtMagOrientation == HWSPARKY2_EXTMAGORIENTATION_TOP90DEGCW)     ? PIOS_HMC5883_TOP_90DEG     : \
-				(ExtMagOrientation == HWSPARKY2_EXTMAGORIENTATION_TOP180DEGCW)    ? PIOS_HMC5883_TOP_180DEG    : \
-				(ExtMagOrientation == HWSPARKY2_EXTMAGORIENTATION_TOP270DEGCW)    ? PIOS_HMC5883_TOP_270DEG    : \
-				(ExtMagOrientation == HWSPARKY2_EXTMAGORIENTATION_BOTTOM0DEGCW)   ? PIOS_HMC5883_BOTTOM_0DEG   : \
-				(ExtMagOrientation == HWSPARKY2_EXTMAGORIENTATION_BOTTOM90DEGCW)  ? PIOS_HMC5883_BOTTOM_90DEG  : \
-				(ExtMagOrientation == HWSPARKY2_EXTMAGORIENTATION_BOTTOM180DEGCW) ? PIOS_HMC5883_BOTTOM_180DEG : \
-				(ExtMagOrientation == HWSPARKY2_EXTMAGORIENTATION_BOTTOM270DEGCW) ? PIOS_HMC5883_BOTTOM_270DEG : \
-				pios_hmc5883_external_cfg.Default_Orientation;
+			        (ExtMagOrientation == HWSPARKY2_EXTMAGORIENTATION_TOP0DEGCW)      ? PIOS_HMC5883_TOP_0DEG      : \
+			        (ExtMagOrientation == HWSPARKY2_EXTMAGORIENTATION_TOP90DEGCW)     ? PIOS_HMC5883_TOP_90DEG     : \
+			        (ExtMagOrientation == HWSPARKY2_EXTMAGORIENTATION_TOP180DEGCW)    ? PIOS_HMC5883_TOP_180DEG    : \
+			        (ExtMagOrientation == HWSPARKY2_EXTMAGORIENTATION_TOP270DEGCW)    ? PIOS_HMC5883_TOP_270DEG    : \
+			        (ExtMagOrientation == HWSPARKY2_EXTMAGORIENTATION_BOTTOM0DEGCW)   ? PIOS_HMC5883_BOTTOM_0DEG   : \
+			        (ExtMagOrientation == HWSPARKY2_EXTMAGORIENTATION_BOTTOM90DEGCW)  ? PIOS_HMC5883_BOTTOM_90DEG  : \
+			        (ExtMagOrientation == HWSPARKY2_EXTMAGORIENTATION_BOTTOM180DEGCW) ? PIOS_HMC5883_BOTTOM_180DEG : \
+			        (ExtMagOrientation == HWSPARKY2_EXTMAGORIENTATION_BOTTOM270DEGCW) ? PIOS_HMC5883_BOTTOM_270DEG : \
+			        pios_hmc5883_external_cfg.Default_Orientation;
 			PIOS_HMC5883_SetOrientation(hmc5883_orientation);
 		}
 	}
@@ -674,24 +675,23 @@ void PIOS_Board_Init(void) {
 	if (get_external_flash(bdinfo->board_rev)) {
 		if ( PIOS_STREAMFS_Init(&streamfs_id, &streamfs_settings, FLASH_PARTITION_LABEL_LOG) != 0)
 			panic(8);
-			
+
 		const uint32_t LOG_BUF_LEN = 256;
 		uint8_t *log_rx_buffer = PIOS_malloc(LOG_BUF_LEN);
 		uint8_t *log_tx_buffer = PIOS_malloc(LOG_BUF_LEN);
 		if (PIOS_COM_Init(&pios_com_logging_id, &pios_streamfs_com_driver, streamfs_id,
-			log_rx_buffer, LOG_BUF_LEN, log_tx_buffer, LOG_BUF_LEN) != 0)
+		                  log_rx_buffer, LOG_BUF_LEN, log_tx_buffer, LOG_BUF_LEN) != 0)
 			panic(9);
 	}
 #endif	/* PIOS_INCLUDE_FLASH */
 
 	switch (bdinfo->board_rev) {
-	case BRUSHEDSPARKY_V0_2:
-		{
-			HwSparky2VTX_ChOptions channel;
-			HwSparky2VTX_ChGet(&channel);
-			set_vtx_channel(channel);
-		}
-		break;
+	case BRUSHEDSPARKY_V0_2: {
+		HwSparky2VTX_ChOptions channel;
+		HwSparky2VTX_ChGet(&channel);
+		set_vtx_channel(channel);
+	}
+	break;
 	}
 
 }

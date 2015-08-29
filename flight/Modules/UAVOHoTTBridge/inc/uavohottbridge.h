@@ -1,9 +1,9 @@
 /**
  ******************************************************************************
  * @addtogroup TauLabsModules TauLabs Modules
- * @{ 
+ * @{
  * @addtogroup UAVOHoTTBridge HoTT Telemetry Module
- * @{ 
+ * @{
  *
  * @file       uavohottbridge.h
  * @author     Tau Labs, http://taulabs.org, Copyright (C) 2013
@@ -132,7 +132,7 @@
 #define HOTT_BUTTON_NEXT 0xEE		// next button
 #define HOTT_BUTTON_PREV 0xE7		// previous button
 
-// prefined signal tones or spoken announcments 
+// prefined signal tones or spoken announcments
 #define HOTT_TONE_A		1	// minimum speed
 #define HOTT_TONE_B		2	// sink rate 3 seconds
 #define HOTT_TONE_C		3	// sink rate 1 second
@@ -177,12 +177,12 @@
 
 // Private types
 typedef struct {
-		uint8_t l;
-		uint8_t h;
+	uint8_t l;
+	uint8_t h;
 } uword_t;
 
 // Private structures
-struct telemetrydata{
+struct telemetrydata {
 	HoTTSettingsData Settings;
 	AttitudeActualData Attitude;
 	BaroAltitudeData Baro;
@@ -250,7 +250,7 @@ struct hott_gps_message {
 	uword_t longitude_min;		// GPS longitude (min)
 	uword_t longitude_sec;		// GPS longitude (sec)
 	uword_t distance;			// distance from home location (meters)
-	uword_t altitude;			// altitude (meters), offset 500, 500 == 0m 
+	uword_t altitude;			// altitude (meters), offset 500, 500 == 0m
 	uword_t climbrate;			// climb rate (0.01m/s), offset of 30000, 30000 = 0.00 m/s
 	uint8_t climbrate3s;		// climb rate in (m/3s). offset of 120, 120 == 0m/3sec
 	uint8_t gps_num_sat;		// GPS number of satelites

@@ -10,19 +10,19 @@
  * @brief      STM32F30x internal ADC PIOS interface
  * @see        The GNU Public License (GPL) Version 3
  *****************************************************************************/
-/* 
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 3 of the License, or 
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
  * for more details.
- * 
- * You should have received a copy of the GNU General Public License along 
- * with this program; if not, write to the Free Software Foundation, Inc., 
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
@@ -40,11 +40,11 @@ static uint8_t PIOS_INTERNAL_ADC_NumberOfChannels(uint32_t internal_adc_id);
 static float PIOS_INTERNAL_ADC_LSB_Voltage(uint32_t internal_adc_id);
 
 const struct pios_adc_driver pios_internal_adc_driver = {
-		.available = PIOS_INTERNAL_ADC_Available,
-		.get_pin = PIOS_INTERNAL_ADC_PinGet,
-		.set_queue = NULL,
-		.number_of_channels = PIOS_INTERNAL_ADC_NumberOfChannels,
-		.lsb_voltage = PIOS_INTERNAL_ADC_LSB_Voltage,
+	.available = PIOS_INTERNAL_ADC_Available,
+	.get_pin = PIOS_INTERNAL_ADC_PinGet,
+	.set_queue = NULL,
+	.number_of_channels = PIOS_INTERNAL_ADC_NumberOfChannels,
+	.lsb_voltage = PIOS_INTERNAL_ADC_LSB_Voltage,
 };
 
 static void PIOS_INTERNAL_ADC_DMA_Handler1(void);
@@ -306,8 +306,8 @@ static void PIOS_INTERNAL_ADC_Converter_Config(uint32_t internal_adc_id)
 					++current_index;
 					acc_index += 2;
 					if (current_index
-					                == (adc_dev->number_used_master_channels > adc_dev->number_used_slave_channels ?
-					                                adc_dev->number_used_master_channels : adc_dev->number_used_slave_channels)) {
+					    == (adc_dev->number_used_master_channels > adc_dev->number_used_slave_channels ?
+					        adc_dev->number_used_master_channels : adc_dev->number_used_slave_channels)) {
 						again = false;
 						break;
 					}
@@ -325,8 +325,8 @@ static void PIOS_INTERNAL_ADC_Converter_Config(uint32_t internal_adc_id)
 					++current_index;
 					acc_index += 2;
 					if (current_index
-					                == (adc_dev->number_used_master_channels > adc_dev->number_used_slave_channels ?
-					                                adc_dev->number_used_master_channels : adc_dev->number_used_slave_channels)) {
+					    == (adc_dev->number_used_master_channels > adc_dev->number_used_slave_channels ?
+					        adc_dev->number_used_master_channels : adc_dev->number_used_slave_channels)) {
 						again = false;
 						break;
 					}
@@ -350,7 +350,8 @@ static void PIOS_INTERNAL_ADC_Converter_Config(uint32_t internal_adc_id)
  */
 int32_t PIOS_INTERNAL_ADC_Init(uint32_t * internal_adc_id, const struct pios_internal_adc_cfg * cfg)
 {
-	PIOS_DEBUG_Assert(internal_adc_id); PIOS_DEBUG_Assert(cfg);
+	PIOS_DEBUG_Assert(internal_adc_id);
+	PIOS_DEBUG_Assert(cfg);
 
 	struct pios_internal_adc_dev * adc_dev;
 	adc_dev = PIOS_INTERNAL_ADC_Allocate();
@@ -545,10 +546,10 @@ static float PIOS_INTERNAL_ADC_LSB_Voltage(uint32_t internal_adc_id)
 	if (!PIOS_INTERNAL_ADC_validate(adc_dev)) {
 		return 0;
 	}
-        return VREF_PLUS / (((uint32_t)1 << 12) - 1);
+	return VREF_PLUS / (((uint32_t)1 << 12) - 1);
 }
 #endif /* PIOS_INCLUDE_ADC */
-/** 
+/**
  * @}
  * @}
  */

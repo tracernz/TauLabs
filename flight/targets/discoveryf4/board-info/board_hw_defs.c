@@ -5,26 +5,26 @@
  * @addtogroup DiscoveryF4 DiscoveryF4 support files
  * @{
  *
- * @file       board_hw_defs.c 
+ * @file       board_hw_defs.c
  * @author     Tau Labs, http://taulabs.org, Copyright (C) 2012-2013
  * @brief      Defines board specific static initializers for hardware for the
  *             DiscoveryF4 board.
  * @see        The GNU Public License (GPL) Version 3
- * 
+ *
  *****************************************************************************/
-/* 
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 3 of the License, or 
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
  * for more details.
- * 
- * You should have received a copy of the GNU General Public License along 
- * with this program; if not, write to the Free Software Foundation, Inc., 
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 #include <pios_config.h>
@@ -141,7 +141,7 @@ static const struct pios_spi_cfg pios_spi_accel_cfg = {
 				.NVIC_IRQChannelCmd = ENABLE,
 			},
 		},
-		
+
 		.rx = {
 			.channel = DMA1_Stream0,
 			.init = {
@@ -215,15 +215,16 @@ static const struct pios_spi_cfg pios_spi_accel_cfg = {
 	},
 	.slave_count = 1,
 	.ssel = { {
-		.gpio = GPIOE,
-		.init = {
-			.GPIO_Pin = GPIO_Pin_2,
-			.GPIO_Speed = GPIO_Speed_50MHz,
-			.GPIO_Mode  = GPIO_Mode_OUT,
-			.GPIO_OType = GPIO_OType_PP,
-			.GPIO_PuPd = GPIO_PuPd_UP
-		},
-	} },
+			.gpio = GPIOE,
+			.init = {
+				.GPIO_Pin = GPIO_Pin_2,
+				.GPIO_Speed = GPIO_Speed_50MHz,
+				.GPIO_Mode  = GPIO_Mode_OUT,
+				.GPIO_OType = GPIO_OType_PP,
+				.GPIO_PuPd = GPIO_PuPd_UP
+			},
+		}
+	},
 };
 
 uint32_t pios_spi_accel_id;
@@ -290,10 +291,10 @@ static const struct flashfs_logfs_cfg flashfs_waypoints_cfg = {
 
 
 static const struct pios_flash_jedec_cfg flash_m25p_cfg = {
-  .expect_manufacturer = JEDEC_MANUFACTURER_ST,
-  .expect_memorytype   = 0x20,
-  .expect_capacity     = 0x15,
-  .sector_erase        = 0xD8,
+	.expect_manufacturer = JEDEC_MANUFACTURER_ST,
+	.expect_memorytype   = 0x20,
+	.expect_capacity     = 0x15,
+	.sector_erase        = 0xD8,
 };
 
 static const struct pios_flash_sector_range m25p16_sectors[] = {

@@ -12,26 +12,26 @@
  * @see        The GNU Public License (GPL) Version 3
  *
  *****************************************************************************/
-/* 
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 3 of the License, or 
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
  * for more details.
- * 
- * You should have received a copy of the GNU General Public License along 
- * with this program; if not, write to the Free Software Foundation, Inc., 
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
 /* Pull in the board-specific static HW definitions.
  * Including .c files is a bit ugly but this allows all of
  * the HW definitions to be const and static to limit their
- * scope.  
+ * scope.
  *
  * NOTE: THIS IS THE ONLY PLACE THAT SHOULD EVER INCLUDE THIS FILE
  */
@@ -73,17 +73,17 @@ void PIOS_Board_Init()
 #if defined(PIOS_INCLUDE_FLASH)
 	/* Inititialize all flash drivers */
 	PIOS_Flash_Internal_Init(&pios_internal_flash_id,
-				 &flash_internal_cfg);
+	                         &flash_internal_cfg);
 
 #if defined(PIOS_INCLUDE_SPI)
 	PIOS_Flash_Jedec_Init(&pios_external_flash_id, pios_spi_flash_id,
-			      0, &flash_mx25_cfg);
+	                      0, &flash_mx25_cfg);
 #endif /* PIOS_INCLUDE_SPI */
 
 	/* Register the partition table */
 	PIOS_FLASH_register_partition_table(pios_flash_partition_table,
-					    NELEMENTS
-					    (pios_flash_partition_table));
+	                                    NELEMENTS
+	                                    (pios_flash_partition_table));
 #endif /* PIOS_INCLUDE_FLASH */
 
 #if defined(PIOS_INCLUDE_USB)
@@ -95,7 +95,7 @@ void PIOS_Board_Init()
 
 	uintptr_t pios_usb_id;
 	PIOS_USB_Init(&pios_usb_id,
-		      PIOS_BOARD_HW_DEFS_GetUsbCfg(bdinfo->board_rev));
+	              PIOS_BOARD_HW_DEFS_GetUsbCfg(bdinfo->board_rev));
 
 #if defined(PIOS_INCLUDE_USB_HID) && defined(PIOS_INCLUDE_COM_MSG)
 	uintptr_t pios_usb_hid_id;

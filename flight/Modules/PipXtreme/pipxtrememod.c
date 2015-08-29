@@ -1,9 +1,9 @@
 /**
  ******************************************************************************
  * @addtogroup TauLabsModules Tau Labs Modules
- * @{ 
+ * @{
  * @addtogroup PipXtremeModule PipXtreme Module
- * @{ 
+ * @{
  *
  * @file       pipxtrememod.c
  * @author     The OpenPilot Team, http://www.openpilot.org Copyright (C) 2012.
@@ -103,29 +103,29 @@ static void systemTask(void *parameters)
 {
 
 	uint32_t lastSysTime;
-    uint16_t prev_tx_count = 0;
-    uint16_t prev_rx_count = 0;
-    bool first_time = true;
+	uint16_t prev_tx_count = 0;
+	uint16_t prev_rx_count = 0;
+	bool first_time = true;
 
-    /* create all modules thread */
-    MODULE_TASKCREATE_ALL;
+	/* create all modules thread */
+	MODULE_TASKCREATE_ALL;
 
-    lastSysTime = PIOS_Thread_Systime();
+	lastSysTime = PIOS_Thread_Systime();
 
-    if (mallocFailed) {
-        /* We failed to malloc during task creation,
-         * system behaviour is undefined.  Reset and let
-         * the BootFault code recover for us.
-         */
-        PIOS_SYS_Reset();
-    }
+	if (mallocFailed) {
+		/* We failed to malloc during task creation,
+		 * system behaviour is undefined.  Reset and let
+		 * the BootFault code recover for us.
+		 */
+		PIOS_SYS_Reset();
+	}
 
-    // Initialize vars
-    lastSysTime = PIOS_Thread_Systime();
+	// Initialize vars
+	lastSysTime = PIOS_Thread_Systime();
 
-    // Main system loop
-    while (1) {
-        // Flash the heartbeat LED
+	// Main system loop
+	while (1) {
+		// Flash the heartbeat LED
 
 #if defined(PIOS_LED_HEARTBEAT)
 		PIOS_LED_Toggle(PIOS_LED_HEARTBEAT);
@@ -160,21 +160,21 @@ static void systemTask(void *parameters)
 				uint16_t tx_bytes =
 				    (tx_count <
 				     prev_tx_count) ? (0xffff -
-						       prev_tx_count +
-						       tx_count)
+				                       prev_tx_count +
+				                       tx_count)
 				    : (tx_count - prev_tx_count);
 				uint16_t rx_bytes =
 				    (rx_count <
 				     prev_rx_count) ? (0xffff -
-						       prev_rx_count +
-						       rx_count)
+				                       prev_rx_count +
+				                       rx_count)
 				    : (rx_count - prev_rx_count);
 				rfm22bStatus.TXRate =
 				    (uint16_t) ((float)(tx_bytes * 1000) /
-						SYSTEM_UPDATE_PERIOD_MS);
+				                SYSTEM_UPDATE_PERIOD_MS);
 				rfm22bStatus.RXRate =
 				    (uint16_t) ((float)(rx_bytes * 1000) /
-						SYSTEM_UPDATE_PERIOD_MS);
+				                SYSTEM_UPDATE_PERIOD_MS);
 				prev_tx_count = tx_count;
 				prev_rx_count = rx_count;
 			}

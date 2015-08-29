@@ -12,19 +12,19 @@
 * @see	      The GNU Public License (GPL) Version 3
 *
 *****************************************************************************/
-/* 
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 3 of the License, or 
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
  * for more details.
- * 
- * You should have received a copy of the GNU General Public License along 
- * with this program; if not, write to the Free Software Foundation, Inc., 
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
@@ -66,37 +66,37 @@ static void rfm22_deassertCs(struct pios_openlrs_dev *openlrs_dev);
 static void rfm22_claimBus(struct pios_openlrs_dev *openlrs_dev);
 static void rfm22_releaseBus(struct pios_openlrs_dev *openlrs_dev);
 static void rfm22_write_claim(struct pios_openlrs_dev *openlrs_dev,
-			      uint8_t addr, uint8_t data);
+                              uint8_t addr, uint8_t data);
 static void rfm22_write(struct pios_openlrs_dev *openlrs_dev, uint8_t addr,
-			uint8_t data);
+                        uint8_t data);
 static uint8_t rfm22_read_claim(struct pios_openlrs_dev *openlrs_dev,
-			  uint8_t addr);
+                                uint8_t addr);
 static uint8_t rfm22_read(struct pios_openlrs_dev *openlrs_dev,
-			  uint8_t addr);
+                          uint8_t addr);
 
 // Private constants
 const struct rfm22_modem_regs {
-  uint32_t bps;
-  uint8_t  r_1c, r_1d, r_1e, r_20, r_21, r_22, r_23, r_24, r_25, r_2a, r_6e, r_6f, r_70, r_71, r_72;
+	uint32_t bps;
+	uint8_t  r_1c, r_1d, r_1e, r_20, r_21, r_22, r_23, r_24, r_25, r_2a, r_6e, r_6f, r_70, r_71, r_72;
 } modem_params[] = {
-  { 4800, 0x1a, 0x40, 0x0a, 0xa1, 0x20, 0x4e, 0xa5, 0x00, 0x1b, 0x1e, 0x27, 0x52, 0x2c, 0x23, 0x30 }, // 50000 0x00
-  { 9600, 0x05, 0x40, 0x0a, 0xa1, 0x20, 0x4e, 0xa5, 0x00, 0x20, 0x24, 0x4e, 0xa5, 0x2c, 0x23, 0x30 }, // 25000 0x00
-  { 19200, 0x06, 0x40, 0x0a, 0xd0, 0x00, 0x9d, 0x49, 0x00, 0x7b, 0x28, 0x9d, 0x49, 0x2c, 0x23, 0x30 }, // 25000 0x01
-  { 57600, 0x05, 0x40, 0x0a, 0x45, 0x01, 0xd7, 0xdc, 0x03, 0xb8, 0x1e, 0x0e, 0xbf, 0x00, 0x23, 0x2e },
-  { 125000, 0x8a, 0x40, 0x0a, 0x60, 0x01, 0x55, 0x55, 0x02, 0xad, 0x1e, 0x20, 0x00, 0x00, 0x23, 0xc8 },
+	{ 4800, 0x1a, 0x40, 0x0a, 0xa1, 0x20, 0x4e, 0xa5, 0x00, 0x1b, 0x1e, 0x27, 0x52, 0x2c, 0x23, 0x30 }, // 50000 0x00
+	{ 9600, 0x05, 0x40, 0x0a, 0xa1, 0x20, 0x4e, 0xa5, 0x00, 0x20, 0x24, 0x4e, 0xa5, 0x2c, 0x23, 0x30 }, // 25000 0x00
+	{ 19200, 0x06, 0x40, 0x0a, 0xd0, 0x00, 0x9d, 0x49, 0x00, 0x7b, 0x28, 0x9d, 0x49, 0x2c, 0x23, 0x30 }, // 25000 0x01
+	{ 57600, 0x05, 0x40, 0x0a, 0x45, 0x01, 0xd7, 0xdc, 0x03, 0xb8, 0x1e, 0x0e, 0xbf, 0x00, 0x23, 0x2e },
+	{ 125000, 0x8a, 0x40, 0x0a, 0x60, 0x01, 0x55, 0x55, 0x02, 0xad, 0x1e, 0x20, 0x00, 0x00, 0x23, 0xc8 },
 };
 
 const static uint8_t pktsizes[8] = { 0, 7, 11, 12, 16, 17, 21, 0 };
 
 static const uint8_t OUT_FF[64] = {
-    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
+	0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+	0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+	0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+	0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+	0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+	0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+	0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+	0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
 };
 
 const uint8_t default_hop_list[] = {DEFAULT_HOPLIST};
@@ -129,7 +129,7 @@ static uint32_t getInterval(struct bind_data *bd)
 	// round up to ms
 	ret = ((ret + 999) / 1000) * 1000;
 
-  // enable following to limit packet rate to 50Hz at most
+	// enable following to limit packet rate to 50Hz at most
 #ifdef LIMIT_RATE_TO_50HZ
 	if (ret < 20000) {
 		ret = 20000;
@@ -435,8 +435,8 @@ static void tx_packet(struct pios_openlrs_dev *openlrs_dev, uint8_t* pkt, uint8_
 	PIOS_Semaphore_Take(openlrs_dev->sema_isr, 25);
 
 #if defined(PIOS_INCLUDE_WDG) && defined(PIOS_WDG_RFM22B)
-		// Update the watchdog timer
-		PIOS_WDG_UpdateFlag(PIOS_WDG_RFM22B);
+	// Update the watchdog timer
+	PIOS_WDG_UpdateFlag(PIOS_WDG_RFM22B);
 #endif /* PIOS_WDG_RFM22B */
 
 	if (openlrs_dev->rf_mode == Transmit) {
@@ -501,8 +501,8 @@ static void beacon_tone(struct pios_openlrs_dev *openlrs_dev, int16_t hz, int16_
 #endif /* PIOS_LED_LINK */
 
 #if defined(PIOS_INCLUDE_WDG) && defined(PIOS_WDG_RFM22B)
-		// Update the watchdog timer
-		PIOS_WDG_UpdateFlag(PIOS_WDG_RFM22B);
+	// Update the watchdog timer
+	PIOS_WDG_UpdateFlag(PIOS_WDG_RFM22B);
 #endif /* PIOS_WDG_RFM22B */
 
 }
@@ -646,10 +646,10 @@ static uint8_t pios_openlrs_bind_receive(struct pios_openlrs_dev *openlrs_dev, u
 			rxb = PIOS_SPI_TransferByte(openlrs_dev->spi_id, 0x00);
 			if (rxb == 'b') {
 				PIOS_SPI_TransferBlock(openlrs_dev->spi_id, OUT_FF,
-			      (uint8_t*) &openlrs_dev->bind_data, sizeof(struct bind_data), NULL);
+				                       (uint8_t*) &openlrs_dev->bind_data, sizeof(struct bind_data), NULL);
 				rfm22_deassertCs(openlrs_dev);
 				rfm22_releaseBus(openlrs_dev);
-				
+
 #if defined(PIOS_INCLUDE_DEBUG_CONSOLE)
 				if(2 <= DEBUG_LEVEL && pios_com_debug_id > 0) {
 					DEBUG_PRINTF(2, "Binding settings:\r\n");
@@ -709,7 +709,7 @@ static uint8_t pios_openlrs_bind_receive(struct pios_openlrs_dev *openlrs_dev, u
 				rfm22_deassertCs(openlrs_dev);
 				rfm22_releaseBus(openlrs_dev);
 			}
-			
+
 			openlrs_dev->rf_mode = Receive;
 			rx_reset(openlrs_dev);
 		}
@@ -724,18 +724,18 @@ static void printVersion(uint16_t v)
 	ver[0] = '0' + ((v >> 8) & 0x0f);
 	ver[1] = '.';
 	ver[2] = '0' + ((v >> 4) & 0x0f);
-  	if (v & 0x0f) {
-    	ver[3] = '.';
-    	ver[4] = '0' + (v & 0x0f);
-    	ver[5] = '\r';
-    	ver[6] = '\n';
-    	ver[7] = '\0';
-    } else {
-    	ver[3] = '\r';
-    	ver[4] = '\n';
-    	ver[5] = '\0';
-    }
-    DEBUG_PRINTF(2, ver);
+	if (v & 0x0f) {
+		ver[3] = '.';
+		ver[4] = '0' + (v & 0x0f);
+		ver[5] = '\r';
+		ver[6] = '\n';
+		ver[7] = '\0';
+	} else {
+		ver[3] = '\r';
+		ver[4] = '\n';
+		ver[5] = '\0';
+	}
+	DEBUG_PRINTF(2, ver);
 }
 #endif
 
@@ -781,7 +781,7 @@ static void pios_openlrs_rx_loop(struct pios_openlrs_dev *openlrs_dev)
 	uint32_t timeUs, timeMs;
 
 #if defined(PIOS_INCLUDE_WDG) && defined(PIOS_WDG_RFM22B)
-		// Update the watchdog timer
+	// Update the watchdog timer
 	PIOS_WDG_UpdateFlag(PIOS_WDG_RFM22B);
 #endif /* PIOS_WDG_RFM22B */
 
@@ -804,7 +804,7 @@ static void pios_openlrs_rx_loop(struct pios_openlrs_dev *openlrs_dev)
 		PIOS_SPI_TransferByte(openlrs_dev->spi_id, 0x7F);
 		uint32_t packet_size = getPacketSize(&openlrs_dev->bind_data);
 		PIOS_SPI_TransferBlock(openlrs_dev->spi_id, OUT_FF,
-			      openlrs_dev->rx_buf, packet_size, NULL);
+		                       openlrs_dev->rx_buf, packet_size, NULL);
 		rfm22_deassertCs(openlrs_dev);
 		rfm22_releaseBus(openlrs_dev);
 
@@ -849,8 +849,7 @@ static void pios_openlrs_rx_loop(struct pios_openlrs_dev *openlrs_dev)
 				fs_saved = 0;
 			}
 			*/
-		} 
-		else {
+		} else {
 			// something else than servo data...
 			if ((openlrs_dev->rx_buf[0] & 0x38) == 0x38) {
 				if ((openlrs_dev->rx_buf[0] ^ tx_buf[0]) & 0x80) {
@@ -921,7 +920,7 @@ static void pios_openlrs_rx_loop(struct pios_openlrs_dev *openlrs_dev)
 
 	// sample RSSI when packet is in the 'air'
 	if ((openlrs_dev->numberOfLostPackets < 2) && (openlrs_dev->lastRSSITimeUs != openlrs_dev->lastPacketTimeUs) &&
-			(timeUs - openlrs_dev->lastPacketTimeUs) > (getInterval(&openlrs_dev->bind_data) - 1500)) {
+	    (timeUs - openlrs_dev->lastPacketTimeUs) > (getInterval(&openlrs_dev->bind_data) - 1500)) {
 
 		//DEBUG_PRINTF(3,"pios_openlrs_rx_loop -- measure RSSI\r\n");
 
@@ -961,9 +960,8 @@ static void pios_openlrs_rx_loop(struct pios_openlrs_dev *openlrs_dev)
 #endif /* PIOS_LED_LINK */
 
 			if (openlrs_dev->failsafeDelay &&
-				(openlrs_status.FailsafeActive == OPENLRSSTATUS_FAILSAFEACTIVE_INACTIVE) && 
-				((timeMs - openlrs_dev->linkLossTimeMs) > ((uint32_t) openlrs_dev->failsafeDelay)))
-			{
+			    (openlrs_status.FailsafeActive == OPENLRSSTATUS_FAILSAFEACTIVE_INACTIVE) &&
+			    ((timeMs - openlrs_dev->linkLossTimeMs) > ((uint32_t) openlrs_dev->failsafeDelay))) {
 				DEBUG_PRINTF(2,"Failsafe activated: %d %d\r\n", timeMs, openlrs_dev->linkLossTimeMs);
 				openlrs_status.FailsafeActive = OPENLRSSTATUS_FAILSAFEACTIVE_ACTIVE;
 				//failsafeApply();
@@ -971,7 +969,7 @@ static void pios_openlrs_rx_loop(struct pios_openlrs_dev *openlrs_dev)
 			}
 
 			if ((openlrs_dev->beacon_frequency) && (openlrs_dev->nextBeaconTimeMs) &&
-					((timeMs - openlrs_dev->nextBeaconTimeMs) < 0x80000000)) {
+			    ((timeMs - openlrs_dev->nextBeaconTimeMs) < 0x80000000)) {
 
 				DEBUG_PRINTF(2,"Beacon time: %d\r\n", openlrs_dev->nextBeaconTimeMs);
 				// Only beacon when disarmed
@@ -1017,7 +1015,7 @@ static void pios_openlrs_rx_loop(struct pios_openlrs_dev *openlrs_dev)
 		rx_reset(openlrs_dev);
 		openlrs_dev->willhop = 0;
 	}
-	
+
 	// Update UAVO
 	OpenLRSStatusSet(&openlrs_status);
 }
@@ -1029,7 +1027,7 @@ uint8_t PIOS_OpenLRS_RSSI_Get(void)
 	else {
 		OpenLRSData openlrs_data;
 		OpenLRSGet(&openlrs_data);
-		
+
 		uint16_t LQ = openlrs_status.LinkQuality & 0x7fff;
 		// count number of 1s in LinkQuality
 		LQ  = LQ - ((LQ >> 1) & 0x5555);
@@ -1037,7 +1035,7 @@ uint8_t PIOS_OpenLRS_RSSI_Get(void)
 		LQ  = LQ + (LQ >> 4);
 		LQ &= 0x0F0F;
 		LQ = (LQ * 0x0101) >> 8;
-		
+
 		switch(openlrs_data.RSSI_Type) {
 		case OPENLRS_RSSI_TYPE_COMBINED:
 			if ((uint8_t)LQ == 15) {
@@ -1095,8 +1093,8 @@ static struct pios_openlrs_dev * g_openlrs_dev;
  * @param[in] cfg  The device configuration.
  */
 int32_t PIOS_OpenLRS_Init(uintptr_t * openlrs_id, uint32_t spi_id,
-			 uint32_t slave_num,
-			 const struct pios_openlrs_cfg *cfg)
+                          uint32_t slave_num,
+                          const struct pios_openlrs_cfg *cfg)
 {
 	PIOS_DEBUG_Assert(rfm22b_id);
 	PIOS_DEBUG_Assert(cfg);
@@ -1212,8 +1210,7 @@ bool PIOS_OpenLRS_EXT_Int(void)
 
 	if (openlrs_dev->rf_mode == Transmit) {
 		openlrs_dev->rf_mode = Transmitted;
-	}
-	else if (openlrs_dev->rf_mode == Receive) {
+	} else if (openlrs_dev->rf_mode == Receive) {
 		openlrs_dev->rf_mode = Received;
 	}
 
@@ -1258,7 +1255,7 @@ static struct pios_openlrs_dev *pios_openlrs_alloc(void)
 static bool pios_openlrs_validate(struct pios_openlrs_dev *openlrs_dev)
 {
 	return openlrs_dev != NULL
-	    && openlrs_dev->magic == PIOS_OPENLRS_DEV_MAGIC;
+	       && openlrs_dev->magic == PIOS_OPENLRS_DEV_MAGIC;
 }
 
 /*****************************************************************************
@@ -1275,7 +1272,7 @@ static void rfm22_assertCs(struct pios_openlrs_dev *openlrs_dev)
 	PIOS_DELAY_WaituS(1);
 	if (openlrs_dev->spi_id != 0) {
 		PIOS_SPI_RC_PinSet(openlrs_dev->spi_id,
-				   openlrs_dev->slave_num, 0);
+		                   openlrs_dev->slave_num, 0);
 	}
 }
 
@@ -1288,7 +1285,7 @@ static void rfm22_deassertCs(struct pios_openlrs_dev *openlrs_dev)
 {
 	if (openlrs_dev->spi_id != 0) {
 		PIOS_SPI_RC_PinSet(openlrs_dev->spi_id,
-				   openlrs_dev->slave_num, 1);
+		                   openlrs_dev->slave_num, 1);
 	}
 }
 
@@ -1324,13 +1321,13 @@ static void rfm22_releaseBus(struct pios_openlrs_dev *openlrs_dev)
  * @param[in] data The datat to write to that address
  */
 static void rfm22_write_claim(struct pios_openlrs_dev *openlrs_dev,
-			      uint8_t addr, uint8_t data)
+                              uint8_t addr, uint8_t data)
 {
 	rfm22_claimBus(openlrs_dev);
 	rfm22_assertCs(openlrs_dev);
 	uint8_t buf[2] = { addr | 0x80, data };
 	PIOS_SPI_TransferBlock(openlrs_dev->spi_id, buf, NULL, sizeof(buf),
-			       NULL);
+	                       NULL);
 	rfm22_deassertCs(openlrs_dev);
 	rfm22_releaseBus(openlrs_dev);
 }
@@ -1343,7 +1340,7 @@ static void rfm22_write_claim(struct pios_openlrs_dev *openlrs_dev,
  * @param[in] data The datat to write to that address
  */
 static uint8_t rfm22_read_claim(struct pios_openlrs_dev *openlrs_dev,
-			      uint8_t addr)
+                                uint8_t addr)
 {
 	uint8_t out[2] = { addr & 0x7F, 0xFF };
 	uint8_t in[2];
@@ -1351,7 +1348,7 @@ static uint8_t rfm22_read_claim(struct pios_openlrs_dev *openlrs_dev,
 	rfm22_claimBus(openlrs_dev);
 	rfm22_assertCs(openlrs_dev);
 	PIOS_SPI_TransferBlock(openlrs_dev->spi_id, out, in, sizeof(out),
-			       NULL);
+	                       NULL);
 	rfm22_deassertCs(openlrs_dev);
 	rfm22_releaseBus(openlrs_dev);
 	return in[1];
@@ -1365,12 +1362,12 @@ static uint8_t rfm22_read_claim(struct pios_openlrs_dev *openlrs_dev,
  * @param[in] data The datat to write to that address
  */
 static void rfm22_write(struct pios_openlrs_dev *openlrs_dev, uint8_t addr,
-			uint8_t data)
+                        uint8_t data)
 {
 	rfm22_assertCs(openlrs_dev);
 	uint8_t buf[2] = { addr | 0x80, data };
 	PIOS_SPI_TransferBlock(openlrs_dev->spi_id, buf, NULL, sizeof(buf),
-			       NULL);
+	                       NULL);
 	rfm22_deassertCs(openlrs_dev);
 }
 
@@ -1388,7 +1385,7 @@ static uint8_t rfm22_read(struct pios_openlrs_dev *openlrs_dev, uint8_t addr)
 
 	rfm22_assertCs(openlrs_dev);
 	PIOS_SPI_TransferBlock(openlrs_dev->spi_id, out, in, sizeof(out),
-			       NULL);
+	                       NULL);
 	rfm22_deassertCs(openlrs_dev);
 	return in[1];
 }

@@ -13,19 +13,19 @@
 * @see        The GNU Public License (GPL) Version 3
 *
 *****************************************************************************/
-/* 
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 3 of the License, or 
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
  * for more details.
- * 
- * You should have received a copy of the GNU General Public License along 
- * with this program; if not, write to the Free Software Foundation, Inc., 
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
@@ -38,15 +38,15 @@
 /* Provide a COM driver */
 static void PIOS_RFM22B_COM_ChangeBaud(uintptr_t rfm22b_id, uint32_t baud);
 static void PIOS_RFM22B_COM_RegisterRxCallback(uintptr_t rfm22b_id,
-					       pios_com_callback rx_in_cb,
-					       uintptr_t context);
+        pios_com_callback rx_in_cb,
+        uintptr_t context);
 static void PIOS_RFM22B_COM_RegisterTxCallback(uintptr_t rfm22b_id,
-					       pios_com_callback tx_out_cb,
-					       uintptr_t context);
+        pios_com_callback tx_out_cb,
+        uintptr_t context);
 static void PIOS_RFM22B_COM_TxStart(uintptr_t rfm22b_id,
-				    uint16_t tx_bytes_avail);
+                                    uint16_t tx_bytes_avail);
 static void PIOS_RFM22B_COM_RxStart(uintptr_t rfm22b_id,
-				    uint16_t rx_bytes_avail);
+                                    uint16_t rx_bytes_avail);
 static bool PIOS_RFM22B_COM_Available(uintptr_t rfm22b_com_id);
 
 /* Local variables */
@@ -66,9 +66,9 @@ const struct pios_com_driver pios_rfm22b_com_driver = {
  * @param[in] baud Requested baud rate
  */
 static void PIOS_RFM22B_COM_ChangeBaud( __attribute__ ((unused)) uintptr_t
-				       rfm22b_id,
-				       __attribute__ ((unused)) uint32_t
-				       baud)
+                                        rfm22b_id,
+                                        __attribute__ ((unused)) uint32_t
+                                        baud)
 {
 }
 
@@ -79,9 +79,9 @@ static void PIOS_RFM22B_COM_ChangeBaud( __attribute__ ((unused)) uintptr_t
  * @param[in] rx_bytes_available  The number of bytes available to receive
  */
 static void PIOS_RFM22B_COM_RxStart( __attribute__ ((unused)) uintptr_t
-				    rfm22b_id,
-				    __attribute__ ((unused)) uint16_t
-				    rx_bytes_avail)
+                                     rfm22b_id,
+                                     __attribute__ ((unused)) uint16_t
+                                     rx_bytes_avail)
 {
 }
 
@@ -92,9 +92,9 @@ static void PIOS_RFM22B_COM_RxStart( __attribute__ ((unused)) uintptr_t
  * @param[in] tx_bytes_available  The number of bytes available to transmit
  */
 static void PIOS_RFM22B_COM_TxStart( __attribute__ ((unused)) uintptr_t
-				    rfm22b_id,
-				    __attribute__ ((unused)) uint16_t
-				    tx_bytes_avail)
+                                     rfm22b_id,
+                                     __attribute__ ((unused)) uint16_t
+                                     tx_bytes_avail)
 {
 }
 
@@ -106,8 +106,8 @@ static void PIOS_RFM22B_COM_TxStart( __attribute__ ((unused)) uintptr_t
  * @param[in] context  The callback context.
  */
 static void PIOS_RFM22B_COM_RegisterRxCallback(uintptr_t rfm22b_id,
-					       pios_com_callback rx_in_cb,
-					       uintptr_t context)
+        pios_com_callback rx_in_cb,
+        uintptr_t context)
 {
 	struct pios_rfm22b_dev *rfm22b_dev =
 	    (struct pios_rfm22b_dev *)rfm22b_id;
@@ -132,8 +132,8 @@ static void PIOS_RFM22B_COM_RegisterRxCallback(uintptr_t rfm22b_id,
  * @param[in] context  The callback context.
  */
 static void PIOS_RFM22B_COM_RegisterTxCallback(uintptr_t rfm22b_id,
-					       pios_com_callback tx_out_cb,
-					       uintptr_t context)
+        pios_com_callback tx_out_cb,
+        uintptr_t context)
 {
 	struct pios_rfm22b_dev *rfm22b_dev =
 	    (struct pios_rfm22b_dev *)rfm22b_id;

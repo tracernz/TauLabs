@@ -30,8 +30,8 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
- #ifndef GEOFENCE_CONTROL_H
- #define GEOFENCE_CONTROL_H
+#ifndef GEOFENCE_CONTROL_H
+#define GEOFENCE_CONTROL_H
 
 //! Initialize the geofence controller
 int32_t geofence_control_initialize();
@@ -48,7 +48,7 @@ bool geofence_control_activate();
 //! Get any control events
 enum control_events geofence_control_get_events();
 
- #endif /* GEOFENCE_CONTROL_H */
+#endif /* GEOFENCE_CONTROL_H */
 
 /**
  * @}

@@ -252,9 +252,8 @@ static void PIOS_PPM_tim_edge_cb (uintptr_t tim_id, uintptr_t context, uint8_t c
 	/* Sync pulse detection */
 	if (ppm_dev->DeltaTime > PIOS_PPM_IN_MIN_SYNC_PULSE_US) {
 		if (ppm_dev->PulseIndex == ppm_dev->NumChannelsPrevFrame
-			&& ppm_dev->PulseIndex >= PIOS_PPM_IN_MIN_NUM_CHANNELS
-			&& ppm_dev->PulseIndex <= PIOS_PPM_IN_MAX_NUM_CHANNELS)
-		{
+		    && ppm_dev->PulseIndex >= PIOS_PPM_IN_MIN_NUM_CHANNELS
+		    && ppm_dev->PulseIndex <= PIOS_PPM_IN_MAX_NUM_CHANNELS) {
 			/* If we see n simultaneous frames of the same
 			   number of channels we save it as our frame size */
 			if (ppm_dev->NumChannelCounter < PIOS_PPM_STABLE_CHANNEL_COUNT)
@@ -289,8 +288,8 @@ static void PIOS_PPM_tim_edge_cb (uintptr_t tim_id, uintptr_t context, uint8_t c
 	} else if (ppm_dev->Tracking) {
 		/* Valid pulse duration 0.75 to 2.5 ms*/
 		if (ppm_dev->DeltaTime > PIOS_PPM_IN_MIN_CHANNEL_PULSE_US
-			&& ppm_dev->DeltaTime < PIOS_PPM_IN_MAX_CHANNEL_PULSE_US
-			&& ppm_dev->PulseIndex < PIOS_PPM_IN_MAX_NUM_CHANNELS) {
+		    && ppm_dev->DeltaTime < PIOS_PPM_IN_MAX_CHANNEL_PULSE_US
+		    && ppm_dev->PulseIndex < PIOS_PPM_IN_MAX_NUM_CHANNELS) {
 
 			ppm_dev->CaptureValueNewFrame[ppm_dev->PulseIndex] = ppm_dev->DeltaTime;
 			ppm_dev->PulseIndex++;
@@ -304,7 +303,8 @@ static void PIOS_PPM_tim_edge_cb (uintptr_t tim_id, uintptr_t context, uint8_t c
 	}
 }
 
-static void PIOS_PPM_Supervisor(uintptr_t ppm_id) {
+static void PIOS_PPM_Supervisor(uintptr_t ppm_id)
+{
 	/* Recover our device context */
 	struct pios_ppm_dev * ppm_dev = (struct pios_ppm_dev *)ppm_id;
 

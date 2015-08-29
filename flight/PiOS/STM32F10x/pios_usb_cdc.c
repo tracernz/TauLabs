@@ -152,7 +152,7 @@ static void PIOS_USB_CDC_RegisterRxCallback(uintptr_t usbcdc_id, pios_com_callba
 	bool valid = PIOS_USB_CDC_validate(usb_cdc_dev);
 	PIOS_Assert(valid);
 
-	/* 
+	/*
 	 * Order is important in these assignments since ISR uses _cb
 	 * field to determine if it's ok to dereference _cb and _context
 	 */
@@ -167,7 +167,7 @@ static void PIOS_USB_CDC_RegisterTxCallback(uintptr_t usbcdc_id, pios_com_callba
 	bool valid = PIOS_USB_CDC_validate(usb_cdc_dev);
 	PIOS_Assert(valid);
 
-	/* 
+	/*
 	 * Order is important in these assignments since ISR uses _cb
 	 * field to determine if it's ok to dereference _cb and _context
 	 */
@@ -175,7 +175,8 @@ static void PIOS_USB_CDC_RegisterTxCallback(uintptr_t usbcdc_id, pios_com_callba
 	usb_cdc_dev->tx_out_cb = tx_out_cb;
 }
 
-static void PIOS_USB_CDC_RxStart(uintptr_t usbcdc_id, uint16_t rx_bytes_avail) {
+static void PIOS_USB_CDC_RxStart(uintptr_t usbcdc_id, uint16_t rx_bytes_avail)
+{
 	struct pios_usb_cdc_dev * usb_cdc_dev = (struct pios_usb_cdc_dev *)usbcdc_id;
 
 	bool valid = PIOS_USB_CDC_validate(usb_cdc_dev);
@@ -187,8 +188,8 @@ static void PIOS_USB_CDC_RxStart(uintptr_t usbcdc_id, uint16_t rx_bytes_avail) {
 
 	// If endpoint was stalled and there is now space make it valid
 	PIOS_IRQ_Disable();
-	if ((GetEPRxStatus(usb_cdc_dev->cfg->data_rx_ep) != EP_RX_VALID) && 
-		(rx_bytes_avail >= sizeof(usb_cdc_dev->rx_packet_buffer))) {
+	if ((GetEPRxStatus(usb_cdc_dev->cfg->data_rx_ep) != EP_RX_VALID) &&
+	    (rx_bytes_avail >= sizeof(usb_cdc_dev->rx_packet_buffer))) {
 		SetEPRxStatus(usb_cdc_dev->cfg->data_rx_ep, EP_RX_VALID);
 	}
 	PIOS_IRQ_Enable();
@@ -204,17 +205,17 @@ static void PIOS_USB_CDC_SendData(struct pios_usb_cdc_dev * usb_cdc_dev)
 
 	bool need_yield = false;
 	bytes_to_tx = (usb_cdc_dev->tx_out_cb)(usb_cdc_dev->tx_out_context,
-					       usb_cdc_dev->tx_packet_buffer,
-					       sizeof(usb_cdc_dev->tx_packet_buffer),
-					       NULL,
-					       &need_yield);
+	                                       usb_cdc_dev->tx_packet_buffer,
+	                                       sizeof(usb_cdc_dev->tx_packet_buffer),
+	                                       NULL,
+	                                       &need_yield);
 	if (bytes_to_tx == 0) {
 		return;
 	}
 
 	UserToPMABufferCopy(usb_cdc_dev->tx_packet_buffer,
-			GetEPTxAddr(usb_cdc_dev->cfg->data_tx_ep),
-			bytes_to_tx);
+	                    GetEPTxAddr(usb_cdc_dev->cfg->data_tx_ep),
+	                    bytes_to_tx);
 	SetEPTxCount(usb_cdc_dev->cfg->data_tx_ep, bytes_to_tx);
 	SetEPTxValid(usb_cdc_dev->cfg->data_tx_ep);
 
@@ -270,8 +271,8 @@ static void PIOS_USB_CDC_DATA_EP_OUT_Callback(void)
 
 	/* Use the memory interface function to read from the selected endpoint */
 	PMAToUserBufferCopy((uint8_t *) usb_cdc_dev->rx_packet_buffer,
-			GetEPRxAddr(usb_cdc_dev->cfg->data_rx_ep),
-			DataLength);
+	                    GetEPRxAddr(usb_cdc_dev->cfg->data_rx_ep),
+	                    DataLength);
 
 	if (!usb_cdc_dev->rx_in_cb) {
 		/* No Rx call back registered, disable the receiver */
@@ -283,10 +284,10 @@ static void PIOS_USB_CDC_DATA_EP_OUT_Callback(void)
 	bool need_yield = false;
 	uint16_t rc;
 	rc = (usb_cdc_dev->rx_in_cb)(usb_cdc_dev->rx_in_context,
-				usb_cdc_dev->rx_packet_buffer,
-				DataLength,
-				&headroom,
-				&need_yield);
+	                             usb_cdc_dev->rx_packet_buffer,
+	                             DataLength,
+	                             &headroom,
+	                             &need_yield);
 
 	if (rc < DataLength) {
 		/* Lost bytes on rx */
@@ -333,7 +334,7 @@ static bool PIOS_USB_CDC_Available (uintptr_t usbcdc_id)
 	PIOS_Assert(valid);
 
 	return (PIOS_USB_CheckAvailable(usb_cdc_dev->lower_id) &&
-		(control_line_state & USB_CDC_CONTROL_LINE_STATE_DTE_PRESENT));
+	        (control_line_state & USB_CDC_CONTROL_LINE_STATE_DTE_PRESENT));
 }
 
 static struct usb_cdc_line_coding line_coding = {
@@ -390,7 +391,7 @@ struct usb_cdc_serial_state_report uart_state = {
 	.wLength       = htousbs(2),
 	.bmUartState  = htousbs(0),
 };
-	
+
 static void PIOS_USB_CDC_CTRL_EP_IN_Callback(void)
 {
 	struct pios_usb_cdc_dev * usb_cdc_dev = (struct pios_usb_cdc_dev *)pios_usb_cdc_id;
@@ -412,8 +413,8 @@ static void PIOS_USB_CDC_CTRL_EP_IN_Callback(void)
 	uart_state.bmUartState = htousbs(0x0003);
 
 	UserToPMABufferCopy((uint8_t *) &uart_state,
-			GetEPTxAddr(usb_cdc_dev->cfg->ctrl_tx_ep),
-			sizeof(uart_state));
+	                    GetEPTxAddr(usb_cdc_dev->cfg->ctrl_tx_ep),
+	                    sizeof(uart_state));
 	SetEPTxCount(usb_cdc_dev->cfg->ctrl_tx_ep, PIOS_USB_BOARD_CDC_MGMT_LENGTH);
 	SetEPTxValid(usb_cdc_dev->cfg->ctrl_tx_ep);
 }

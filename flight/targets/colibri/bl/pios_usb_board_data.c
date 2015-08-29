@@ -49,8 +49,8 @@ static const uint8_t usb_product_id[22] = {
 };
 
 static uint8_t usb_serial_number[2 + PIOS_SYS_SERIAL_NUM_ASCII_LEN * 2 +
-				 (sizeof(PIOS_USB_BOARD_SN_SUFFIX) -
-				  1) * 2] = {
+                                 (sizeof(PIOS_USB_BOARD_SN_SUFFIX) -
+                                  1) * 2] = {
 	sizeof(usb_serial_number),
 	USB_DESC_TYPE_STRING,
 };
@@ -97,26 +97,26 @@ int32_t PIOS_USB_BOARD_DATA_Init(void)
 	uint8_t *utf8 = &(usb_serial_number[2]);
 	utf8 =
 	    PIOS_USB_UTIL_AsciiToUtf8(utf8, sn,
-				      PIOS_SYS_SERIAL_NUM_ASCII_LEN);
+	                              PIOS_SYS_SERIAL_NUM_ASCII_LEN);
 	utf8 =
 	    PIOS_USB_UTIL_AsciiToUtf8(utf8,
-				      (uint8_t *) PIOS_USB_BOARD_SN_SUFFIX,
-				      sizeof(PIOS_USB_BOARD_SN_SUFFIX) -
-				      1);
+	                              (uint8_t *) PIOS_USB_BOARD_SN_SUFFIX,
+	                              sizeof(PIOS_USB_BOARD_SN_SUFFIX) -
+	                              1);
 
 	PIOS_USBHOOK_RegisterString(USB_STRING_DESC_PRODUCT,
-				    (uint8_t *) & usb_product_id,
-				    sizeof(usb_product_id));
+	                            (uint8_t *) & usb_product_id,
+	                            sizeof(usb_product_id));
 	PIOS_USBHOOK_RegisterString(USB_STRING_DESC_SERIAL,
-				    (uint8_t *) & usb_serial_number,
-				    sizeof(usb_serial_number));
+	                            (uint8_t *) & usb_serial_number,
+	                            sizeof(usb_serial_number));
 
 	PIOS_USBHOOK_RegisterString(USB_STRING_DESC_LANG,
-				    (uint8_t *) & usb_lang_id,
-				    sizeof(usb_lang_id));
+	                            (uint8_t *) & usb_lang_id,
+	                            sizeof(usb_lang_id));
 	PIOS_USBHOOK_RegisterString(USB_STRING_DESC_VENDOR,
-				    (uint8_t *) & usb_vendor_id,
-				    sizeof(usb_vendor_id));
+	                            (uint8_t *) & usb_vendor_id,
+	                            sizeof(usb_vendor_id));
 
 	return 0;
 }

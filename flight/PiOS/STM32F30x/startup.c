@@ -124,24 +124,24 @@ HANDLER(xPortSysTickHandler);
 
 /** CortexM3 vector table */
 struct cm3_vectors cpu_vectors __attribute((section(".cpu_vectors"))) = {
-		.initial_stack = &irq_stack[sizeof(irq_stack)],
-		.entry = (vector *)_main,
-		.vectors = {
-				NMI_Handler,
-				HardFault_Handler,
-				MemManage_Handler,
-				BusFault_Handler,
-				UsageFault_Handler,
-				0,
-				0,
-				0,
-				0,
-				vPortSVCHandler,
-				DebugMon_Handler,
-				0,
-				xPortPendSVHandler,
-				xPortSysTickHandler,
-		}
+	.initial_stack = &irq_stack[sizeof(irq_stack)],
+	.entry = (vector *)_main,
+	.vectors = {
+		NMI_Handler,
+		HardFault_Handler,
+		MemManage_Handler,
+		BusFault_Handler,
+		UsageFault_Handler,
+		0,
+		0,
+		0,
+		0,
+		vPortSVCHandler,
+		DebugMon_Handler,
+		0,
+		xPortPendSVHandler,
+		xPortSysTickHandler,
+	}
 };
 
 /**

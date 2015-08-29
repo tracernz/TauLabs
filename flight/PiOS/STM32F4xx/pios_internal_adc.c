@@ -104,11 +104,11 @@ static bool PIOS_INTERNAL_ADC_Available(uint32_t adc_id, uint32_t device_pin);
 static float PIOS_INTERNAL_ADC_LSB_Voltage(uint32_t internal_adc_id);
 
 const struct pios_adc_driver pios_internal_adc_driver = {
-                .available      = PIOS_INTERNAL_ADC_Available,
-                .get_pin        = PIOS_INTERNAL_ADC_PinGet,
-                .set_queue      = NULL,
-                .number_of_channels = PIOS_INTERNAL_ADC_Number_of_Channels,
-                .lsb_voltage = PIOS_INTERNAL_ADC_LSB_Voltage,
+	.available      = PIOS_INTERNAL_ADC_Available,
+	.get_pin        = PIOS_INTERNAL_ADC_PinGet,
+	.set_queue      = NULL,
+	.number_of_channels = PIOS_INTERNAL_ADC_Number_of_Channels,
+	.lsb_voltage = PIOS_INTERNAL_ADC_LSB_Voltage,
 };
 
 struct dma_config {
@@ -140,7 +140,7 @@ static void init_pins(void)
 	GPIO_StructInit(&GPIO_InitStructure);
 	GPIO_InitStructure.GPIO_Speed	= GPIO_Speed_2MHz;
 	GPIO_InitStructure.GPIO_Mode	= GPIO_Mode_AIN;
-	
+
 	for (int32_t i = 0; i < PIOS_ADC_NUM_PINS; i++) {
 		if (config[i].port == NULL)
 			continue;
@@ -221,9 +221,9 @@ static void init_adc(void)
 	/* Configure input scan */
 	for (int32_t i = 0; i < PIOS_ADC_NUM_PINS; i++) {
 		ADC_RegularChannelConfig(pios_adc_dev->cfg->adc_dev_master,
-				config[i].channel,
-				i+1,
-				ADC_SampleTime_56Cycles);		/* XXX this is totally arbitrary... */
+		                         config[i].channel,
+		                         i+1,
+		                         ADC_SampleTime_56Cycles);		/* XXX this is totally arbitrary... */
 	}
 
 	ADC_DMARequestAfterLastTransferCmd(pios_adc_dev->cfg->adc_dev_master, ENABLE);
@@ -239,17 +239,17 @@ static bool PIOS_INTERNAL_ADC_validate(struct pios_internal_adc_dev * dev)
 {
 	if (dev == NULL)
 		return false;
-	
+
 	return (dev->magic == PIOS_INTERNAL_ADC_DEV_MAGIC);
 }
 
 static struct pios_internal_adc_dev * PIOS_INTERNAL_ADC_Allocate()
 {
 	struct pios_internal_adc_dev * adc_dev;
-	
+
 	adc_dev = (struct pios_internal_adc_dev *)PIOS_malloc(sizeof(*adc_dev));
 	if (!adc_dev) return (NULL);
-	
+
 	adc_dev->magic = PIOS_INTERNAL_ADC_DEV_MAGIC;
 	return(adc_dev);
 }
@@ -259,13 +259,13 @@ static struct pios_internal_adc_dev * PIOS_INTERNAL_ADC_Allocate()
  */
 int32_t PIOS_INTERNAL_ADC_Init(uint32_t * internal_adc_id, const struct pios_internal_adc_cfg * cfg)
 {
-        pios_adc_dev = PIOS_INTERNAL_ADC_Allocate();
+	pios_adc_dev = PIOS_INTERNAL_ADC_Allocate();
 	if (pios_adc_dev == NULL)
 		return -1;
-	
+
 	pios_adc_dev->cfg = cfg;
 	pios_adc_dev->callback_function = NULL;
-	
+
 #if defined(PIOS_INCLUDE_FREERTOS) || defined(PIOS_INCLUDE_CHIBIOS)
 	pios_adc_dev->data_queue = NULL;
 #endif
@@ -301,12 +301,12 @@ static int32_t PIOS_INTERNAL_ADC_PinGet(uint32_t internal_adc_id, uint32_t pin)
 {
 #if defined(PIOS_INCLUDE_ADC)
 	int32_t	result;
-	
+
 	/* Check if pin exists */
 	if (pin >= PIOS_ADC_NUM_PINS) {
 		return -1;
 	}
-	
+
 	if (accumulator[pin].accumulator <= 0)
 		return -2;
 
@@ -322,7 +322,7 @@ static int32_t PIOS_INTERNAL_ADC_PinGet(uint32_t internal_adc_id, uint32_t pin)
 
 /**
  * @brief Set a callback function that is executed whenever
- * the ADC double buffer swaps 
+ * the ADC double buffer swaps
  * @note Not currently supported.
  */
 void PIOS_ADC_SetCallback(ADCCallback new_function)
@@ -340,7 +340,7 @@ float * PIOS_ADC_GetBuffer(void)
 }
 
 /**
- * @brief Return the address of the raw data data buffer 
+ * @brief Return the address of the raw data data buffer
  * @note Not currently supported.
  */
 int16_t * PIOS_ADC_GetRawBuffer(void)
@@ -358,7 +358,7 @@ uint8_t PIOS_ADC_GetOverSampling(void)
 }
 
 /**
- * @brief Set the fir coefficients.  Takes as many samples as the 
+ * @brief Set the fir coefficients.  Takes as many samples as the
  * current filter order plus one (normalization)
  *
  * @param new_filter Array of adc_oversampling floats plus one for the
@@ -395,7 +395,7 @@ void accumulate(uint16_t *buffer, uint32_t count)
 			}
 		}
 	}
-	
+
 #if defined(PIOS_INCLUDE_FREERTOS) || defined(PIOS_INCLUDE_CHIBIOS)
 	// XXX should do something with this
 	if (pios_adc_dev->data_queue) {
@@ -429,7 +429,7 @@ void PIOS_INTERNAL_ADC_DMA_Handler(void)
 
 		/* accumulate results from the buffer that was just completed */
 		accumulate(&adc_raw_buffer[DMA_GetCurrentMemoryTarget(pios_adc_dev->cfg->dma.rx.channel) ? 0 : 1][0][0],
-				PIOS_ADC_MAX_SAMPLES);
+		           PIOS_ADC_MAX_SAMPLES);
 
 	}
 #endif
@@ -441,7 +441,8 @@ void PIOS_INTERNAL_ADC_DMA_Handler(void)
   * \param[in] device_pin pin to check if available
   * \return true if available
   */
-static bool PIOS_INTERNAL_ADC_Available(uint32_t adc_id, uint32_t device_pin) {
+static bool PIOS_INTERNAL_ADC_Available(uint32_t adc_id, uint32_t device_pin)
+{
 	/* Check if pin exists */
 	return (!(device_pin >= PIOS_ADC_NUM_CHANNELS));
 }
@@ -456,7 +457,7 @@ static uint8_t PIOS_INTERNAL_ADC_Number_of_Channels(uint32_t internal_adc_id)
 {
 	struct pios_internal_adc_dev * adc_dev = (struct pios_internal_adc_dev *)internal_adc_id;
 	if(!PIOS_INTERNAL_ADC_validate(adc_dev))
-			return 0;
+		return 0;
 	return PIOS_ADC_NUM_CHANNELS;
 }
 
@@ -469,11 +470,11 @@ static float PIOS_INTERNAL_ADC_LSB_Voltage(uint32_t internal_adc_id)
 	if (!PIOS_INTERNAL_ADC_validate(adc_dev)) {
 		return 0;
 	}
-        return VREF_PLUS / (((uint32_t)1 << 12) - 1);
+	return VREF_PLUS / (((uint32_t)1 << 12) - 1);
 }
 #endif /* PIOS_INCLUDE_ADC */
 
-/** 
+/**
  * @}
  * @}
  */

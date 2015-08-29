@@ -1,9 +1,9 @@
 /**
  ******************************************************************************
  * @addtogroup TauLabsModules TauLabs Modules
- * @{ 
+ * @{
  * @addtogroup UAVOHoTTBridge HoTT Telemetry Module
- * @{ 
+ * @{
  *
  * @file       uavohottbridge.c
  * @author     Tau Labs, http://taulabs.org, Copyright (C) 2013-2014
@@ -71,10 +71,10 @@ static int32_t uavoHoTTBridgeStart(void)
 	if (module_enabled) {
 		// Start task
 		uavoHoTTBridgeTaskHandle = PIOS_Thread_Create(
-				uavoHoTTBridgeTask, "uavoHoTTBridge",
-				STACK_SIZE_BYTES, NULL, TASK_PRIORITY);
+		                               uavoHoTTBridgeTask, "uavoHoTTBridge",
+		                               STACK_SIZE_BYTES, NULL, TASK_PRIORITY);
 		TaskMonitorAdd(TASKINFO_RUNNING_UAVOHOTTBRIDGE,
-				uavoHoTTBridgeTaskHandle);
+		               uavoHoTTBridgeTaskHandle);
 		return 0;
 	}
 	return -1;
@@ -116,7 +116,8 @@ MODULE_INITCALL( uavoHoTTBridgeInitialize, uavoHoTTBridgeStart)
 /**
  * Main task. It does not return.
  */
-static void uavoHoTTBridgeTask(void *parameters) {
+static void uavoHoTTBridgeTask(void *parameters)
+{
 	uint8_t rx_buffer[2];
 	uint8_t tx_buffer[HOTT_MAX_MESSAGE_LENGTH];
 	uint16_t message_size;
@@ -150,38 +151,37 @@ static void uavoHoTTBridgeTask(void *parameters) {
 		if (rx_buffer[1] == HOTT_BINARY_ID) {
 			// first received byte looks like a binary request. check second received byte for a sensor id.
 			switch (rx_buffer[0]) {
-				case HOTT_VARIO_ID:
-					message_size = build_VARIO_message((struct hott_vario_message *)tx_buffer);
-					break;
-				case HOTT_GPS_ID:
-					message_size = build_GPS_message((struct hott_gps_message *)tx_buffer);
-					break;
-				case HOTT_GAM_ID:
-					message_size = build_GAM_message((struct hott_gam_message *)tx_buffer);
-					break;
-				case HOTT_EAM_ID:
-					message_size = build_EAM_message((struct hott_eam_message *)tx_buffer);
-					break;
-				case HOTT_ESC_ID:
-					message_size = build_ESC_message((struct hott_esc_message *)tx_buffer);
-					break;
-				default:
-					message_size = 0;
+			case HOTT_VARIO_ID:
+				message_size = build_VARIO_message((struct hott_vario_message *)tx_buffer);
+				break;
+			case HOTT_GPS_ID:
+				message_size = build_GPS_message((struct hott_gps_message *)tx_buffer);
+				break;
+			case HOTT_GAM_ID:
+				message_size = build_GAM_message((struct hott_gam_message *)tx_buffer);
+				break;
+			case HOTT_EAM_ID:
+				message_size = build_EAM_message((struct hott_eam_message *)tx_buffer);
+				break;
+			case HOTT_ESC_ID:
+				message_size = build_ESC_message((struct hott_esc_message *)tx_buffer);
+				break;
+			default:
+				message_size = 0;
 			}
-		}
-		else if (rx_buffer[1] == HOTT_TEXT_ID) {
+		} else if (rx_buffer[1] == HOTT_TEXT_ID) {
 			// first received byte looks like a text request. check second received byte for a valid button.
 			switch (rx_buffer[0]) {
-				case HOTT_BUTTON_DEC:
-				case HOTT_BUTTON_INC:
-				case HOTT_BUTTON_SET:
-				case HOTT_BUTTON_NIL:
-				case HOTT_BUTTON_NEXT:
-				case HOTT_BUTTON_PREV:
-					message_size = build_TEXT_message((struct hott_text_message *)tx_buffer);
-					break;
-				default:
-					message_size = 0;
+			case HOTT_BUTTON_DEC:
+			case HOTT_BUTTON_INC:
+			case HOTT_BUTTON_SET:
+			case HOTT_BUTTON_NIL:
+			case HOTT_BUTTON_NEXT:
+			case HOTT_BUTTON_PREV:
+				message_size = build_TEXT_message((struct hott_text_message *)tx_buffer);
+				break;
+			default:
+				message_size = 0;
 			}
 		}
 
@@ -213,7 +213,8 @@ static void uavoHoTTBridgeTask(void *parameters) {
  * Build requested answer messages.
  * \return value sets message size
  */
-uint16_t build_VARIO_message(struct hott_vario_message *msg) {
+uint16_t build_VARIO_message(struct hott_vario_message *msg)
+{
 	update_telemetrydata();
 
 	if (telestate->Settings.Sensor[HOTTSETTINGS_SENSOR_VARIO] == HOTTSETTINGS_SENSOR_DISABLED)
@@ -266,7 +267,8 @@ uint16_t build_VARIO_message(struct hott_vario_message *msg) {
 	return sizeof(*msg);
 }
 
-uint16_t build_GPS_message(struct hott_gps_message *msg) {
+uint16_t build_GPS_message(struct hott_gps_message *msg)
+{
 	update_telemetrydata();
 
 	if (telestate->Settings.Sensor[HOTTSETTINGS_SENSOR_GPS] == HOTTSETTINGS_SENSOR_DISABLED)
@@ -313,34 +315,34 @@ uint16_t build_GPS_message(struct hott_gps_message *msg) {
 	// number of satellites,gps fix and state
 	msg->gps_num_sat = telestate->GPS.Satellites;
 	switch (telestate->GPS.Status) {
-		case GPSPOSITION_STATUS_FIX2D:
-			msg->gps_fix_char = '2';
-			break;
-		case GPSPOSITION_STATUS_FIX3D:
-		case GPSPOSITION_STATUS_DIFF3D:
-			msg->gps_fix_char = '3';
-			break;
-		default:
-			msg->gps_fix_char = 0;
+	case GPSPOSITION_STATUS_FIX2D:
+		msg->gps_fix_char = '2';
+		break;
+	case GPSPOSITION_STATUS_FIX3D:
+	case GPSPOSITION_STATUS_DIFF3D:
+		msg->gps_fix_char = '3';
+		break;
+	default:
+		msg->gps_fix_char = 0;
 	}
 	switch (telestate->SysAlarms.Alarm[SYSTEMALARMS_ALARM_GPS]) {
-		case SYSTEMALARMS_ALARM_UNINITIALISED:
-			msg->ascii6 = 0;
-			// if there is no gps, show compass flight direction
-			msg->flight_direction = scale_float2int8((telestate->Attitude.Yaw > 0) ? telestate->Attitude.Yaw : 360 + telestate->Attitude.Yaw , DEG_TO_UINT, 0);
-			break;
-		case SYSTEMALARMS_ALARM_OK:
-			msg->ascii6 = '.';
-			break;
-		case SYSTEMALARMS_ALARM_WARNING:
-			msg->ascii6 = '?';
-			break;
-		case SYSTEMALARMS_ALARM_ERROR:
-		case SYSTEMALARMS_ALARM_CRITICAL:
-			msg->ascii6 = '!';
-			break;
-		default:
-			msg->ascii6 = 0;
+	case SYSTEMALARMS_ALARM_UNINITIALISED:
+		msg->ascii6 = 0;
+		// if there is no gps, show compass flight direction
+		msg->flight_direction = scale_float2int8((telestate->Attitude.Yaw > 0) ? telestate->Attitude.Yaw : 360 + telestate->Attitude.Yaw , DEG_TO_UINT, 0);
+		break;
+	case SYSTEMALARMS_ALARM_OK:
+		msg->ascii6 = '.';
+		break;
+	case SYSTEMALARMS_ALARM_WARNING:
+		msg->ascii6 = '?';
+		break;
+	case SYSTEMALARMS_ALARM_ERROR:
+	case SYSTEMALARMS_ALARM_CRITICAL:
+		msg->ascii6 = '!';
+		break;
+	default:
+		msg->ascii6 = 0;
 	}
 
 	// model angles
@@ -364,7 +366,8 @@ uint16_t build_GPS_message(struct hott_gps_message *msg) {
 	return sizeof(*msg);
 }
 
-uint16_t build_GAM_message(struct hott_gam_message *msg) {
+uint16_t build_GAM_message(struct hott_gam_message *msg)
+{
 	update_telemetrydata();
 
 	if (telestate->Settings.Sensor[HOTTSETTINGS_SENSOR_GAM] == HOTTSETTINGS_SENSOR_DISABLED)
@@ -417,7 +420,8 @@ uint16_t build_GAM_message(struct hott_gam_message *msg) {
 	return sizeof(*msg);
 }
 
-uint16_t build_EAM_message(struct hott_eam_message *msg) {
+uint16_t build_EAM_message(struct hott_eam_message *msg)
+{
 	update_telemetrydata();
 
 	if (telestate->Settings.Sensor[HOTTSETTINGS_SENSOR_EAM] == HOTTSETTINGS_SENSOR_DISABLED)
@@ -473,7 +477,8 @@ uint16_t build_EAM_message(struct hott_eam_message *msg) {
 	return sizeof(*msg);
 }
 
-uint16_t build_ESC_message(struct hott_esc_message *msg) {
+uint16_t build_ESC_message(struct hott_esc_message *msg)
+{
 	update_telemetrydata();
 
 	if (telestate->Settings.Sensor[HOTTSETTINGS_SENSOR_ESC] == HOTTSETTINGS_SENSOR_DISABLED)
@@ -509,7 +514,8 @@ uint16_t build_ESC_message(struct hott_esc_message *msg) {
 	return sizeof(*msg);
 }
 
-uint16_t build_TEXT_message(struct hott_text_message *msg) {
+uint16_t build_TEXT_message(struct hott_text_message *msg)
+{
 	update_telemetrydata();
 
 	// clear message buffer
@@ -530,7 +536,8 @@ uint16_t build_TEXT_message(struct hott_text_message *msg) {
  * calling interval is 200ms depending on TX
  * 200ms telemetry request is used as time base for timed calculations (5Hz interval)
 */
-void update_telemetrydata () {
+void update_telemetrydata ()
+{
 	// update all available data
 	if (HoTTSettingsHandle() != NULL)
 		HoTTSettingsGet(&telestate->Settings);
@@ -622,62 +629,62 @@ void update_telemetrydata () {
 
 	const char *txt_flightmode;
 	switch (telestate->FlightStatus.FlightMode) {
-		case FLIGHTSTATUS_FLIGHTMODE_MANUAL:
-			txt_flightmode = txt_manual;
-			break;
-		case FLIGHTSTATUS_FLIGHTMODE_ACRO:
-			txt_flightmode = txt_acro;
-			break;
-		case FLIGHTSTATUS_FLIGHTMODE_LEVELING:
-			txt_flightmode = txt_leveling;
-			break;
-		case FLIGHTSTATUS_FLIGHTMODE_VIRTUALBAR:
-			txt_flightmode = txt_virtualbar;
-			break;
-		case FLIGHTSTATUS_FLIGHTMODE_STABILIZED1:
-			txt_flightmode = txt_stabilized1;
-			break;
-		case FLIGHTSTATUS_FLIGHTMODE_STABILIZED2:
-			txt_flightmode = txt_stabilized2;
-			break;
-		case FLIGHTSTATUS_FLIGHTMODE_STABILIZED3:
-			txt_flightmode = txt_stabilized3;
-			break;
-		case FLIGHTSTATUS_FLIGHTMODE_AUTOTUNE:
-			txt_flightmode = txt_autotune;
-			break;
-		case FLIGHTSTATUS_FLIGHTMODE_ALTITUDEHOLD:
-			txt_flightmode = txt_altitudehold;
-			break;
-		case FLIGHTSTATUS_FLIGHTMODE_POSITIONHOLD:
-			txt_flightmode = txt_positionhold;
-			break;
-		case FLIGHTSTATUS_FLIGHTMODE_RETURNTOHOME:
-			txt_flightmode = txt_returntohome;
-			break;
-		case FLIGHTSTATUS_FLIGHTMODE_PATHPLANNER:
-			txt_flightmode = txt_pathplanner;
-			break;
-		case FLIGHTSTATUS_FLIGHTMODE_TABLETCONTROL:
-			txt_flightmode = txt_tabletcontrol;
-			break;
-		default:
-			txt_flightmode = txt_unknown;
+	case FLIGHTSTATUS_FLIGHTMODE_MANUAL:
+		txt_flightmode = txt_manual;
+		break;
+	case FLIGHTSTATUS_FLIGHTMODE_ACRO:
+		txt_flightmode = txt_acro;
+		break;
+	case FLIGHTSTATUS_FLIGHTMODE_LEVELING:
+		txt_flightmode = txt_leveling;
+		break;
+	case FLIGHTSTATUS_FLIGHTMODE_VIRTUALBAR:
+		txt_flightmode = txt_virtualbar;
+		break;
+	case FLIGHTSTATUS_FLIGHTMODE_STABILIZED1:
+		txt_flightmode = txt_stabilized1;
+		break;
+	case FLIGHTSTATUS_FLIGHTMODE_STABILIZED2:
+		txt_flightmode = txt_stabilized2;
+		break;
+	case FLIGHTSTATUS_FLIGHTMODE_STABILIZED3:
+		txt_flightmode = txt_stabilized3;
+		break;
+	case FLIGHTSTATUS_FLIGHTMODE_AUTOTUNE:
+		txt_flightmode = txt_autotune;
+		break;
+	case FLIGHTSTATUS_FLIGHTMODE_ALTITUDEHOLD:
+		txt_flightmode = txt_altitudehold;
+		break;
+	case FLIGHTSTATUS_FLIGHTMODE_POSITIONHOLD:
+		txt_flightmode = txt_positionhold;
+		break;
+	case FLIGHTSTATUS_FLIGHTMODE_RETURNTOHOME:
+		txt_flightmode = txt_returntohome;
+		break;
+	case FLIGHTSTATUS_FLIGHTMODE_PATHPLANNER:
+		txt_flightmode = txt_pathplanner;
+		break;
+	case FLIGHTSTATUS_FLIGHTMODE_TABLETCONTROL:
+		txt_flightmode = txt_tabletcontrol;
+		break;
+	default:
+		txt_flightmode = txt_unknown;
 	}
 
 	const char *txt_armstate;
 	switch (telestate->FlightStatus.Armed) {
-		case FLIGHTSTATUS_ARMED_DISARMED:
-			txt_armstate = txt_disarmed;
-			break;
-		case FLIGHTSTATUS_ARMED_ARMING:
-			txt_armstate = txt_arming;
-			break;
-		case FLIGHTSTATUS_ARMED_ARMED:
-			txt_armstate = txt_armed;
-			break;
-		default:
-			txt_armstate = txt_unknown;
+	case FLIGHTSTATUS_ARMED_DISARMED:
+		txt_armstate = txt_disarmed;
+		break;
+	case FLIGHTSTATUS_ARMED_ARMING:
+		txt_armstate = txt_arming;
+		break;
+	case FLIGHTSTATUS_ARMED_ARMED:
+		txt_armstate = txt_armed;
+		break;
+	default:
+		txt_armstate = txt_unknown;
 	}
 
 	snprintf(telestate->statusline, sizeof(telestate->statusline), "%12s,%8s", txt_flightmode, txt_armstate);
@@ -686,74 +693,75 @@ void update_telemetrydata () {
 /**
  * generate warning beeps or spoken announcements
 */
-uint8_t generate_warning() {
+uint8_t generate_warning()
+{
 	// set warning tone with hardcoded priority
 	if ((telestate->Settings.Warning[HOTTSETTINGS_WARNING_MINSPEED] == HOTTSETTINGS_WARNING_ENABLED) &&
-		(telestate->Settings.Limit[HOTTSETTINGS_LIMIT_MINSPEED] > telestate->GPS.Groundspeed * MS_TO_KMH))
+	    (telestate->Settings.Limit[HOTTSETTINGS_LIMIT_MINSPEED] > telestate->GPS.Groundspeed * MS_TO_KMH))
 		return HOTT_TONE_A; // maximum speed
 
 	if ((telestate->Settings.Warning[HOTTSETTINGS_WARNING_NEGDIFFERENCE2] == HOTTSETTINGS_WARNING_ENABLED) &&
-		(telestate->Settings.Limit[HOTTSETTINGS_LIMIT_NEGDIFFERENCE2] > telestate->climbrate3s))
+	    (telestate->Settings.Limit[HOTTSETTINGS_LIMIT_NEGDIFFERENCE2] > telestate->climbrate3s))
 		return HOTT_TONE_B; // sink rate 3s
 
 	if ((telestate->Settings.Warning[HOTTSETTINGS_WARNING_NEGDIFFERENCE1] == HOTTSETTINGS_WARNING_ENABLED) &&
-		(telestate->Settings.Limit[HOTTSETTINGS_LIMIT_NEGDIFFERENCE2] > telestate->climbrate1s))
+	    (telestate->Settings.Limit[HOTTSETTINGS_LIMIT_NEGDIFFERENCE2] > telestate->climbrate1s))
 		return HOTT_TONE_C; // sink rate 1s
 
 	if ((telestate->Settings.Warning[HOTTSETTINGS_WARNING_MAXDISTANCE] == HOTTSETTINGS_WARNING_ENABLED) &&
-		(telestate->Settings.Limit[HOTTSETTINGS_LIMIT_MAXDISTANCE] < telestate->homedistance))
+	    (telestate->Settings.Limit[HOTTSETTINGS_LIMIT_MAXDISTANCE] < telestate->homedistance))
 		return HOTT_TONE_D; // maximum distance
 
 	if ((telestate->Settings.Warning[HOTTSETTINGS_WARNING_MINSENSOR1TEMP] == HOTTSETTINGS_WARNING_ENABLED) &&
-		(telestate->Settings.Limit[HOTTSETTINGS_LIMIT_MINSENSOR1TEMP] > telestate->Gyro.temperature))
+	    (telestate->Settings.Limit[HOTTSETTINGS_LIMIT_MINSENSOR1TEMP] > telestate->Gyro.temperature))
 		return HOTT_TONE_F; // minimum temperature sensor 1
 
 	if ((telestate->Settings.Warning[HOTTSETTINGS_WARNING_MINSENSOR2TEMP] == HOTTSETTINGS_WARNING_ENABLED) &&
-		(telestate->Settings.Limit[HOTTSETTINGS_LIMIT_MINSENSOR2TEMP] > telestate->Baro.Temperature))
+	    (telestate->Settings.Limit[HOTTSETTINGS_LIMIT_MINSENSOR2TEMP] > telestate->Baro.Temperature))
 		return HOTT_TONE_G; // minimum temperature sensor 2
 
 	if ((telestate->Settings.Warning[HOTTSETTINGS_WARNING_MAXSENSOR1TEMP] == HOTTSETTINGS_WARNING_ENABLED) &&
-		(telestate->Settings.Limit[HOTTSETTINGS_LIMIT_MAXSENSOR1TEMP] < telestate->Gyro.temperature))
+	    (telestate->Settings.Limit[HOTTSETTINGS_LIMIT_MAXSENSOR1TEMP] < telestate->Gyro.temperature))
 		return HOTT_TONE_H; // maximum temperature sensor 1
 
 	if ((telestate->Settings.Warning[HOTTSETTINGS_WARNING_MAXSENSOR2TEMP] == HOTTSETTINGS_WARNING_ENABLED) &&
-		(telestate->Settings.Limit[HOTTSETTINGS_LIMIT_MAXSENSOR2TEMP] < telestate->Baro.Temperature))
+	    (telestate->Settings.Limit[HOTTSETTINGS_LIMIT_MAXSENSOR2TEMP] < telestate->Baro.Temperature))
 		return HOTT_TONE_I; // maximum temperature sensor 2
 
 	if ((telestate->Settings.Warning[HOTTSETTINGS_WARNING_MAXSPEED] == HOTTSETTINGS_WARNING_ENABLED) &&
-		(telestate->Settings.Limit[HOTTSETTINGS_LIMIT_MAXSPEED] < telestate->GPS.Groundspeed * MS_TO_KMH))
+	    (telestate->Settings.Limit[HOTTSETTINGS_LIMIT_MAXSPEED] < telestate->GPS.Groundspeed * MS_TO_KMH))
 		return HOTT_TONE_L; // maximum speed
 
 	if ((telestate->Settings.Warning[HOTTSETTINGS_WARNING_POSDIFFERENCE2] == HOTTSETTINGS_WARNING_ENABLED) &&
-		(telestate->Settings.Limit[HOTTSETTINGS_LIMIT_POSDIFFERENCE2] > telestate->climbrate3s))
+	    (telestate->Settings.Limit[HOTTSETTINGS_LIMIT_POSDIFFERENCE2] > telestate->climbrate3s))
 		return HOTT_TONE_M; // climb rate 3s
 
 	if ((telestate->Settings.Warning[HOTTSETTINGS_WARNING_POSDIFFERENCE1] == HOTTSETTINGS_WARNING_ENABLED) &&
-		(telestate->Settings.Limit[HOTTSETTINGS_LIMIT_POSDIFFERENCE1] > telestate->climbrate1s))
+	    (telestate->Settings.Limit[HOTTSETTINGS_LIMIT_POSDIFFERENCE1] > telestate->climbrate1s))
 		return HOTT_TONE_N; // climb rate 1s
 
 	if ((telestate->Settings.Warning[HOTTSETTINGS_WARNING_MINHEIGHT] == HOTTSETTINGS_WARNING_ENABLED) &&
-		(telestate->Settings.Limit[HOTTSETTINGS_LIMIT_MINHEIGHT] > telestate->altitude))
+	    (telestate->Settings.Limit[HOTTSETTINGS_LIMIT_MINHEIGHT] > telestate->altitude))
 		return HOTT_TONE_O; // minimum height
 
 	if ((telestate->Settings.Warning[HOTTSETTINGS_WARNING_MINPOWERVOLTAGE] == HOTTSETTINGS_WARNING_ENABLED) &&
-		(telestate->Settings.Limit[HOTTSETTINGS_LIMIT_MINPOWERVOLTAGE] > telestate->Battery.Voltage))
+	    (telestate->Settings.Limit[HOTTSETTINGS_LIMIT_MINPOWERVOLTAGE] > telestate->Battery.Voltage))
 		return HOTT_TONE_P; // minimum input voltage
 
 	if ((telestate->Settings.Warning[HOTTSETTINGS_WARNING_MAXUSEDCAPACITY] == HOTTSETTINGS_WARNING_ENABLED) &&
-		(telestate->Settings.Limit[HOTTSETTINGS_LIMIT_MAXUSEDCAPACITY] < telestate->Battery.ConsumedEnergy))
+	    (telestate->Settings.Limit[HOTTSETTINGS_LIMIT_MAXUSEDCAPACITY] < telestate->Battery.ConsumedEnergy))
 		return HOTT_TONE_V; // capacity
 
 	if ((telestate->Settings.Warning[HOTTSETTINGS_WARNING_MAXCURRENT] == HOTTSETTINGS_WARNING_ENABLED) &&
-		(telestate->Settings.Limit[HOTTSETTINGS_LIMIT_MAXCURRENT] < telestate->Battery.Current))
+	    (telestate->Settings.Limit[HOTTSETTINGS_LIMIT_MAXCURRENT] < telestate->Battery.Current))
 		return HOTT_TONE_W; // maximum current
 
 	if ((telestate->Settings.Warning[HOTTSETTINGS_WARNING_MAXPOWERVOLTAGE] == HOTTSETTINGS_WARNING_ENABLED) &&
-		(telestate->Settings.Limit[HOTTSETTINGS_LIMIT_MAXPOWERVOLTAGE] < telestate->Battery.Voltage))
+	    (telestate->Settings.Limit[HOTTSETTINGS_LIMIT_MAXPOWERVOLTAGE] < telestate->Battery.Voltage))
 		return HOTT_TONE_X; // maximum input voltage
 
 	if ((telestate->Settings.Warning[HOTTSETTINGS_WARNING_MAXHEIGHT] == HOTTSETTINGS_WARNING_ENABLED) &&
-		(telestate->Settings.Limit[HOTTSETTINGS_LIMIT_MAXHEIGHT] < telestate->altitude))
+	    (telestate->Settings.Limit[HOTTSETTINGS_LIMIT_MAXHEIGHT] < telestate->altitude))
 		return HOTT_TONE_Z; // maximum height
 
 	// altitude beeps when crossing altitude limits at 20,40,60,80,100,200,400,600,800 and 1000 meters
@@ -791,7 +799,8 @@ uint8_t generate_warning() {
 /**
  * calculate checksum of data buffer
  */
-uint8_t calc_checksum(uint8_t *data, uint16_t size) {
+uint8_t calc_checksum(uint8_t *data, uint16_t size)
+{
 	uint16_t sum = 0;
 	for(int i = 0; i < size; i++)
 		sum += data[i];
@@ -801,7 +810,8 @@ uint8_t calc_checksum(uint8_t *data, uint16_t size) {
 /**
  * scale float value with scale and offset to unsigned byte
  */
-uint8_t scale_float2uint8(float value, float scale, float offset) {
+uint8_t scale_float2uint8(float value, float scale, float offset)
+{
 	uint16_t temp = (uint16_t)roundf(value * scale + offset);
 	uint8_t result;
 	result = (uint8_t)temp & 0xff;
@@ -811,7 +821,8 @@ uint8_t scale_float2uint8(float value, float scale, float offset) {
 /**
  * scale float value with scale and offset to signed byte (int8_t)
  */
-int8_t scale_float2int8(float value, float scale, float offset) {
+int8_t scale_float2int8(float value, float scale, float offset)
+{
 	int8_t result = (int8_t)roundf(value * scale + offset);
 	return result;
 }
@@ -819,7 +830,8 @@ int8_t scale_float2int8(float value, float scale, float offset) {
 /**
  * scale float value with scale and offset to word
  */
-uword_t scale_float2uword(float value, float scale, float offset) {
+uword_t scale_float2uword(float value, float scale, float offset)
+{
 	uint16_t temp = (uint16_t)roundf(value * scale + offset);
 	uword_t result;
 	result.l = (uint8_t)temp & 0xff;
@@ -830,7 +842,8 @@ uword_t scale_float2uword(float value, float scale, float offset) {
 /**
  * convert dword gps value into HoTT gps format and write result to given pointers
  */
-void convert_long2gps(int32_t value, uint8_t *dir, uword_t *min, uword_t *sec) {
+void convert_long2gps(int32_t value, uint8_t *dir, uword_t *min, uword_t *sec)
+{
 	//convert gps decigrad value into degrees, minutes and seconds
 	uword_t temp;
 	uint32_t absvalue = abs(value);

@@ -74,7 +74,8 @@ static struct hmc5983_dev *dev;
 /**
  * @brief Allocate a new device
  */
-static struct hmc5983_dev *PIOS_HMC5983_alloc(void) {
+static struct hmc5983_dev *PIOS_HMC5983_alloc(void)
+{
 	struct hmc5983_dev *hmc5983_dev;
 
 	hmc5983_dev = (struct hmc5983_dev *)PIOS_malloc(sizeof(*hmc5983_dev));

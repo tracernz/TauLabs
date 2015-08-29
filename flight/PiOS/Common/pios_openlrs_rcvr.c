@@ -12,19 +12,19 @@
 * @see        The GNU Public License (GPL) Version 3
 *
 *****************************************************************************/
-/* 
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 3 of the License, or 
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
  * for more details.
- * 
- * You should have received a copy of the GNU General Public License along 
- * with this program; if not, write to the Free Software Foundation, Inc., 
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
@@ -33,7 +33,7 @@
 #ifdef PIOS_INCLUDE_OPENLRS
 
 #include "pios_openlrs_priv.h"
- 
+
 #include <uavobjectmanager.h>
 #include <rfm22breceiver.h>
 #include <pios_openlrs_priv.h>
@@ -64,7 +64,7 @@ struct pios_openlrs_rcvr_dev {
 static void openlrs_rcvr_update_uavo(struct pios_openlrs_rcvr_dev *pios_rfm22b_rcvr_dev);
 
 static bool PIOS_OpenLRS_Rcvr_Validate(struct pios_openlrs_rcvr_dev
-				      *openlrs_rcvr_dev)
+                                       *openlrs_rcvr_dev)
 {
 	return openlrs_rcvr_dev->magic == PIOS_OPENLRS_RCVR_DEV_MAGIC;
 }
@@ -99,9 +99,9 @@ extern int32_t PIOS_OpenLRS_Rcvr_Init(uintptr_t * openlrs_rcvr_id, uintptr_t ope
 	}
 
 	/* Register uavobj callback */
-    RFM22BReceiverInitialize();
+	RFM22BReceiverInitialize();
 
-    *openlrs_rcvr_id = (uintptr_t) openlrs_rcvr_dev;
+	*openlrs_rcvr_id = (uintptr_t) openlrs_rcvr_dev;
 	PIOS_OpenLRS_RegisterRcvr(openlrs_id, *openlrs_rcvr_id);
 
 	/* Register the failsafe timer callback. */
@@ -204,7 +204,7 @@ static void openlrs_rcvr_update_uavo(struct pios_openlrs_rcvr_dev *rcvr_dev)
 	// Also store the received data in a UAVO for easy
 	// debugging. However this is not what is used in
 	// ManualControl (it fetches directly from this driver)
-    RFM22BReceiverData rcvr;
+	RFM22BReceiverData rcvr;
 	for (uint8_t i = 0; i < OPENLRS_PPM_NUM_CHANNELS; i++) {
 		if (i < RFM22BRECEIVER_CHANNEL_NUMELEM)
 			rcvr.Channel[i] = rcvr_dev->channels[i];

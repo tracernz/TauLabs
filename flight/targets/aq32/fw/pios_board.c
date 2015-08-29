@@ -218,7 +218,7 @@ uintptr_t pios_com_frsky_sport_id;
  */
 #if defined(PIOS_INCLUDE_USART) && defined(PIOS_INCLUDE_COM)
 static void PIOS_Board_configure_com (const struct pios_usart_cfg *usart_port_cfg, size_t rx_buf_len, size_t tx_buf_len,
-		const struct pios_com_driver *com_driver, uintptr_t *pios_com_id)
+                                      const struct pios_com_driver *com_driver, uintptr_t *pios_com_id)
 {
 	uintptr_t pios_usart_id;
 	if (PIOS_USART_Init(&pios_usart_id, usart_port_cfg)) {
@@ -242,8 +242,8 @@ static void PIOS_Board_configure_com (const struct pios_usart_cfg *usart_port_cf
 	}
 
 	if (PIOS_COM_Init(pios_com_id, com_driver, pios_usart_id,
-				rx_buffer, rx_buf_len,
-				tx_buffer, tx_buf_len)) {
+	                  rx_buffer, rx_buf_len,
+	                  tx_buffer, tx_buf_len)) {
 		PIOS_Assert(0);
 	}
 }
@@ -251,8 +251,8 @@ static void PIOS_Board_configure_com (const struct pios_usart_cfg *usart_port_cf
 
 #ifdef PIOS_INCLUDE_DSM
 static void PIOS_Board_configure_dsm(const struct pios_usart_cfg *pios_usart_dsm_cfg, const struct pios_dsm_cfg *pios_dsm_cfg,
-		const struct pios_com_driver *pios_usart_com_driver,
-		ManualControlSettingsChannelGroupsOptions channelgroup,uint8_t *bind)
+                                     const struct pios_com_driver *pios_usart_com_driver,
+                                     ManualControlSettingsChannelGroupsOptions channelgroup,uint8_t *bind)
 {
 	uintptr_t pios_usart_dsm_id;
 	if (PIOS_USART_Init(&pios_usart_dsm_id, pios_usart_dsm_cfg)) {
@@ -261,7 +261,7 @@ static void PIOS_Board_configure_dsm(const struct pios_usart_cfg *pios_usart_dsm
 
 	uintptr_t pios_dsm_id;
 	if (PIOS_DSM_Init(&pios_dsm_id, pios_dsm_cfg, pios_usart_com_driver,
-			pios_usart_dsm_id, *bind)) {
+	                  pios_usart_dsm_id, *bind)) {
 		PIOS_Assert(0);
 	}
 
@@ -275,8 +275,8 @@ static void PIOS_Board_configure_dsm(const struct pios_usart_cfg *pios_usart_dsm
 
 #ifdef PIOS_INCLUDE_HSUM
 static void PIOS_Board_configure_hsum(const struct pios_usart_cfg *pios_usart_hsum_cfg,
-		const struct pios_com_driver *pios_usart_com_driver,enum pios_hsum_proto *proto,
-		ManualControlSettingsChannelGroupsOptions channelgroup)
+                                      const struct pios_com_driver *pios_usart_com_driver,enum pios_hsum_proto *proto,
+                                      ManualControlSettingsChannelGroupsOptions channelgroup)
 {
 	uintptr_t pios_usart_hsum_id;
 	if (PIOS_USART_Init(&pios_usart_hsum_id, pios_usart_hsum_cfg)) {
@@ -285,7 +285,7 @@ static void PIOS_Board_configure_hsum(const struct pios_usart_cfg *pios_usart_hs
 
 	uintptr_t pios_hsum_id;
 	if (PIOS_HSUM_Init(&pios_hsum_id, pios_usart_com_driver,
-			  pios_usart_hsum_id, *proto)) {
+	                   pios_usart_hsum_id, *proto)) {
 		PIOS_Assert(0);
 	}
 
@@ -316,8 +316,9 @@ static void PIOS_Board_configure_hsum(const struct pios_usart_cfg *pios_usart_hs
  * 15 pulses: ADC     - PIOS_ADC_Init failed
  */
 
-void panic(int32_t code) {
-	while(1){
+void panic(int32_t code)
+{
+	while(1) {
 		for (int32_t i = 0; i < code; i++) {
 			PIOS_WDG_Clear();
 			PIOS_LED_Toggle(PIOS_LED_ALARM);
@@ -343,7 +344,8 @@ void panic(int32_t code) {
 
 #include <pios_board_info.h>
 
-void PIOS_Board_Init(void) {
+void PIOS_Board_Init(void)
+{
 	/* Delay system */
 	PIOS_DELAY_Init();
 
@@ -367,7 +369,7 @@ void PIOS_Board_Init(void) {
 	if (PIOS_SPI_Init(&pios_spi_internal_id, &pios_spi_internal_cfg)) {
 		PIOS_Assert(0);
 	}
-    #endif
+#endif
 
 #if defined(PIOS_INCLUDE_FLASH)
 	/* Initialize all flash drivers */
@@ -384,7 +386,7 @@ void PIOS_Board_Init(void) {
 	if (PIOS_FLASHFS_Logfs_Init(&pios_uavo_settings_fs_id, &flashfs_settings_cfg, FLASH_PARTITION_LABEL_SETTINGS) != 0)
 		panic(2);
 	if (PIOS_FLASHFS_Logfs_Init(&pios_waypoints_settings_fs_id, &flashfs_waypoints_cfg, FLASH_PARTITION_LABEL_WAYPOINTS) != 0)
-	    panic(3);
+		panic(3);
 #endif	/* PIOS_INCLUDE_FLASH */
 
 	/* Initialize the task monitor library */
@@ -415,32 +417,32 @@ void PIOS_Board_Init(void) {
 #endif
 
 	/* Set up pulse timers */
-	
+
 	//Timers used for inputs (4)
 	PIOS_TIM_InitClock(&tim_4_cfg);
-	
+
 	// Timers used for outputs (2, 3, 8)
 	PIOS_TIM_InitClock(&tim_2_cfg);
 	PIOS_TIM_InitClock(&tim_3_cfg);
 	PIOS_TIM_InitClock(&tim_8_cfg);
-	
+
 	// Timers used for inputs or outputs (1)
 	// Configure TIM_Period (ARR) accordingly
-	
+
 	PIOS_TIM_InitClock(&tim_1_cfg);
-	
+
 	uint8_t hw_rcvrport;
 	HwAQ32RcvrPortGet(&hw_rcvrport);
 
 	switch (hw_rcvrport) {
 	case HWAQ32_RCVRPORT_DISABLED:
 	case HWAQ32_RCVRPORT_PPM:
-	    TIM1->ARR = ((1000000 / PIOS_SERVO_UPDATE_HZ) - 1);  // Timer 1 configured for PWM outputs
+		TIM1->ARR = ((1000000 / PIOS_SERVO_UPDATE_HZ) - 1);  // Timer 1 configured for PWM outputs
 		break;
 	case HWAQ32_RCVRPORT_PWM:
 		TIM1->ARR = 0xFFFF;  // Timer 1 configured for PWM inputs
 		break;
-	}	
+	}
 
 	/* IAP System Setup */
 	PIOS_IAP_Init();
@@ -504,64 +506,64 @@ void PIOS_Board_Init(void) {
 		break;
 	case HWAQ32_USB_VCPPORT_USBTELEMETRY:
 #if defined(PIOS_INCLUDE_COM)
-		{
-			uint8_t * rx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_TELEM_USB_RX_BUF_LEN);
-			uint8_t * tx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_TELEM_USB_TX_BUF_LEN);
-			PIOS_Assert(rx_buffer);
-			PIOS_Assert(tx_buffer);
-			if (PIOS_COM_Init(&pios_com_telem_usb_id, &pios_usb_cdc_com_driver, pios_usb_cdc_id,
-							  rx_buffer, PIOS_COM_TELEM_USB_RX_BUF_LEN,
-							  tx_buffer, PIOS_COM_TELEM_USB_TX_BUF_LEN)) {
-				PIOS_Assert(0);
-			}
+	{
+		uint8_t * rx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_TELEM_USB_RX_BUF_LEN);
+		uint8_t * tx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_TELEM_USB_TX_BUF_LEN);
+		PIOS_Assert(rx_buffer);
+		PIOS_Assert(tx_buffer);
+		if (PIOS_COM_Init(&pios_com_telem_usb_id, &pios_usb_cdc_com_driver, pios_usb_cdc_id,
+		                  rx_buffer, PIOS_COM_TELEM_USB_RX_BUF_LEN,
+		                  tx_buffer, PIOS_COM_TELEM_USB_TX_BUF_LEN)) {
+			PIOS_Assert(0);
 		}
+	}
 #endif	/* PIOS_INCLUDE_COM */
-		break;
+	break;
 	case HWAQ32_USB_VCPPORT_COMBRIDGE:
 #if defined(PIOS_INCLUDE_COM)
-		{
-			uint8_t * rx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_BRIDGE_RX_BUF_LEN);
-			uint8_t * tx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_BRIDGE_TX_BUF_LEN);
-			PIOS_Assert(rx_buffer);
-			PIOS_Assert(tx_buffer);
-			if (PIOS_COM_Init(&pios_com_vcp_id, &pios_usb_cdc_com_driver, pios_usb_cdc_id,
-							  rx_buffer, PIOS_COM_BRIDGE_RX_BUF_LEN,
-							  tx_buffer, PIOS_COM_BRIDGE_TX_BUF_LEN)) {
-				PIOS_Assert(0);
-			}
+	{
+		uint8_t * rx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_BRIDGE_RX_BUF_LEN);
+		uint8_t * tx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_BRIDGE_TX_BUF_LEN);
+		PIOS_Assert(rx_buffer);
+		PIOS_Assert(tx_buffer);
+		if (PIOS_COM_Init(&pios_com_vcp_id, &pios_usb_cdc_com_driver, pios_usb_cdc_id,
+		                  rx_buffer, PIOS_COM_BRIDGE_RX_BUF_LEN,
+		                  tx_buffer, PIOS_COM_BRIDGE_TX_BUF_LEN)) {
+			PIOS_Assert(0);
 		}
+	}
 #endif	/* PIOS_INCLUDE_COM */
-		break;
+	break;
 	case HWAQ32_USB_VCPPORT_DEBUGCONSOLE:
 #if defined(PIOS_INCLUDE_COM)
 #if defined(PIOS_INCLUDE_DEBUG_CONSOLE)
-		{
-			uint8_t * tx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_DEBUGCONSOLE_TX_BUF_LEN);
-			PIOS_Assert(tx_buffer);
-			if (PIOS_COM_Init(&pios_com_debug_id, &pios_usb_cdc_com_driver, pios_usb_cdc_id,
-							  NULL, 0,
-							  tx_buffer, PIOS_COM_DEBUGCONSOLE_TX_BUF_LEN)) {
-				PIOS_Assert(0);
-			}
+	{
+		uint8_t * tx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_DEBUGCONSOLE_TX_BUF_LEN);
+		PIOS_Assert(tx_buffer);
+		if (PIOS_COM_Init(&pios_com_debug_id, &pios_usb_cdc_com_driver, pios_usb_cdc_id,
+		                  NULL, 0,
+		                  tx_buffer, PIOS_COM_DEBUGCONSOLE_TX_BUF_LEN)) {
+			PIOS_Assert(0);
 		}
+	}
 #endif	/* PIOS_INCLUDE_DEBUG_CONSOLE */
 #endif	/* PIOS_INCLUDE_COM */
-		break;
+	break;
 	case HWAQ32_USB_VCPPORT_PICOC:
 #if defined(PIOS_INCLUDE_COM)
-		{
-			uint8_t * rx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_PICOC_RX_BUF_LEN);
-			uint8_t * tx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_PICOC_TX_BUF_LEN);
-			PIOS_Assert(rx_buffer);
-			PIOS_Assert(tx_buffer);
-			if (PIOS_COM_Init(&pios_com_picoc_id, &pios_usb_cdc_com_driver, pios_usb_cdc_id,
-							  rx_buffer, PIOS_COM_PICOC_RX_BUF_LEN,
-							tx_buffer, PIOS_COM_PICOC_TX_BUF_LEN)) {
-				PIOS_Assert(0);
-			}
+	{
+		uint8_t * rx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_PICOC_RX_BUF_LEN);
+		uint8_t * tx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_PICOC_TX_BUF_LEN);
+		PIOS_Assert(rx_buffer);
+		PIOS_Assert(tx_buffer);
+		if (PIOS_COM_Init(&pios_com_picoc_id, &pios_usb_cdc_com_driver, pios_usb_cdc_id,
+		                  rx_buffer, PIOS_COM_PICOC_RX_BUF_LEN,
+		                  tx_buffer, PIOS_COM_PICOC_TX_BUF_LEN)) {
+			PIOS_Assert(0);
 		}
+	}
 #endif	/* PIOS_INCLUDE_COM */
-		break;
+	break;
 	}
 #endif	/* PIOS_INCLUDE_USB_CDC */
 
@@ -585,19 +587,19 @@ void PIOS_Board_Init(void) {
 		break;
 	case HWAQ32_USB_HIDPORT_USBTELEMETRY:
 #if defined(PIOS_INCLUDE_COM)
-		{
-			uint8_t * rx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_TELEM_USB_RX_BUF_LEN);
-			uint8_t * tx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_TELEM_USB_TX_BUF_LEN);
-			PIOS_Assert(rx_buffer);
-			PIOS_Assert(tx_buffer);
-			if (PIOS_COM_Init(&pios_com_telem_usb_id, &pios_usb_hid_com_driver, pios_usb_hid_id,
-							  rx_buffer, PIOS_COM_TELEM_USB_RX_BUF_LEN,
-							  tx_buffer, PIOS_COM_TELEM_USB_TX_BUF_LEN)) {
-				PIOS_Assert(0);
-			}
+	{
+		uint8_t * rx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_TELEM_USB_RX_BUF_LEN);
+		uint8_t * tx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_TELEM_USB_TX_BUF_LEN);
+		PIOS_Assert(rx_buffer);
+		PIOS_Assert(tx_buffer);
+		if (PIOS_COM_Init(&pios_com_telem_usb_id, &pios_usb_hid_com_driver, pios_usb_hid_id,
+		                  rx_buffer, PIOS_COM_TELEM_USB_RX_BUF_LEN,
+		                  tx_buffer, PIOS_COM_TELEM_USB_TX_BUF_LEN)) {
+			PIOS_Assert(0);
 		}
+	}
 #endif	/* PIOS_INCLUDE_COM */
-		break;
+	break;
 	}
 #endif	/* PIOS_INCLUDE_USB_HID */
 
@@ -607,13 +609,13 @@ void PIOS_Board_Init(void) {
 
 	/* Issue USB Disconnect Pulse */
 	PIOS_WDG_Clear();
-	
+
 	GPIO_ResetBits(pios_usb_main_cfg.disconnect.gpio, pios_usb_main_cfg.disconnect.init.GPIO_Pin);
-		
+
 	PIOS_DELAY_WaitmS(200);
-		
+
 	GPIO_SetBits(pios_usb_main_cfg.disconnect.gpio, pios_usb_main_cfg.disconnect.init.GPIO_Pin);
-	
+
 	PIOS_WDG_Clear();
 #endif	/* PIOS_INCLUDE_USB */
 
@@ -702,7 +704,7 @@ void PIOS_Board_Init(void) {
 
 	GPIO_Init(pios_usart3_sbus_aux_cfg.inv.gpio, (GPIO_InitTypeDef*)&pios_usart3_sbus_aux_cfg.inv.init);
 	GPIO_WriteBit(pios_usart3_sbus_aux_cfg.inv.gpio, pios_usart3_sbus_aux_cfg.inv.init.GPIO_Pin, pios_usart3_sbus_aux_cfg.gpio_inv_disable);
-	
+
 	switch (hw_uart3) {
 	case HWAQ32_UART3_DISABLED:
 		break;
@@ -719,23 +721,23 @@ void PIOS_Board_Init(void) {
 	case HWAQ32_UART3_SBUS:
 		//hardware signal inverter required
 #if defined(PIOS_INCLUDE_SBUS) && defined(PIOS_INCLUDE_USART)
-		{
-			uintptr_t pios_usart_sbus_id;
-			if (PIOS_USART_Init(&pios_usart_sbus_id, &pios_usart3_sbus_cfg)) {
-				PIOS_Assert(0);
-			}
-			uintptr_t pios_sbus_id;
-			if (PIOS_SBus_Init(&pios_sbus_id, &pios_usart3_sbus_aux_cfg, &pios_usart_com_driver, pios_usart_sbus_id)) {
-				PIOS_Assert(0);
-			}
-			uintptr_t pios_sbus_rcvr_id;
-			if (PIOS_RCVR_Init(&pios_sbus_rcvr_id, &pios_sbus_rcvr_driver, pios_sbus_id)) {
-				PIOS_Assert(0);
-			}
-			pios_rcvr_group_map[MANUALCONTROLSETTINGS_CHANNELGROUPS_SBUS] = pios_sbus_rcvr_id;
+	{
+		uintptr_t pios_usart_sbus_id;
+		if (PIOS_USART_Init(&pios_usart_sbus_id, &pios_usart3_sbus_cfg)) {
+			PIOS_Assert(0);
 		}
+		uintptr_t pios_sbus_id;
+		if (PIOS_SBus_Init(&pios_sbus_id, &pios_usart3_sbus_aux_cfg, &pios_usart_com_driver, pios_usart_sbus_id)) {
+			PIOS_Assert(0);
+		}
+		uintptr_t pios_sbus_rcvr_id;
+		if (PIOS_RCVR_Init(&pios_sbus_rcvr_id, &pios_sbus_rcvr_driver, pios_sbus_id)) {
+			PIOS_Assert(0);
+		}
+		pios_rcvr_group_map[MANUALCONTROLSETTINGS_CHANNELGROUPS_SBUS] = pios_sbus_rcvr_id;
+	}
 #endif	/* PIOS_INCLUDE_SBUS */
-		break;
+	break;
 	case HWAQ32_UART3_DEBUGCONSOLE:
 #if defined(PIOS_INCLUDE_DEBUG_CONSOLE) && defined(PIOS_INCLUDE_USART) && defined(PIOS_INCLUDE_COM)
 		PIOS_Board_configure_com(&pios_usart3_cfg, 0, PIOS_COM_DEBUGCONSOLE_TX_BUF_LEN, &pios_usart_com_driver, &pios_com_debug_id);
@@ -760,24 +762,24 @@ void PIOS_Board_Init(void) {
 	case HWAQ32_UART3_HOTTSUMD:
 	case HWAQ32_UART3_HOTTSUMH:
 #if defined(PIOS_INCLUDE_HSUM)
-		{
-			enum pios_hsum_proto proto;
-			switch (hw_uart3) {
-			case HWAQ32_UART3_HOTTSUMD:
-				proto = PIOS_HSUM_PROTO_SUMD;
-				break;
-			case HWAQ32_UART3_HOTTSUMH:
-				proto = PIOS_HSUM_PROTO_SUMH;
-				break;
-			default:
-				PIOS_Assert(0);
-				break;
-			}
-			PIOS_Board_configure_hsum(&pios_usart3_dsm_hsum_cfg, &pios_usart_com_driver,
-				&proto, MANUALCONTROLSETTINGS_CHANNELGROUPS_HOTTSUM);
+	{
+		enum pios_hsum_proto proto;
+		switch (hw_uart3) {
+		case HWAQ32_UART3_HOTTSUMD:
+			proto = PIOS_HSUM_PROTO_SUMD;
+			break;
+		case HWAQ32_UART3_HOTTSUMH:
+			proto = PIOS_HSUM_PROTO_SUMH;
+			break;
+		default:
+			PIOS_Assert(0);
+			break;
 		}
+		PIOS_Board_configure_hsum(&pios_usart3_dsm_hsum_cfg, &pios_usart_com_driver,
+		                          &proto, MANUALCONTROLSETTINGS_CHANNELGROUPS_HOTTSUM);
+	}
 #endif	/* PIOS_INCLUDE_HSUM */
-		break;
+	break;
 	case HWAQ32_UART3_HOTTTELEMETRY:
 #if defined(PIOS_INCLUDE_HOTT) && defined(PIOS_INCLUDE_USART) && defined(PIOS_INCLUDE_COM)
 		PIOS_Board_configure_com(&pios_usart3_cfg, PIOS_COM_HOTT_RX_BUF_LEN, PIOS_COM_HOTT_TX_BUF_LEN, &pios_usart_com_driver, &pios_com_hott_id);
@@ -826,12 +828,12 @@ void PIOS_Board_Init(void) {
 		break;
 	case HWAQ32_UART4_DSM:
 #if defined(PIOS_INCLUDE_DSM)
-		{
-			PIOS_Board_configure_dsm(&pios_usart4_dsm_hsum_cfg, &pios_usart4_dsm_aux_cfg, &pios_usart_com_driver,
-				MANUALCONTROLSETTINGS_CHANNELGROUPS_DSM, &hw_DSMxBind);
-		}
+	{
+		PIOS_Board_configure_dsm(&pios_usart4_dsm_hsum_cfg, &pios_usart4_dsm_aux_cfg, &pios_usart_com_driver,
+		                         MANUALCONTROLSETTINGS_CHANNELGROUPS_DSM, &hw_DSMxBind);
+	}
 #endif	/* PIOS_INCLUDE_DSM */
-		break;
+	break;
 	case HWAQ32_UART4_DEBUGCONSOLE:
 #if defined(PIOS_INCLUDE_DEBUG_CONSOLE) && defined(PIOS_INCLUDE_USART) && defined(PIOS_INCLUDE_COM)
 		PIOS_Board_configure_com(&pios_usart4_cfg, 0, PIOS_COM_DEBUGCONSOLE_TX_BUF_LEN, &pios_usart_com_driver, &pios_com_debug_id);
@@ -856,24 +858,24 @@ void PIOS_Board_Init(void) {
 	case HWAQ32_UART4_HOTTSUMD:
 	case HWAQ32_UART4_HOTTSUMH:
 #if defined(PIOS_INCLUDE_HSUM)
-		{
-			enum pios_hsum_proto proto;
-			switch (hw_uart4) {
-			case HWAQ32_UART4_HOTTSUMD:
-				proto = PIOS_HSUM_PROTO_SUMD;
-				break;
-			case HWAQ32_UART4_HOTTSUMH:
-				proto = PIOS_HSUM_PROTO_SUMH;
-				break;
-			default:
-				PIOS_Assert(0);
-				break;
-			}
-			PIOS_Board_configure_hsum(&pios_usart4_dsm_hsum_cfg, &pios_usart_com_driver,
-				&proto, MANUALCONTROLSETTINGS_CHANNELGROUPS_HOTTSUM);
+	{
+		enum pios_hsum_proto proto;
+		switch (hw_uart4) {
+		case HWAQ32_UART4_HOTTSUMD:
+			proto = PIOS_HSUM_PROTO_SUMD;
+			break;
+		case HWAQ32_UART4_HOTTSUMH:
+			proto = PIOS_HSUM_PROTO_SUMH;
+			break;
+		default:
+			PIOS_Assert(0);
+			break;
 		}
+		PIOS_Board_configure_hsum(&pios_usart4_dsm_hsum_cfg, &pios_usart_com_driver,
+		                          &proto, MANUALCONTROLSETTINGS_CHANNELGROUPS_HOTTSUM);
+	}
 #endif	/* PIOS_INCLUDE_HSUM */
-		break;
+	break;
 	case HWAQ32_UART4_HOTTTELEMETRY:
 #if defined(PIOS_INCLUDE_HOTT) && defined(PIOS_INCLUDE_USART) && defined(PIOS_INCLUDE_COM)
 		PIOS_Board_configure_com(&pios_usart4_cfg, PIOS_COM_HOTT_RX_BUF_LEN, PIOS_COM_HOTT_TX_BUF_LEN, &pios_usart_com_driver, &pios_com_hott_id);
@@ -884,7 +886,7 @@ void PIOS_Board_Init(void) {
 		PIOS_Board_configure_com(&pios_usart4_cfg, 0, PIOS_COM_FRSKYSENSORHUB_TX_BUF_LEN, &pios_usart_com_driver, &pios_com_frsky_sensor_hub_id);
 #endif /* PIOS_INCLUDE_FRSKY_SENSOR_HUB */
 		break;
-    case HWAQ32_UART4_LIGHTTELEMETRYTX:
+	case HWAQ32_UART4_LIGHTTELEMETRYTX:
 #if defined(PIOS_INCLUDE_LIGHTTELEMETRY)
 		PIOS_Board_configure_com(&pios_usart4_cfg, 0, PIOS_COM_LIGHTTELEMETRY_TX_BUF_LEN, &pios_usart_com_driver, &pios_com_lighttelemetry_id);
 #endif
@@ -921,12 +923,12 @@ void PIOS_Board_Init(void) {
 		break;
 	case HWAQ32_UART6_DSM:
 #if defined(PIOS_INCLUDE_DSM)
-		{
-			PIOS_Board_configure_dsm(&pios_usart6_dsm_hsum_cfg, &pios_usart6_dsm_aux_cfg, &pios_usart_com_driver,
-				MANUALCONTROLSETTINGS_CHANNELGROUPS_DSM, &hw_DSMxBind);
-		}
+	{
+		PIOS_Board_configure_dsm(&pios_usart6_dsm_hsum_cfg, &pios_usart6_dsm_aux_cfg, &pios_usart_com_driver,
+		                         MANUALCONTROLSETTINGS_CHANNELGROUPS_DSM, &hw_DSMxBind);
+	}
 #endif	/* PIOS_INCLUDE_DSM */
-		break;
+	break;
 	case HWAQ32_UART6_DEBUGCONSOLE:
 #if defined(PIOS_INCLUDE_DEBUG_CONSOLE) && defined(PIOS_INCLUDE_USART) && defined(PIOS_INCLUDE_COM)
 		PIOS_Board_configure_com(&pios_usart6_cfg, 0, PIOS_COM_DEBUGCONSOLE_TX_BUF_LEN, &pios_usart_com_driver, &pios_com_debug_id);
@@ -951,24 +953,24 @@ void PIOS_Board_Init(void) {
 	case HWAQ32_UART6_HOTTSUMD:
 	case HWAQ32_UART6_HOTTSUMH:
 #if defined(PIOS_INCLUDE_HSUM)
-		{
-			enum pios_hsum_proto proto;
-			switch (hw_uart6) {
-			case HWAQ32_UART6_HOTTSUMD:
-				proto = PIOS_HSUM_PROTO_SUMD;
-				break;
-			case HWAQ32_UART6_HOTTSUMH:
-				proto = PIOS_HSUM_PROTO_SUMH;
-				break;
-			default:
-				PIOS_Assert(0);
-				break;
-			}
-			PIOS_Board_configure_hsum(&pios_usart6_dsm_hsum_cfg, &pios_usart_com_driver,
-				&proto, MANUALCONTROLSETTINGS_CHANNELGROUPS_HOTTSUM);
+	{
+		enum pios_hsum_proto proto;
+		switch (hw_uart6) {
+		case HWAQ32_UART6_HOTTSUMD:
+			proto = PIOS_HSUM_PROTO_SUMD;
+			break;
+		case HWAQ32_UART6_HOTTSUMH:
+			proto = PIOS_HSUM_PROTO_SUMH;
+			break;
+		default:
+			PIOS_Assert(0);
+			break;
 		}
+		PIOS_Board_configure_hsum(&pios_usart6_dsm_hsum_cfg, &pios_usart_com_driver,
+		                          &proto, MANUALCONTROLSETTINGS_CHANNELGROUPS_HOTTSUM);
+	}
 #endif	/* PIOS_INCLUDE_HSUM */
-		break;
+	break;
 	case HWAQ32_UART6_HOTTTELEMETRY:
 #if defined(PIOS_INCLUDE_HOTT) && defined(PIOS_INCLUDE_USART) && defined(PIOS_INCLUDE_COM)
 		PIOS_Board_configure_com(&pios_usart6_cfg, PIOS_COM_HOTT_RX_BUF_LEN, PIOS_COM_HOTT_TX_BUF_LEN, &pios_usart_com_driver, &pios_com_hott_id);
@@ -979,7 +981,7 @@ void PIOS_Board_Init(void) {
 		PIOS_Board_configure_com(&pios_usart6_cfg, 0, PIOS_COM_FRSKYSENSORHUB_TX_BUF_LEN, &pios_usart_com_driver, &pios_com_frsky_sensor_hub_id);
 #endif /* PIOS_INCLUDE_FRSKY_SENSOR_HUB */
 		break;
-    case HWAQ32_UART6_LIGHTTELEMETRYTX:
+	case HWAQ32_UART6_LIGHTTELEMETRYTX:
 #if defined(PIOS_INCLUDE_LIGHTTELEMETRY)
 		PIOS_Board_configure_com(&pios_usart6_cfg, 0, PIOS_COM_LIGHTTELEMETRY_TX_BUF_LEN, &pios_usart_com_driver, &pios_com_lighttelemetry_id);
 #endif
@@ -999,34 +1001,35 @@ void PIOS_Board_Init(void) {
 	/* Configure the rcvr port */
 	switch (hw_rcvrport) {
 	case HWAQ32_RCVRPORT_DISABLED:
-	    break;
+		break;
 	case HWAQ32_RCVRPORT_PPM:
 #if defined(PIOS_INCLUDE_PPM)
-		{uintptr_t pios_ppm_id;
-			PIOS_PPM_Init(&pios_ppm_id, &pios_ppm_cfg);
+	{
+		uintptr_t pios_ppm_id;
+		PIOS_PPM_Init(&pios_ppm_id, &pios_ppm_cfg);
 
-			uintptr_t pios_ppm_rcvr_id;
-			if (PIOS_RCVR_Init(&pios_ppm_rcvr_id, &pios_ppm_rcvr_driver, pios_ppm_id)) {
-				PIOS_Assert(0);
-			}
-			pios_rcvr_group_map[MANUALCONTROLSETTINGS_CHANNELGROUPS_PPM] = pios_ppm_rcvr_id;
-#endif  /* PIOS_INCLUDE_PPM */
+		uintptr_t pios_ppm_rcvr_id;
+		if (PIOS_RCVR_Init(&pios_ppm_rcvr_id, &pios_ppm_rcvr_driver, pios_ppm_id)) {
+			PIOS_Assert(0);
 		}
-		break;
+		pios_rcvr_group_map[MANUALCONTROLSETTINGS_CHANNELGROUPS_PPM] = pios_ppm_rcvr_id;
+#endif  /* PIOS_INCLUDE_PPM */
+	}
+	break;
 	case HWAQ32_RCVRPORT_PWM:
 #if defined(PIOS_INCLUDE_PWM)
-		{
-			uintptr_t pios_pwm_id;
-			PIOS_PWM_Init(&pios_pwm_id, &pios_pwm_cfg);
+	{
+		uintptr_t pios_pwm_id;
+		PIOS_PWM_Init(&pios_pwm_id, &pios_pwm_cfg);
 
-			uintptr_t pios_pwm_rcvr_id;
-			if (PIOS_RCVR_Init(&pios_pwm_rcvr_id, &pios_pwm_rcvr_driver, pios_pwm_id)) {
-				PIOS_Assert(0);
-			}
-			pios_rcvr_group_map[MANUALCONTROLSETTINGS_CHANNELGROUPS_PWM] = pios_pwm_rcvr_id;
+		uintptr_t pios_pwm_rcvr_id;
+		if (PIOS_RCVR_Init(&pios_pwm_rcvr_id, &pios_pwm_rcvr_driver, pios_pwm_id)) {
+			PIOS_Assert(0);
 		}
+		pios_rcvr_group_map[MANUALCONTROLSETTINGS_CHANNELGROUPS_PWM] = pios_pwm_rcvr_id;
+	}
 #endif	/* PIOS_INCLUDE_PWM */
-		break;
+	break;
 	}
 
 #if defined(PIOS_INCLUDE_GCSRCVR)
@@ -1070,63 +1073,63 @@ void PIOS_Board_Init(void) {
 	uint8_t hw_gyro_range;
 	HwAQ32GyroRangeGet(&hw_gyro_range);
 	switch(hw_gyro_range) {
-		case HWAQ32_GYRORANGE_250:
-			PIOS_MPU6000_SetGyroRange(PIOS_MPU60X0_SCALE_250_DEG);
-			break;
-		case HWAQ32_GYRORANGE_500:
-			PIOS_MPU6000_SetGyroRange(PIOS_MPU60X0_SCALE_500_DEG);
-			break;
-		case HWAQ32_GYRORANGE_1000:
-			PIOS_MPU6000_SetGyroRange(PIOS_MPU60X0_SCALE_1000_DEG);
-			break;
-		case HWAQ32_GYRORANGE_2000:
-			PIOS_MPU6000_SetGyroRange(PIOS_MPU60X0_SCALE_2000_DEG);
-			break;
+	case HWAQ32_GYRORANGE_250:
+		PIOS_MPU6000_SetGyroRange(PIOS_MPU60X0_SCALE_250_DEG);
+		break;
+	case HWAQ32_GYRORANGE_500:
+		PIOS_MPU6000_SetGyroRange(PIOS_MPU60X0_SCALE_500_DEG);
+		break;
+	case HWAQ32_GYRORANGE_1000:
+		PIOS_MPU6000_SetGyroRange(PIOS_MPU60X0_SCALE_1000_DEG);
+		break;
+	case HWAQ32_GYRORANGE_2000:
+		PIOS_MPU6000_SetGyroRange(PIOS_MPU60X0_SCALE_2000_DEG);
+		break;
 	}
 
 	uint8_t hw_accel_range;
 	HwAQ32AccelRangeGet(&hw_accel_range);
 	switch(hw_accel_range) {
-		case HWAQ32_ACCELRANGE_2G:
-			PIOS_MPU6000_SetAccelRange(PIOS_MPU60X0_ACCEL_2G);
-			break;
-		case HWAQ32_ACCELRANGE_4G:
-			PIOS_MPU6000_SetAccelRange(PIOS_MPU60X0_ACCEL_4G);
-			break;
-		case HWAQ32_ACCELRANGE_8G:
-			PIOS_MPU6000_SetAccelRange(PIOS_MPU60X0_ACCEL_8G);
-			break;
-		case HWAQ32_ACCELRANGE_16G:
-			PIOS_MPU6000_SetAccelRange(PIOS_MPU60X0_ACCEL_16G);
-			break;
+	case HWAQ32_ACCELRANGE_2G:
+		PIOS_MPU6000_SetAccelRange(PIOS_MPU60X0_ACCEL_2G);
+		break;
+	case HWAQ32_ACCELRANGE_4G:
+		PIOS_MPU6000_SetAccelRange(PIOS_MPU60X0_ACCEL_4G);
+		break;
+	case HWAQ32_ACCELRANGE_8G:
+		PIOS_MPU6000_SetAccelRange(PIOS_MPU60X0_ACCEL_8G);
+		break;
+	case HWAQ32_ACCELRANGE_16G:
+		PIOS_MPU6000_SetAccelRange(PIOS_MPU60X0_ACCEL_16G);
+		break;
 	}
 
 	// the filter has to be set before rate else divisor calculation will fail
 	uint8_t hw_mpu6000_dlpf;
 	HwAQ32MPU6000DLPFGet(&hw_mpu6000_dlpf);
 	enum pios_mpu60x0_filter mpu6000_dlpf = \
-		(hw_mpu6000_dlpf == HWAQ32_MPU6000DLPF_256) ? PIOS_MPU60X0_LOWPASS_256_HZ : \
-		(hw_mpu6000_dlpf == HWAQ32_MPU6000DLPF_188) ? PIOS_MPU60X0_LOWPASS_188_HZ : \
-		(hw_mpu6000_dlpf == HWAQ32_MPU6000DLPF_98)  ? PIOS_MPU60X0_LOWPASS_98_HZ  : \
-		(hw_mpu6000_dlpf == HWAQ32_MPU6000DLPF_42)  ? PIOS_MPU60X0_LOWPASS_42_HZ  : \
-		(hw_mpu6000_dlpf == HWAQ32_MPU6000DLPF_20)  ? PIOS_MPU60X0_LOWPASS_20_HZ  : \
-		(hw_mpu6000_dlpf == HWAQ32_MPU6000DLPF_10)  ? PIOS_MPU60X0_LOWPASS_10_HZ  : \
-		(hw_mpu6000_dlpf == HWAQ32_MPU6000DLPF_5)   ? PIOS_MPU60X0_LOWPASS_5_HZ   : \
-		pios_mpu6000_cfg.default_filter;
+	                                        (hw_mpu6000_dlpf == HWAQ32_MPU6000DLPF_256) ? PIOS_MPU60X0_LOWPASS_256_HZ : \
+	                                        (hw_mpu6000_dlpf == HWAQ32_MPU6000DLPF_188) ? PIOS_MPU60X0_LOWPASS_188_HZ : \
+	                                        (hw_mpu6000_dlpf == HWAQ32_MPU6000DLPF_98)  ? PIOS_MPU60X0_LOWPASS_98_HZ  : \
+	                                        (hw_mpu6000_dlpf == HWAQ32_MPU6000DLPF_42)  ? PIOS_MPU60X0_LOWPASS_42_HZ  : \
+	                                        (hw_mpu6000_dlpf == HWAQ32_MPU6000DLPF_20)  ? PIOS_MPU60X0_LOWPASS_20_HZ  : \
+	                                        (hw_mpu6000_dlpf == HWAQ32_MPU6000DLPF_10)  ? PIOS_MPU60X0_LOWPASS_10_HZ  : \
+	                                        (hw_mpu6000_dlpf == HWAQ32_MPU6000DLPF_5)   ? PIOS_MPU60X0_LOWPASS_5_HZ   : \
+	                                        pios_mpu6000_cfg.default_filter;
 	PIOS_MPU6000_SetLPF(mpu6000_dlpf);
 
 	uint8_t hw_mpu6000_samplerate;
 	HwAQ32MPU6000RateGet(&hw_mpu6000_samplerate);
 	uint16_t mpu6000_samplerate = \
-		(hw_mpu6000_samplerate == HWAQ32_MPU6000RATE_200)  ?  200 : \
-		(hw_mpu6000_samplerate == HWAQ32_MPU6000RATE_333)  ?  333 : \
-		(hw_mpu6000_samplerate == HWAQ32_MPU6000RATE_500)  ?  500 : \
-		(hw_mpu6000_samplerate == HWAQ32_MPU6000RATE_666)  ?  666 : \
-		(hw_mpu6000_samplerate == HWAQ32_MPU6000RATE_1000) ? 1000 : \
-		(hw_mpu6000_samplerate == HWAQ32_MPU6000RATE_2000) ? 2000 : \
-		(hw_mpu6000_samplerate == HWAQ32_MPU6000RATE_4000) ? 4000 : \
-		(hw_mpu6000_samplerate == HWAQ32_MPU6000RATE_8000) ? 8000 : \
-		pios_mpu6000_cfg.default_samplerate;
+	                              (hw_mpu6000_samplerate == HWAQ32_MPU6000RATE_200)  ?  200 : \
+	                              (hw_mpu6000_samplerate == HWAQ32_MPU6000RATE_333)  ?  333 : \
+	                              (hw_mpu6000_samplerate == HWAQ32_MPU6000RATE_500)  ?  500 : \
+	                              (hw_mpu6000_samplerate == HWAQ32_MPU6000RATE_666)  ?  666 : \
+	                              (hw_mpu6000_samplerate == HWAQ32_MPU6000RATE_1000) ? 1000 : \
+	                              (hw_mpu6000_samplerate == HWAQ32_MPU6000RATE_2000) ? 2000 : \
+	                              (hw_mpu6000_samplerate == HWAQ32_MPU6000RATE_4000) ? 4000 : \
+	                              (hw_mpu6000_samplerate == HWAQ32_MPU6000RATE_8000) ? 8000 : \
+	                              pios_mpu6000_cfg.default_samplerate;
 	PIOS_MPU6000_SetSampleRate(mpu6000_samplerate);
 
 #endif
@@ -1137,50 +1140,46 @@ void PIOS_Board_Init(void) {
 
 	uint8_t Magnetometer;
 	HwAQ32MagnetometerGet(&Magnetometer);
-	
+
 	external_mag_fail = false;
 
-	if (Magnetometer == HWAQ32_MAGNETOMETER_EXTERNAL)
-	{
+	if (Magnetometer == HWAQ32_MAGNETOMETER_EXTERNAL) {
 		AlarmsSet(SYSTEMALARMS_ALARM_I2C, SYSTEMALARMS_ALARM_OK);
-			
+
 		if (PIOS_I2C_Init(&pios_i2c_external_id, &pios_i2c_external_cfg)) {
 			PIOS_DEBUG_Assert(0);
 			AlarmsSet(SYSTEMALARMS_ALARM_I2C, SYSTEMALARMS_ALARM_CRITICAL);
 		}
-		
+
 		if (PIOS_I2C_CheckClear(pios_i2c_external_id) != 0)
 			AlarmsSet(SYSTEMALARMS_ALARM_I2C, SYSTEMALARMS_ALARM_CRITICAL);;
-    
+
 		if (PIOS_HMC5883_Init(pios_i2c_external_id, &pios_hmc5883_external_cfg) == 0) {
 			if (PIOS_HMC5883_Test() == 0) {
 				// External mag configuration was successful
-				
+
 				// setup sensor orientation
 				uint8_t ExtMagOrientation;
 				HwAQ32ExtMagOrientationGet(&ExtMagOrientation);
 
 				enum pios_hmc5883_orientation hmc5883_externalOrientation = \
-					(ExtMagOrientation == HWAQ32_EXTMAGORIENTATION_TOP0DEGCW)      ? PIOS_HMC5883_TOP_0DEG      : \
-					(ExtMagOrientation == HWAQ32_EXTMAGORIENTATION_TOP90DEGCW)     ? PIOS_HMC5883_TOP_90DEG     : \
-					(ExtMagOrientation == HWAQ32_EXTMAGORIENTATION_TOP180DEGCW)    ? PIOS_HMC5883_TOP_180DEG    : \
-					(ExtMagOrientation == HWAQ32_EXTMAGORIENTATION_TOP270DEGCW)    ? PIOS_HMC5883_TOP_270DEG    : \
-					(ExtMagOrientation == HWAQ32_EXTMAGORIENTATION_BOTTOM0DEGCW)   ? PIOS_HMC5883_BOTTOM_0DEG   : \
-					(ExtMagOrientation == HWAQ32_EXTMAGORIENTATION_BOTTOM90DEGCW)  ? PIOS_HMC5883_BOTTOM_90DEG  : \
-					(ExtMagOrientation == HWAQ32_EXTMAGORIENTATION_BOTTOM180DEGCW) ? PIOS_HMC5883_BOTTOM_180DEG : \
-					(ExtMagOrientation == HWAQ32_EXTMAGORIENTATION_BOTTOM270DEGCW) ? PIOS_HMC5883_BOTTOM_270DEG : \
-					pios_hmc5883_external_cfg.Default_Orientation;
+				        (ExtMagOrientation == HWAQ32_EXTMAGORIENTATION_TOP0DEGCW)      ? PIOS_HMC5883_TOP_0DEG      : \
+				        (ExtMagOrientation == HWAQ32_EXTMAGORIENTATION_TOP90DEGCW)     ? PIOS_HMC5883_TOP_90DEG     : \
+				        (ExtMagOrientation == HWAQ32_EXTMAGORIENTATION_TOP180DEGCW)    ? PIOS_HMC5883_TOP_180DEG    : \
+				        (ExtMagOrientation == HWAQ32_EXTMAGORIENTATION_TOP270DEGCW)    ? PIOS_HMC5883_TOP_270DEG    : \
+				        (ExtMagOrientation == HWAQ32_EXTMAGORIENTATION_BOTTOM0DEGCW)   ? PIOS_HMC5883_BOTTOM_0DEG   : \
+				        (ExtMagOrientation == HWAQ32_EXTMAGORIENTATION_BOTTOM90DEGCW)  ? PIOS_HMC5883_BOTTOM_90DEG  : \
+				        (ExtMagOrientation == HWAQ32_EXTMAGORIENTATION_BOTTOM180DEGCW) ? PIOS_HMC5883_BOTTOM_180DEG : \
+				        (ExtMagOrientation == HWAQ32_EXTMAGORIENTATION_BOTTOM270DEGCW) ? PIOS_HMC5883_BOTTOM_270DEG : \
+				        pios_hmc5883_external_cfg.Default_Orientation;
 				PIOS_HMC5883_SetOrientation(hmc5883_externalOrientation);
-			}
-			else
+			} else
 				external_mag_fail = true;  // External HMC5883 Test Failed
-		}
-		else
+		} else
 			external_mag_fail = true;  // External HMC5883 Init Failed
 	}
 
-	if (Magnetometer == HWAQ32_MAGNETOMETER_INTERNAL)
-	{
+	if (Magnetometer == HWAQ32_MAGNETOMETER_INTERNAL) {
 		if (PIOS_HMC5883_Init(pios_i2c_internal_id, &pios_hmc5883_internal_cfg) != 0)
 			panic(6);
 		if (PIOS_HMC5883_Test() != 0)
@@ -1217,19 +1216,18 @@ void PIOS_Board_Init(void) {
 	switch (hw_adcport)	{
 	case HWAQ32_ADCINPUTS_DISABLED:
 		break;
-	case HWAQ32_ADCINPUTS_ENABLED:
-		{
-			uint32_t internal_adc_id;
+	case HWAQ32_ADCINPUTS_ENABLED: {
+		uint32_t internal_adc_id;
 
-			if (PIOS_INTERNAL_ADC_Init(&internal_adc_id, &pios_adc_cfg) < 0) {
-				PIOS_Assert(0);
-					panic(14);
-			}
-
-			if (PIOS_ADC_Init(&pios_internal_adc_id, &pios_internal_adc_driver, internal_adc_id) < 0)
-				panic(15);
+		if (PIOS_INTERNAL_ADC_Init(&internal_adc_id, &pios_adc_cfg) < 0) {
+			PIOS_Assert(0);
+			panic(14);
 		}
-        break;
+
+		if (PIOS_ADC_Init(&pios_internal_adc_id, &pios_internal_adc_driver, internal_adc_id) < 0)
+			panic(15);
+	}
+	break;
 	}
 #endif
 

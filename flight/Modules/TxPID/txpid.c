@@ -146,7 +146,7 @@ static void updatePIDs(UAVObjEvent* ev)
 	uint8_t armed;
 	FlightStatusArmedGet(&armed);
 	if ((inst.UpdateMode == TXPIDSETTINGS_UPDATEMODE_WHENARMED) &&
-			(armed == FLIGHTSTATUS_ARMED_DISARMED))
+	    (armed == FLIGHTSTATUS_ARMED_DISARMED))
 		return;
 
 	StabilizationSettingsData stab;
@@ -163,9 +163,9 @@ static void updatePIDs(UAVObjEvent* ev)
 			if (inst.Inputs[i] == TXPIDSETTINGS_INPUTS_THROTTLE) {
 				ManualControlCommandThrottleGet(&value);
 				value = scale(value,
-						inst.ThrottleRange[TXPIDSETTINGS_THROTTLERANGE_MIN],
-						inst.ThrottleRange[TXPIDSETTINGS_THROTTLERANGE_MAX],
-						inst.MinPID[i], inst.MaxPID[i]);
+				              inst.ThrottleRange[TXPIDSETTINGS_THROTTLERANGE_MIN],
+				              inst.ThrottleRange[TXPIDSETTINGS_THROTTLERANGE_MAX],
+				              inst.MinPID[i], inst.MaxPID[i]);
 			} else if (AccessoryDesiredInstGet(inst.Inputs[i] - TXPIDSETTINGS_INPUTS_ACCESSORY0, &accessory) == 0) {
 				value = scale(accessory.AccessoryVal, -1.0, 1.0, inst.MinPID[i], inst.MaxPID[i]);
 			} else {
@@ -267,7 +267,7 @@ static void updatePIDs(UAVObjEvent* ev)
 			case TXPIDSETTINGS_PIDS_GYROCUTOFF:
 				needsUpdate |= update(&stab.GyroCutoff, value);
 				break;
-			case TXPIDSETTINGS_PIDS_ROLLVBARSENSITIVITY: 
+			case TXPIDSETTINGS_PIDS_ROLLVBARSENSITIVITY:
 				needsUpdate |= update(&stab.VbarSensitivity[STABILIZATIONSETTINGS_VBARSENSITIVITY_ROLL], value);
 				break;
 			case TXPIDSETTINGS_PIDS_PITCHVBARSENSITIVITY:
@@ -277,7 +277,7 @@ static void updatePIDs(UAVObjEvent* ev)
 				needsUpdate |= update(&stab.VbarSensitivity[STABILIZATIONSETTINGS_VBARSENSITIVITY_ROLL], value);
 				needsUpdate |= update(&stab.VbarSensitivity[STABILIZATIONSETTINGS_VBARSENSITIVITY_PITCH], value);
 				break;
-			
+
 			case TXPIDSETTINGS_PIDS_YAWVBARSENSITIVITY:
 				needsUpdate |= update(&stab.VbarSensitivity[STABILIZATIONSETTINGS_VBARSENSITIVITY_YAW], value);
 				break;
@@ -286,7 +286,7 @@ static void updatePIDs(UAVObjEvent* ev)
 				break;
 			case TXPIDSETTINGS_PIDS_ROLLVBARKI:
 				needsUpdate |= update(&stab.VbarRollPID[STABILIZATIONSETTINGS_VBARROLLPID_KI], value);
-				break;	
+				break;
 			case TXPIDSETTINGS_PIDS_ROLLVBARKD:
 				needsUpdate |= update(&stab.VbarRollPID[STABILIZATIONSETTINGS_VBARROLLPID_KD], value);
 				break;

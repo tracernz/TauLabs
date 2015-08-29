@@ -45,7 +45,7 @@
 #include "pios_mutex.h"
 
 enum pios_com_dev_magic {
-  PIOS_COM_DEV_MAGIC = 0xaa55aa55,
+	PIOS_COM_DEV_MAGIC = 0xaa55aa55,
 };
 
 struct pios_com_dev {
@@ -126,7 +126,7 @@ int32_t PIOS_COM_Init(uintptr_t * com_id, const struct pios_com_driver * driver,
 		if (com_dev->driver->rx_start) {
 			/* Start the receiver */
 			(com_dev->driver->rx_start)(com_dev->lower_id,
-						    fifoBuf_getFree(&com_dev->rx));
+			                            fifoBuf_getFree(&com_dev->rx));
 		}
 	}
 
@@ -296,7 +296,7 @@ int32_t PIOS_COM_SendBufferNonBlocking(uintptr_t com_id, const uint8_t *buffer, 
 		/* More data has been put in the tx buffer, make sure the tx is started */
 		if (com_dev->driver->tx_start) {
 			com_dev->driver->tx_start(com_dev->lower_id,
-						  fifoBuf_getUsed(&com_dev->tx));
+			                          fifoBuf_getUsed(&com_dev->tx));
 		}
 	}
 
@@ -350,7 +350,7 @@ int32_t PIOS_COM_SendBuffer(uintptr_t com_id, const uint8_t *buffer, uint16_t le
 				/* Make sure the transmitter is running while we wait */
 				if (com_dev->driver->tx_start) {
 					(com_dev->driver->tx_start)(com_dev->lower_id,
-								fifoBuf_getUsed(&com_dev->tx));
+					                            fifoBuf_getUsed(&com_dev->tx));
 				}
 #if defined(PIOS_INCLUDE_FREERTOS) || defined(PIOS_INCLUDE_CHIBIOS)
 				if (PIOS_Semaphore_Take(com_dev->tx_sem, 5000) != true) {
@@ -481,7 +481,7 @@ uint16_t PIOS_COM_ReceiveBuffer(uintptr_t com_id, uint8_t * buf, uint16_t buf_le
 	}
 	PIOS_Assert(com_dev->has_rx);
 
- check_again:
+check_again:
 	bytes_from_fifo = fifoBuf_getData(&com_dev->rx, buf, buf_len);
 
 	if (bytes_from_fifo == 0) {
@@ -490,7 +490,7 @@ uint16_t PIOS_COM_ReceiveBuffer(uintptr_t com_id, uint8_t * buf, uint16_t buf_le
 		if (com_dev->driver->rx_start) {
 			/* Notify the lower layer that there is now room in the rx buffer */
 			(com_dev->driver->rx_start)(com_dev->lower_id,
-						    fifoBuf_getFree(&com_dev->rx));
+			                            fifoBuf_getFree(&com_dev->rx));
 		}
 		if (timeout_ms > 0) {
 #if defined(PIOS_INCLUDE_FREERTOS) || defined(PIOS_INCLUDE_CHIBIOS)

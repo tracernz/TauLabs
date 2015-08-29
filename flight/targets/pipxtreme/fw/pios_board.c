@@ -5,26 +5,26 @@
  * @addtogroup PipXtreme OpenPilot PipXtreme support files
  * @{
  *
- * @file       pios_board.c 
+ * @file       pios_board.c
  * @author     The OpenPilot Team, http://www.openpilot.org Copyright (C) 2011.
  * @author     Tau Labs, http://taulabs.org, Copyright (C) 2012-2015
  * @brief      The board specific initialization routines
  * @see        The GNU Public License (GPL) Version 3
- * 
+ *
  *****************************************************************************/
-/* 
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 3 of the License, or 
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
  * for more details.
- * 
- * You should have received a copy of the GNU General Public License along 
- * with this program; if not, write to the Free Software Foundation, Inc., 
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
@@ -54,7 +54,8 @@ uintptr_t pios_uavo_settings_fs_id;
  * initializes all the core subsystems on this specific hardware
  * called from System/openpilot.c
  */
-void PIOS_Board_Init(void) {
+void PIOS_Board_Init(void)
+{
 
 	/* Delay system */
 	PIOS_DELAY_Init();
@@ -143,17 +144,16 @@ void PIOS_Board_Init(void) {
 
 	/* Configure the USB virtual com port (VCP) */
 #if defined(PIOS_INCLUDE_USB_CDC)
-	if (usb_cdc_present)
-	{
+	if (usb_cdc_present) {
 		PIOS_HAL_ConfigureCDC(hwTauLink.VCPPort, pios_usb_id, &pios_usb_cdc_cfg);
 	}
 #endif
 
 	PIOS_HAL_ConfigurePort(hwTauLink.MainPort,
-	    &pios_usart_serial_cfg, &pios_usart_com_driver,
-	    /* no I2C, DSM, HSUM, SBUS, etc. */
-	    NULL, NULL, NULL, PIOS_LED_ALARM,
-	    NULL, NULL, 0, NULL, NULL, false);
+	                       &pios_usart_serial_cfg, &pios_usart_com_driver,
+	                       /* no I2C, DSM, HSUM, SBUS, etc. */
+	                       NULL, NULL, NULL, PIOS_LED_ALARM,
+	                       NULL, NULL, 0, NULL, NULL, false);
 
 	// Update the com baud rate.
 	uint32_t comBaud = 9600;
@@ -180,16 +180,15 @@ void PIOS_Board_Init(void) {
 
 	const struct pios_rfm22b_cfg *rfm22b_cfg = PIOS_BOARD_HW_DEFS_GetRfm22Cfg(bdinfo->board_rev);
 	PIOS_HAL_ConfigureRFM22B(hwTauLink.Radio, bdinfo->board_type,
-	    bdinfo->board_rev, hwTauLink.MaxRfPower,
-	    hwTauLink.MaxRfSpeed, NULL, rfm22b_cfg,
-	    hwTauLink.MinChannel, hwTauLink.MaxChannel,
-	    hwTauLink.CoordID, 0);
+	                         bdinfo->board_rev, hwTauLink.MaxRfPower,
+	                         hwTauLink.MaxRfSpeed, NULL, rfm22b_cfg,
+	                         hwTauLink.MinChannel, hwTauLink.MaxChannel,
+	                         hwTauLink.CoordID, 0);
 
 	if (bdinfo->board_rev == TAULINK_VERSION_MODULE) {
 		// Configure the main serial port function
 		switch (hwTauLink.BTPort) {
-		case HWTAULINK_BTPORT_TELEMETRY:
-		{
+		case HWTAULINK_BTPORT_TELEMETRY: {
 			// Note: if the main port is also on telemetry the bluetooth
 			// port will take precedence
 			uintptr_t pios_usart2_id;
@@ -201,8 +200,8 @@ void PIOS_Board_Init(void) {
 			PIOS_Assert(rx_buffer);
 			PIOS_Assert(tx_buffer);
 			if (PIOS_COM_Init(&pios_com_telem_uart_bluetooth_id, &pios_usart_com_driver, pios_usart2_id,
-												rx_buffer, PIOS_COM_TELEM_RX_BUF_LEN,
-												tx_buffer, PIOS_COM_TELEM_TX_BUF_LEN)) {
+			                  rx_buffer, PIOS_COM_TELEM_RX_BUF_LEN,
+			                  tx_buffer, PIOS_COM_TELEM_TX_BUF_LEN)) {
 				PIOS_Assert(0);
 			}
 
@@ -219,9 +218,8 @@ void PIOS_Board_Init(void) {
 			PIOS_COM_ChangeBaud(pios_com_telem_uart_bluetooth_id, 115200);
 			pios_com_telem_serial_id = pios_com_telem_uart_bluetooth_id;
 		}
-			break;
-		case HWTAULINK_BTPORT_COMBRIDGE:
-		{
+		break;
+		case HWTAULINK_BTPORT_COMBRIDGE: {
 			// Note: if the main port is also on telemetry the bluetooth
 			// port will take precedence
 			uintptr_t pios_usart2_id;
@@ -233,8 +231,8 @@ void PIOS_Board_Init(void) {
 			PIOS_Assert(rx_buffer);
 			PIOS_Assert(tx_buffer);
 			if (PIOS_COM_Init(&pios_com_telem_uart_bluetooth_id, &pios_usart_com_driver, pios_usart2_id,
-												rx_buffer, PIOS_COM_TELEM_RX_BUF_LEN,
-												tx_buffer, PIOS_COM_TELEM_TX_BUF_LEN)) {
+			                  rx_buffer, PIOS_COM_TELEM_RX_BUF_LEN,
+			                  tx_buffer, PIOS_COM_TELEM_TX_BUF_LEN)) {
 				PIOS_Assert(0);
 			}
 
@@ -244,80 +242,78 @@ void PIOS_Board_Init(void) {
 			ModuleSettingsData moduleSettings;
 			ModuleSettingsGet(&moduleSettings);
 			switch(comBaud) {
-				case 4800:
-					moduleSettings.ComUsbBridgeSpeed = MODULESETTINGS_COMUSBBRIDGESPEED_4800;
-					break;
-				case 9600:
-					moduleSettings.ComUsbBridgeSpeed = MODULESETTINGS_COMUSBBRIDGESPEED_9600;
-					break;
-				case 19200:
-					moduleSettings.ComUsbBridgeSpeed = MODULESETTINGS_COMUSBBRIDGESPEED_19200;
-					break;
-				case 38400:
-					moduleSettings.ComUsbBridgeSpeed = MODULESETTINGS_COMUSBBRIDGESPEED_38400;
-					break;
-				case 57600:
-					moduleSettings.ComUsbBridgeSpeed = MODULESETTINGS_COMUSBBRIDGESPEED_57600;
-					break;
-				case 115200:
-					moduleSettings.ComUsbBridgeSpeed = MODULESETTINGS_COMUSBBRIDGESPEED_115200;
-					break;
-				default:
-					moduleSettings.ComUsbBridgeSpeed = MODULESETTINGS_COMUSBBRIDGESPEED_9600;
+			case 4800:
+				moduleSettings.ComUsbBridgeSpeed = MODULESETTINGS_COMUSBBRIDGESPEED_4800;
+				break;
+			case 9600:
+				moduleSettings.ComUsbBridgeSpeed = MODULESETTINGS_COMUSBBRIDGESPEED_9600;
+				break;
+			case 19200:
+				moduleSettings.ComUsbBridgeSpeed = MODULESETTINGS_COMUSBBRIDGESPEED_19200;
+				break;
+			case 38400:
+				moduleSettings.ComUsbBridgeSpeed = MODULESETTINGS_COMUSBBRIDGESPEED_38400;
+				break;
+			case 57600:
+				moduleSettings.ComUsbBridgeSpeed = MODULESETTINGS_COMUSBBRIDGESPEED_57600;
+				break;
+			case 115200:
+				moduleSettings.ComUsbBridgeSpeed = MODULESETTINGS_COMUSBBRIDGESPEED_115200;
+				break;
+			default:
+				moduleSettings.ComUsbBridgeSpeed = MODULESETTINGS_COMUSBBRIDGESPEED_9600;
 			}
 			ModuleSettingsSet(&moduleSettings);
 
 			PIOS_COM_ChangeBaud(pios_com_telem_uart_bluetooth_id, comBaud);
 			pios_com_bridge_id = pios_com_telem_uart_bluetooth_id;
 		}
-			break;
+		break;
 		case HWTAULINK_MAINPORT_DISABLED:
 			break;
 		}
 	}
 
-    // Configure the flexi port
-    switch (hwTauLink.PPMPort) {
-    case HWTAULINK_PPMPORT_PPM:
-    {
+	// Configure the flexi port
+	switch (hwTauLink.PPMPort) {
+	case HWTAULINK_PPMPORT_PPM: {
 #if defined(PIOS_INCLUDE_PPM)
-				/* PPM input is configured on the coordinator modem and sent in the RFM22BReceiver UAVO. */
-				uintptr_t pios_ppm_id;
-				PIOS_PPM_Init(&pios_ppm_id, &pios_ppm_cfg);
+		/* PPM input is configured on the coordinator modem and sent in the RFM22BReceiver UAVO. */
+		uintptr_t pios_ppm_id;
+		PIOS_PPM_Init(&pios_ppm_id, &pios_ppm_cfg);
 
-				if (PIOS_RCVR_Init(&pios_ppm_rcvr_id, &pios_ppm_rcvr_driver, pios_ppm_id)) {
-					PIOS_Assert(0);
-				}
+		if (PIOS_RCVR_Init(&pios_ppm_rcvr_id, &pios_ppm_rcvr_driver, pios_ppm_id)) {
+			PIOS_Assert(0);
+		}
 
 #endif /* PIOS_INCLUDE_PPM */
-        break;
-    }
-    case HWTAULINK_PPMPORT_SPORT:
+		break;
+	}
+	case HWTAULINK_PPMPORT_SPORT:
 #if defined(PIOS_INCLUDE_TARANIS_SPORT)
-        PIOS_HAL_ConfigureCom(&pios_usart_sport_cfg, 0, PIOS_COM_FRSKYSPORT_TX_BUF_LEN, &pios_usart_com_driver, &pios_com_frsky_sport_id);
+		PIOS_HAL_ConfigureCom(&pios_usart_sport_cfg, 0, PIOS_COM_FRSKYSPORT_TX_BUF_LEN, &pios_usart_com_driver, &pios_com_frsky_sport_id);
 #endif /* PIOS_INCLUDE_TARANIS_SPORT */
-        break;
-    case HWTAULINK_PPMPORT_PPMSPORT:
-    {
+		break;
+	case HWTAULINK_PPMPORT_PPMSPORT: {
 #if defined(PIOS_INCLUDE_TARANIS_SPORT)
-        PIOS_HAL_ConfigureCom(&pios_usart_sport_cfg, 0, PIOS_COM_FRSKYSPORT_TX_BUF_LEN, &pios_usart_com_driver, &pios_com_frsky_sport_id);
+		PIOS_HAL_ConfigureCom(&pios_usart_sport_cfg, 0, PIOS_COM_FRSKYSPORT_TX_BUF_LEN, &pios_usart_com_driver, &pios_com_frsky_sport_id);
 #endif /* PIOS_INCLUDE_TARANIS_SPORT */
 #if defined(PIOS_INCLUDE_PPM)
-        /* PPM input is configured on the coordinator modem and sent in the RFM22BReceiver UAVO. */
-        uintptr_t pios_ppm_id;
-        PIOS_PPM_Init(&pios_ppm_id, &pios_ppm_cfg);
+		/* PPM input is configured on the coordinator modem and sent in the RFM22BReceiver UAVO. */
+		uintptr_t pios_ppm_id;
+		PIOS_PPM_Init(&pios_ppm_id, &pios_ppm_cfg);
 
-        if (PIOS_RCVR_Init(&pios_ppm_rcvr_id, &pios_ppm_rcvr_driver, pios_ppm_id)) {
-            PIOS_Assert(0);
-        }
+		if (PIOS_RCVR_Init(&pios_ppm_rcvr_id, &pios_ppm_rcvr_driver, pios_ppm_id)) {
+			PIOS_Assert(0);
+		}
 
 #endif /* PIOS_INCLUDE_PPM */
-        break;
-    }
-    case HWTAULINK_PPMPORT_DISABLED:
-    default:
-        break;
-    }
+		break;
+	}
+	case HWTAULINK_PPMPORT_DISABLED:
+	default:
+		break;
+	}
 
 	if (PIOS_COM_TELEMETRY) {
 		PIOS_COM_ChangeBaud(PIOS_COM_TELEMETRY, comBaud);

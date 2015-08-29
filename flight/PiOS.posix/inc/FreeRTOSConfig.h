@@ -9,52 +9,52 @@
  * application requirements.
  *
  * THESE PARAMETERS ARE DESCRIBED WITHIN THE 'CONFIGURATION' SECTION OF THE
- * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE. 
+ * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE.
  *
  * See http://www.freertos.org/a00110.html.
  *----------------------------------------------------------*/
 
-/* Notes: We use 5 task priorities */  
+/* Notes: We use 5 task priorities */
 
 
-#ifdef __APPLE__ 
-	#define COND_SIGNALING  
-	#define CHECK_TASK_RESUMES
-	#define RUNNING_THREAD_MUTEX
-//	#define TICK_SIGNAL 
+#ifdef __APPLE__
+#define COND_SIGNALING
+#define CHECK_TASK_RESUMES
+#define RUNNING_THREAD_MUTEX
+//	#define TICK_SIGNAL
 //	#define TICK_SIGWAIT
-	#define IDLE_SLEEPS
+#define IDLE_SLEEPS
 
-	#define configUSE_PREEMPTION		1
-	#define configIDLE_SHOULD_YIELD		0
+#define configUSE_PREEMPTION		1
+#define configIDLE_SHOULD_YIELD		0
 #endif
 #ifdef __CYGWIN__
-	#define COND_SIGNALING  
-	#define CHECK_TASK_RESUMES
+#define COND_SIGNALING
+#define CHECK_TASK_RESUMES
 //	#define RUNNING_THREAD_MUTEX
 //	#define TICK_SIGNAL
-	#define TICK_SIGWAIT
-	#define IDLE_SLEEPS
+#define TICK_SIGWAIT
+#define IDLE_SLEEPS
 
-	#define configUSE_PREEMPTION		0
-	#define configIDLE_SHOULD_YIELD		1
+#define configUSE_PREEMPTION		0
+#define configIDLE_SHOULD_YIELD		1
 #endif
 #ifdef __linux__
-	#define COND_SIGNALING
-	#define CHECK_TASK_RESUMES
-	#define RUNNING_THREAD_MUTEX
+#define COND_SIGNALING
+#define CHECK_TASK_RESUMES
+#define RUNNING_THREAD_MUTEX
 //	#define TICK_SIGNAL
 //	#define TICK_SIGWAIT
-	#define IDLE_SLEEPS
+#define IDLE_SLEEPS
 
-	#define configUSE_PREEMPTION		1
-	#define configIDLE_SHOULD_YIELD		0
+#define configUSE_PREEMPTION		1
+#define configIDLE_SHOULD_YIELD		0
 #endif
 
 
 #define configUSE_IDLE_HOOK		1
 #define configUSE_TICK_HOOK		0
-#define configCPU_CLOCK_HZ		( ( unsigned long ) 72000000 )	
+#define configCPU_CLOCK_HZ		( ( unsigned long ) 72000000 )
 #define configTICK_RATE_HZ		( ( portTickType ) 1000 )
 #define configMAX_PRIORITIES		( ( unsigned portBASE_TYPE ) 5 )
 #define configMINIMAL_STACK_SIZE	( ( unsigned short ) 256 )

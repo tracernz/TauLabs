@@ -36,14 +36,14 @@ typedef int32_t (*UAVTalkOutputStream)(uint8_t* data, int32_t length);
 
 //! Tracking statistics for a UAVTalk connection
 typedef struct {
-    uint32_t txBytes;
-    uint32_t rxBytes;
-    uint32_t txObjectBytes;
-    uint32_t rxObjectBytes;
-    uint32_t rxObjects;
-    uint32_t txObjects;
-    uint32_t txErrors;
-    uint32_t rxErrors;
+	uint32_t txBytes;
+	uint32_t rxBytes;
+	uint32_t txObjectBytes;
+	uint32_t rxObjectBytes;
+	uint32_t rxObjects;
+	uint32_t txObjects;
+	uint32_t txErrors;
+	uint32_t rxErrors;
 } UAVTalkStats;
 
 typedef void* UAVTalkConnection;

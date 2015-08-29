@@ -46,7 +46,7 @@
  * Files are written into continuous sectors of the flash chip. Each
  * sector has a footer to indicate the file id and the sector id.
  *
- * Arenas map onto sectors. 
+ * Arenas map onto sectors.
  */
 
 #include <pios_com.h>
@@ -192,7 +192,7 @@ static void streamfs_free(struct streamfs_state *streamfs)
  * Write footer to current sector and reset pointers for writing to
  * next sector
  */
-/* NOTE: Must be called while holding the flash transaction lock */ 
+/* NOTE: Must be called while holding the flash transaction lock */
 static int32_t streamfs_new_sector(struct streamfs_state *streamfs)
 {
 	struct streamfs_footer footer;
@@ -202,7 +202,7 @@ static int32_t streamfs_new_sector(struct streamfs_state *streamfs)
 	footer.file_segment = streamfs->active_file_segment;
 
 	uint32_t start_address = streamfs_get_addr(streamfs, streamfs->active_file_arena,
-			                                   streamfs->cfg->arena_size - sizeof(footer));
+	                         streamfs->cfg->arena_size - sizeof(footer));
 
 	if (PIOS_FLASH_write_data(streamfs->partition_id, start_address, (uint8_t *) &footer, sizeof(footer)) != 0) {
 		return -1;
@@ -233,7 +233,7 @@ static int32_t streamfs_close_sector(struct streamfs_state *streamfs)
 	footer.file_segment = streamfs->active_file_segment;
 
 	uint32_t start_address = streamfs_get_addr(streamfs, streamfs->active_file_arena,
-			                                   streamfs->cfg->arena_size - sizeof(footer));
+	                         streamfs->cfg->arena_size - sizeof(footer));
 
 	if (PIOS_FLASH_write_data(streamfs->partition_id, start_address, (uint8_t *) &footer, sizeof(footer)) != 0) {
 		return -1;
@@ -263,7 +263,7 @@ static int32_t streamfs_find_first_arena(struct streamfs_state *streamfs, int32_
 		// Read footer for each arena
 		struct streamfs_footer footer;
 		uint32_t start_address = streamfs_get_addr(streamfs, arena,
-				                                   streamfs->cfg->arena_size - sizeof(footer));
+		                         streamfs->cfg->arena_size - sizeof(footer));
 		if (PIOS_FLASH_read_data(streamfs->partition_id, start_address, (uint8_t *) &footer, sizeof(footer)) != 0) {
 			return -1;
 		}
@@ -304,7 +304,7 @@ static int32_t streamfs_find_last_arena(struct streamfs_state *streamfs, int32_t
 		// Read footer for each arena
 		struct streamfs_footer footer;
 		uint32_t start_address = streamfs_get_addr(streamfs, arena,
-				                                   streamfs->cfg->arena_size - sizeof(footer));
+		                         streamfs->cfg->arena_size - sizeof(footer));
 		if (PIOS_FLASH_read_data(streamfs->partition_id, start_address, (uint8_t *) &footer, sizeof(footer)) != 0) {
 			return -3;
 		}
@@ -359,7 +359,7 @@ static int32_t streamfs_append_to_file(struct streamfs_state *streamfs, uint8_t 
 
 	while (len > 0) {
 		uint32_t start_address = streamfs_get_addr(streamfs, streamfs->active_file_arena,
-			                                                 streamfs->active_file_arena_offset);
+		                         streamfs->active_file_arena_offset);
 
 		// Make sure not to write into the space for the footer
 		uint32_t bytes_to_write = len;
@@ -402,7 +402,7 @@ static int32_t streamfs_read_from_file(struct streamfs_state *streamfs, uint8_t 
 	while (len > 0) {
 		struct streamfs_footer footer;
 		uint32_t start_address = streamfs_get_addr(streamfs, streamfs->active_file_arena,
-				                                   streamfs->cfg->arena_size - sizeof(footer));
+		                         streamfs->cfg->arena_size - sizeof(footer));
 
 		PIOS_Assert(start_address < streamfs->partition_size);
 		if (PIOS_FLASH_read_data(streamfs->partition_id, start_address, (uint8_t *) &footer, sizeof(footer)) != 0) {
@@ -425,7 +425,7 @@ static int32_t streamfs_read_from_file(struct streamfs_state *streamfs, uint8_t 
 		}
 
 		start_address = streamfs_get_addr(streamfs, streamfs->active_file_arena,
-			                                        streamfs->active_file_arena_offset);
+		                                  streamfs->active_file_arena_offset);
 
 		// Read either remaining bytes or until the footer
 		int32_t bytes_to_read = len;
@@ -478,7 +478,7 @@ static int32_t streamfs_scan_filesystem(struct streamfs_state *streamfs)
 		// Read footer for each arena
 		struct streamfs_footer footer;
 		uint32_t start_address = streamfs_get_addr(streamfs, arena,
-				                                   streamfs->cfg->arena_size - sizeof(footer));
+		                         streamfs->cfg->arena_size - sizeof(footer));
 		if (PIOS_FLASH_read_data(streamfs->partition_id, start_address, (uint8_t *) &footer, sizeof(footer)) != 0) {
 			return -3;
 		}
@@ -855,7 +855,8 @@ out_exit:
 	return rc;
 }
 
-int32_t PIOS_STREAMFS_Testing_Read(uintptr_t fs_id, uint8_t *data, uint32_t len) {
+int32_t PIOS_STREAMFS_Testing_Read(uintptr_t fs_id, uint8_t *data, uint32_t len)
+{
 	int32_t rc;
 
 	struct streamfs_state *streamfs = (struct streamfs_state *)fs_id;
@@ -894,7 +895,7 @@ out_exit:
 static void PIOS_STREAMFS_RxStart(uintptr_t fs_id, uint16_t rx_bytes_avail)
 {
 	struct streamfs_state *streamfs = (struct streamfs_state *)fs_id;
-	
+
 	bool valid = streamfs_validate(streamfs);
 	PIOS_Assert(valid);
 
@@ -920,7 +921,7 @@ static void PIOS_STREAMFS_RxStart(uintptr_t fs_id, uint16_t rx_bytes_avail)
 			goto out_end_trans;
 
 		int32_t bytes_written = (streamfs->rx_in_cb)(streamfs->rx_in_context, streamfs->com_buffer,
-			                                         bytes_buffered, NULL, NULL);
+		                        bytes_buffered, NULL, NULL);
 
 		rx_bytes_avail -= bytes_written;
 	}
@@ -932,7 +933,7 @@ out_end_trans:
 static void PIOS_STREAMFS_TxStart(uintptr_t fs_id, uint16_t tx_bytes_avail)
 {
 	struct streamfs_state *streamfs = (struct streamfs_state *)fs_id;
-	
+
 	bool valid = streamfs_validate(streamfs);
 	PIOS_Assert(valid);
 
@@ -951,7 +952,7 @@ static void PIOS_STREAMFS_TxStart(uintptr_t fs_id, uint16_t tx_bytes_avail)
 	int32_t bytes_to_write;
 	while(1) {
 		bytes_to_write = (streamfs->tx_out_cb)(streamfs->tx_out_context,
-			              streamfs->com_buffer, streamfs->cfg->write_size, NULL, NULL);
+		                                       streamfs->com_buffer, streamfs->cfg->write_size, NULL, NULL);
 
 		if (bytes_to_write <= 0)
 			break;
@@ -972,8 +973,8 @@ static void PIOS_STREAMFS_RegisterRxCallback(uintptr_t fs_id, pios_com_callback 
 
 	bool valid = streamfs_validate(streamfs);
 	PIOS_Assert(valid);
-	
-	/* 
+
+	/*
 	 * Order is important in these assignments since ISR uses _cb
 	 * field to determine if it's ok to dereference _cb and _context
 	 */
@@ -987,8 +988,8 @@ static void PIOS_STREAMFS_RegisterTxCallback(uintptr_t fs_id, pios_com_callback 
 
 	bool valid = streamfs_validate(streamfs);
 	PIOS_Assert(valid);
-	
-	/* 
+
+	/*
 	 * Order is important in these assignments since ISR uses _cb
 	 * field to determine if it's ok to dereference _cb and _context
 	 */

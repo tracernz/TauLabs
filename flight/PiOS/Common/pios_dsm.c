@@ -13,19 +13,19 @@
  * @see        The GNU Public License (GPL) Version 3
  *
  *****************************************************************************/
-/* 
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 3 of the License, or 
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
  * for more details.
- * 
- * You should have received a copy of the GNU General Public License along 
- * with this program; if not, write to the Free Software Foundation, Inc., 
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
@@ -42,10 +42,10 @@
 /* Forward Declarations */
 static int32_t PIOS_DSM_Get(uintptr_t rcvr_id, uint8_t channel);
 static uint16_t PIOS_DSM_RxInCallback(uintptr_t context,
-				      uint8_t *buf,
-				      uint16_t buf_len,
-				      uint16_t *headroom,
-				      bool *need_yield);
+                                      uint8_t *buf,
+                                      uint16_t buf_len,
+                                      uint16_t *headroom,
+                                      bool *need_yield);
 static void PIOS_DSM_Supervisor(uintptr_t dsm_id);
 
 /* Local Variables */
@@ -165,7 +165,7 @@ static void PIOS_DSM_ResetState(struct pios_dsm_dev *dsm_dev)
  * Satellite RX should be bound as master RX (Odd number of binding pulses),
  * then transmitter information byte will be used to determine DSM resolution.
  * If bound as slave RX, routine will fall back to looking at channel order to
- * determine DSM resolution.  It should be noted that the channel order method 
+ * determine DSM resolution.  It should be noted that the channel order method
  * does not work with all Spektrum system configurations.
  */
 enum dsm_resolution PIOS_DSM_DetectResolution(uint8_t *packet)
@@ -182,15 +182,12 @@ enum dsm_resolution PIOS_DSM_DetectResolution(uint8_t *packet)
 	if (word0 & DSM_2ND_FRAME_MASK)
 		return DSM_UNKNOWN;
 
-	if (packet[1] != 0x00)								// If transmitter information byte != 0, master satellite
-	{
+	if (packet[1] != 0x00) {							// If transmitter information byte != 0, master satellite
 		if ((packet[1] & DSM_RESOLUTION_MASK) == 0x00)	// Check resolution bit in transmitter information byte
 			return DSM_10BIT;							// and set DSM resolution accordingly
-		else 
+		else
 			return DSM_11BIT;
-	}
-	else												// Else slave satellite
-	{
+	} else {											// Else slave satellite
 		// Check for 10 bit
 		channel0 = (word0 >> 10) & 0x0f;
 		channel1 = (word1 >> 10) & 0x0f;
@@ -203,11 +200,11 @@ enum dsm_resolution PIOS_DSM_DetectResolution(uint8_t *packet)
 
 		if (bit_10 && !bit_11)
 			return DSM_10BIT;
-		
+
 		if (bit_11 && !bit_10)
 			return DSM_11BIT;
-		
-		return DSM_UNKNOWN;		
+
+		return DSM_UNKNOWN;
 	}
 }
 
@@ -298,10 +295,10 @@ static void PIOS_DSM_UpdateState(struct pios_dsm_dev *dsm_dev, uint8_t byte)
 
 /* Initialise DSM receiver interface */
 int32_t PIOS_DSM_Init(uintptr_t *dsm_id,
-		      const struct pios_dsm_cfg *cfg,
-		      const struct pios_com_driver *driver,
-		      uintptr_t lower_id,
-		      uint8_t bind)
+                      const struct pios_dsm_cfg *cfg,
+                      const struct pios_com_driver *driver,
+                      uintptr_t lower_id,
+                      uint8_t bind)
 {
 	PIOS_DEBUG_Assert(dsm_id);
 	PIOS_DEBUG_Assert(cfg);
@@ -336,10 +333,10 @@ int32_t PIOS_DSM_Init(uintptr_t *dsm_id,
 
 /* Comm byte received callback */
 static uint16_t PIOS_DSM_RxInCallback(uintptr_t context,
-				      uint8_t *buf,
-				      uint16_t buf_len,
-				      uint16_t *headroom,
-				      bool *need_yield)
+                                      uint8_t *buf,
+                                      uint16_t buf_len,
+                                      uint16_t *headroom,
+                                      bool *need_yield)
 {
 	struct pios_dsm_dev *dsm_dev = (struct pios_dsm_dev *)context;
 
@@ -422,7 +419,7 @@ static void PIOS_DSM_Supervisor(uintptr_t dsm_id)
 
 #endif	/* PIOS_INCLUDE_DSM */
 
-/** 
+/**
  * @}
  * @}
  */

@@ -5,23 +5,23 @@
  * @addtogroup PiosFlashInternal PIOS Flash internal flash driver
  * @{
  *
- * @file       pios_flash_internal.c  
+ * @file       pios_flash_internal.c
  * @author     Tau Labs, http://taulabs.org, Copyright (C) 2013
  * @brief Provides a flash driver for the STM32 internal flash sectors
  *****************************************************************************/
-/* 
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 3 of the License, or 
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
  * for more details.
- * 
- * You should have received a copy of the GNU General Public License along 
- * with this program; if not, write to the Free Software Foundation, Inc., 
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
@@ -47,7 +47,8 @@ struct pios_internal_flash_dev {
 	struct pios_semaphore *transaction_lock;
 };
 
-static bool PIOS_Flash_Internal_Validate(struct pios_internal_flash_dev *flash_dev) {
+static bool PIOS_Flash_Internal_Validate(struct pios_internal_flash_dev *flash_dev)
+{
 	return (flash_dev && (flash_dev->magic == PIOS_INTERNAL_FLASH_DEV_MAGIC));
 }
 

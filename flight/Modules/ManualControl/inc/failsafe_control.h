@@ -28,8 +28,8 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
- #ifndef FAILSAFE_CONTROL_H
- #define FAILSAFE_CONTROL_H
+#ifndef FAILSAFE_CONTROL_H
+#define FAILSAFE_CONTROL_H
 
 //! Initialize the failsafe controller
 int32_t failsafe_control_initialize();
@@ -43,7 +43,7 @@ int32_t failsafe_control_select(bool reset_controller);
 //! Get any control events
 enum control_events failsafe_control_get_events();
 
- #endif /* FAILSAFE_CONTROL_H */
+#endif /* FAILSAFE_CONTROL_H */
 
 /**
  * @}

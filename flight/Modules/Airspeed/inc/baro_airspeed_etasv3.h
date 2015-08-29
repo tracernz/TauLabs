@@ -1,9 +1,9 @@
 /**
  ******************************************************************************
  * @addtogroup TauLabsModules Tau Labs Modules
- * @{ 
+ * @{
  * @addtogroup AirspeedModule Airspeed Module
- * @{ 
+ * @{
  *
  * @file       baro_airspeed_etasv3.h
  * @author     The OpenPilot Team, http://www.openpilot.org Copyright (C) 2012.

@@ -5,11 +5,11 @@
  * @addtogroup Quanton Quanton support files
  * @{
  *
- * @file       STM32F4xx_Quanton.c 
+ * @file       STM32F4xx_Quanton.c
  * @author     Tau Labs, http://taulabs.org, Copyright (C) 2012-2013
  * @brief      Board specific defines for Quanton
  * @see        The GNU Public License (GPL) Version 3
- * 
+ *
  *****************************************************************************/
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -153,7 +153,7 @@ extern uintptr_t pios_com_debug_id;
 // TELEMETRY
 //------------------------
 #define TELEM_QUEUE_SIZE				80
-#define PIOS_TELEM_STACK_SIZE			624		
+#define PIOS_TELEM_STACK_SIZE			624
 
 #define PIOS_SYSCLK						168000000
 //	Peripherals that belongs to APB1 are:
@@ -161,16 +161,16 @@ extern uintptr_t pios_com_debug_id;
 //	I2C1,2,3	|UART4,5			|USART3,2
 //	I2S3Ext		|SPI3/I2S3			|SPI2/I2S2
 //	I2S2Ext		|IWDG				|WWDG
-//	RTC/BKP reg	
+//	RTC/BKP reg
 // TIM2,3,4,5,6,7,12,13,14
 
-// Calculated as SYSCLK / APBPresc * (APBPre == 1 ? 1 : 2)   
-// Default APB1 Prescaler = 4 
+// Calculated as SYSCLK / APBPresc * (APBPre == 1 ? 1 : 2)
+// Default APB1 Prescaler = 4
 #define PIOS_PERIPHERAL_APB1_CLOCK		(PIOS_SYSCLK / 2)
 
 //	Peripherals belonging to APB2
 //	SDIO			|EXTI				|SYSCFG			|SPI1
-//	ADC1,2,3				
+//	ADC1,2,3
 //	USART1,6
 //	TIM1,8,9,10,11
 //

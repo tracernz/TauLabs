@@ -103,30 +103,27 @@ static int32_t GenericI2CSensorInitialize(void)
 		i2cvm_program = user_program;
 		i2cvm_program_len = I2CVMUSERPROGRAM_PROGRAM_NUMELEM;
 		break;
-	case MODULESETTINGS_I2CVMPROGRAMSELECT_OPBAROALTIMETER:
-		{
+	case MODULESETTINGS_I2CVMPROGRAMSELECT_OPBAROALTIMETER: {
 		extern const uint32_t vmprog_op_mag_baro[];
 		extern const uint32_t vmprog_op_mag_baro_len;
 		i2cvm_program = vmprog_op_mag_baro;
 		i2cvm_program_len = vmprog_op_mag_baro_len;
-		}
-		break;
-	case MODULESETTINGS_I2CVMPROGRAMSELECT_ENDIANTEST:
-		{
+	}
+	break;
+	case MODULESETTINGS_I2CVMPROGRAMSELECT_ENDIANTEST: {
 		extern const uint32_t vmprog_endiantest[];
 		extern const uint32_t vmprog_endiantest_len;
 		i2cvm_program = vmprog_endiantest;
 		i2cvm_program_len = vmprog_endiantest_len;
-		}
-		break;
-	case MODULESETTINGS_I2CVMPROGRAMSELECT_MATHTEST:
-		{
+	}
+	break;
+	case MODULESETTINGS_I2CVMPROGRAMSELECT_MATHTEST: {
 		extern const uint32_t vmprog_mathtest[];
 		extern const uint32_t vmprog_mathtest_len;
 		i2cvm_program = vmprog_mathtest;
 		i2cvm_program_len = vmprog_mathtest_len;
-		}
-		break;
+	}
+	break;
 	case MODULESETTINGS_I2CVMPROGRAMSELECT_NONE:
 	default:
 		/* No program selected, module will not start */
@@ -153,7 +150,7 @@ static void GenericI2CSensorTask(void *parameters)
 	while (1) {
 		/* Run the selected program */
 		if (i2c_vm_run(i2cvm_program, i2cvm_program_len, PIOS_I2C_MAIN_ADAPTER)) {
-			/* Program ran to completion. This could be because the program is 
+			/* Program ran to completion. This could be because the program is
 			 * empty or does not infinitely loop.
 			 * Delay in order to prevent these programs from consuming all CPU.
 			 */

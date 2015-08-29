@@ -65,8 +65,8 @@ void PIOS_FLASH_register_partition_table(const struct pios_flash_partition parti
 		uint32_t chip_start_offset;
 		uint32_t chip_end_offset;
 		if (!pios_flash_partition_get_chip_extents(partition,
-								&chip_start_offset,
-								&chip_end_offset))
+		        &chip_start_offset,
+		        &chip_end_offset))
 			PIOS_Assert(0);
 
 		PIOS_Assert(partition->chip_offset == chip_start_offset);
@@ -322,7 +322,7 @@ int32_t PIOS_FLASH_erase_range(uintptr_t partition_id, uint32_t start_offset, ui
 
 		/* Is our start offset in the current sector? */
 		if ((erase_offset >= sector_desc.partition_offset) &&
-		        (erase_offset < sector_desc.partition_offset + sector_desc.sector_size)) {
+		    (erase_offset < sector_desc.partition_offset + sector_desc.sector_size)) {
 			/* Make sure we're erasing on a sector boundary */
 			if (erase_offset != sector_desc.partition_offset)
 				return -23;
@@ -333,8 +333,8 @@ int32_t PIOS_FLASH_erase_range(uintptr_t partition_id, uint32_t start_offset, ui
 
 			/* Erase the sector */
 			if (partition->chip_desc->driver->erase_sector(*partition->chip_desc->chip_id,
-									sector_desc.sector,
-									sector_desc.chip_offset) != 0) {
+			        sector_desc.sector,
+			        sector_desc.chip_offset) != 0) {
 				return -25;
 			}
 
@@ -376,8 +376,8 @@ int32_t PIOS_FLASH_erase_partition(uintptr_t partition_id)
 	do {
 		/* Erase the sector */
 		if (partition->chip_desc->driver->erase_sector(*partition->chip_desc->chip_id,
-								sector_desc.sector,
-								sector_desc.chip_offset) != 0) {
+		        sector_desc.sector,
+		        sector_desc.chip_offset) != 0) {
 			return -23;
 		}
 	} while (pios_flash_get_partition_next_sector(partition, &sector_desc));
@@ -420,9 +420,9 @@ int32_t PIOS_FLASH_write_data(uintptr_t partition_id, uint32_t partition_offset,
 		uint16_t write_size = MIN(len, page_remaining);
 
 		int32_t rc = partition->chip_desc->driver->write_data(*partition->chip_desc->chip_id,
-								partition->chip_offset + partition_offset,
-								data,
-								write_size);
+		             partition->chip_offset + partition_offset,
+		             data,
+		             write_size);
 		if (rc != 0) {
 			/* Failed to write the data to the underlying flash */
 			return rc;
@@ -464,9 +464,9 @@ int32_t PIOS_FLASH_read_data(uintptr_t partition_id, uint32_t partition_offset, 
 		return -22;
 
 	return partition->chip_desc->driver->read_data(*partition->chip_desc->chip_id,
-						partition->chip_offset + partition_offset,
-						data,
-						len);
+	        partition->chip_offset + partition_offset,
+	        data,
+	        len);
 }
 
 #endif	/* PIOS_INCLUDE_FLASH */

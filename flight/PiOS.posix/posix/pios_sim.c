@@ -10,7 +10,7 @@ struct pios_sim_state pios_sim_state = {
 	.baro = {0},
 	.q = {1, 0, 0, 0},
 	.velocity = {0, 0, 0},
-	.position = {0, 0, 0},	
+	.position = {0, 0, 0},
 	.actuator = {0, 0, 0, 0, 0, 0, 0, 0}
 };
 
@@ -18,7 +18,7 @@ struct pios_sim_state pios_sim_state = {
  * Initialize the model in the external library
  * @returns 0 for success, -1 if fails to initialize external library
  */
-int PIOS_SIM_Init() 
+int PIOS_SIM_Init()
 {
 	if (sim_model_init() != 0)
 		return -1;
@@ -29,7 +29,7 @@ int PIOS_SIM_Init()
  * Step the model simulation in the external library
  * @returns 0 for success, -1 for failure to step external library
  */
-int PIOS_SIM_Step(float dT) 
+int PIOS_SIM_Step(float dT)
 {
 	if (sim_model_step(dT, &pios_sim_state) != 0)
 		return -1;

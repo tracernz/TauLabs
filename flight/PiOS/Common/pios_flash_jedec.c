@@ -103,7 +103,8 @@ static struct jedec_flash_dev *PIOS_Flash_Jedec_alloc(void)
 /**
  * @brief Validate the handle to the spi device
  */
-static int32_t PIOS_Flash_Jedec_Validate(struct jedec_flash_dev *flash_dev) {
+static int32_t PIOS_Flash_Jedec_Validate(struct jedec_flash_dev *flash_dev)
+{
 	if (flash_dev == NULL)
 		return -1;
 	if (flash_dev->magic != PIOS_JEDEC_DEV_MAGIC)
@@ -132,8 +133,8 @@ int32_t PIOS_Flash_Jedec_Init(uintptr_t *chip_id, uint32_t spi_id, uint32_t slav
 
 	(void) PIOS_Flash_Jedec_ReadID(flash_dev);
 	if ((flash_dev->manufacturer != flash_dev->cfg->expect_manufacturer) ||
-		(flash_dev->memorytype != flash_dev->cfg->expect_memorytype) ||
-		(flash_dev->capacity != flash_dev->cfg->expect_capacity)) {
+	    (flash_dev->memorytype != flash_dev->cfg->expect_memorytype) ||
+	    (flash_dev->capacity != flash_dev->cfg->expect_capacity)) {
 		/* Mismatched device has been discovered */
 		return -1;
 	}

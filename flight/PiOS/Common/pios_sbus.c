@@ -13,19 +13,19 @@
  * @see        The GNU Public License (GPL) Version 3
  *
  *****************************************************************************/
-/* 
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 3 of the License, or 
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
  * for more details.
- * 
- * You should have received a copy of the GNU General Public License along 
- * with this program; if not, write to the Free Software Foundation, Inc., 
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
@@ -38,10 +38,10 @@
 /* Forward Declarations */
 static int32_t PIOS_SBus_Get(uintptr_t rcvr_id, uint8_t channel);
 static uint16_t PIOS_SBus_RxInCallback(uintptr_t context,
-				       uint8_t *buf,
-				       uint16_t buf_len,
-				       uint16_t *headroom,
-				       bool *need_yield);
+                                       uint8_t *buf,
+                                       uint16_t buf_len,
+                                       uint16_t *headroom,
+                                       bool *need_yield);
 static void PIOS_SBus_Supervisor(uintptr_t sbus_id);
 
 
@@ -106,9 +106,9 @@ static void PIOS_SBus_ResetState(struct pios_sbus_state *state)
 
 /* Initialise S.Bus receiver interface */
 int32_t PIOS_SBus_Init(uintptr_t *sbus_id,
-		       const struct pios_sbus_cfg *cfg,
-		       const struct pios_com_driver *driver,
-		       uintptr_t lower_id)
+                       const struct pios_sbus_cfg *cfg,
+                       const struct pios_com_driver *driver,
+                       uintptr_t lower_id)
 {
 	PIOS_DEBUG_Assert(sbus_id);
 	PIOS_DEBUG_Assert(cfg);
@@ -129,8 +129,7 @@ int32_t PIOS_SBus_Init(uintptr_t *sbus_id,
 	/* Enable inverter clock and enable the inverter */
 	if (cfg->gpio_clk_func != NULL)
 		(*cfg->gpio_clk_func)(cfg->gpio_clk_periph, ENABLE);
-	if (cfg->inv.gpio != NULL)
-	{
+	if (cfg->inv.gpio != NULL) {
 		GPIO_Init(cfg->inv.gpio, (GPIO_InitTypeDef*)&cfg->inv.init);
 		GPIO_WriteBit(cfg->inv.gpio, cfg->inv.init.GPIO_Pin, cfg->gpio_inv_enable);
 	}
@@ -255,10 +254,10 @@ static void PIOS_SBus_UpdateState(struct pios_sbus_state *state, uint8_t b)
 
 /* Comm byte received callback */
 static uint16_t PIOS_SBus_RxInCallback(uintptr_t context,
-				       uint8_t *buf,
-				       uint16_t buf_len,
-				       uint16_t *headroom,
-				       bool *need_yield)
+                                       uint8_t *buf,
+                                       uint16_t buf_len,
+                                       uint16_t *headroom,
+                                       bool *need_yield)
 {
 	struct pios_sbus_dev *sbus_dev = (struct pios_sbus_dev *)context;
 
@@ -321,7 +320,7 @@ static void PIOS_SBus_Supervisor(uintptr_t sbus_id)
 
 #endif	/* PIOS_INCLUDE_SBUS */
 
-/** 
+/**
  * @}
  * @}
  */

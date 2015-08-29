@@ -40,8 +40,8 @@
 #endif
 
 struct rtc_callback_entry {
-  void (*fn)(uintptr_t);
-  uintptr_t data;
+	void (*fn)(uintptr_t);
+	uintptr_t data;
 };
 
 #define PIOS_RTC_MAX_CALLBACKS 3
@@ -64,7 +64,7 @@ void PIOS_RTC_Init(const struct pios_rtc_cfg * cfg)
 	// Divide 15625Hz by 25 to get 625 Hz
 	RTC_SetWakeUpCounter(cfg->prescaler); //cfg->prescaler);
 	RTC_WakeUpCmd(ENABLE);
-	
+
 	/* Configure and enable the RTC Second interrupt */
 	EXTI_InitTypeDef ExtiInit = {
 		.EXTI_Line = EXTI_Line20, // matches above GPIO pin
@@ -75,7 +75,7 @@ void PIOS_RTC_Init(const struct pios_rtc_cfg * cfg)
 	EXTI_Init((EXTI_InitTypeDef*)&ExtiInit);
 	NVIC_Init((NVIC_InitTypeDef*)&cfg->irq.init);
 	RTC_ITConfig(RTC_IT_WUT, ENABLE);
-	
+
 	RTC_ClearFlag(RTC_FLAG_WUTF);
 }
 
@@ -92,7 +92,7 @@ float PIOS_RTC_Rate()
 	return (float) (8e6 / 128) / (1 + PIOS_RTC_PRESCALER);
 }
 
-float PIOS_RTC_MsPerTick() 
+float PIOS_RTC_MsPerTick()
 {
 	return 1000.0f / PIOS_RTC_Rate();
 }
@@ -118,8 +118,7 @@ void PIOS_RTC_irq_handler (void)
 	CH_IRQ_PROLOGUE();
 #endif /* defined(PIOS_INCLUDE_CHIBIOS) */
 
-	if (RTC_GetITStatus(RTC_IT_WUT))
-	{
+	if (RTC_GetITStatus(RTC_IT_WUT)) {
 		/* Call all registered callbacks */
 		for (uint8_t i = 0; i < rtc_callback_next; i++) {
 			struct rtc_callback_entry * cb = &rtc_callback_list[i];
@@ -141,7 +140,7 @@ void PIOS_RTC_irq_handler (void)
 }
 #endif
 
-/** 
+/**
  * @}
  * @}
  */

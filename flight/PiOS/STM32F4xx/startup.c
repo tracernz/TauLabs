@@ -107,10 +107,10 @@ register void *stack_pointer asm("sp");
 static void
 default_cpu_handler(void)
 {
-    // Hijack the process stack pointer to make backtrace work
-    asm("mrs %0, psp" : "=r"(HARDFAULT_PSP) : :);
-    stack_pointer = HARDFAULT_PSP;
-    while(1);
+	// Hijack the process stack pointer to make backtrace work
+	asm("mrs %0, psp" : "=r"(HARDFAULT_PSP) : :);
+	stack_pointer = HARDFAULT_PSP;
+	while(1);
 }
 
 /** Prototype for optional exception vector handlers */
@@ -131,24 +131,24 @@ HANDLER(xPortSysTickHandler);
 
 /** CortexM3 vector table */
 struct cm3_vectors cpu_vectors __attribute((section(".cpu_vectors"))) = {
-		.initial_stack = &irq_stack[sizeof(irq_stack)],
-		.entry = (vector *)_main,
-		.vectors = {
-				NMI_Handler,
-				HardFault_Handler,
-				MemManage_Handler,
-				BusFault_Handler,
-				UsageFault_Handler,
-				0,
-				0,
-				0,
-				0,
-				vPortSVCHandler,
-				DebugMon_Handler,
-				0,
-				xPortPendSVHandler,
-				xPortSysTickHandler,
-		}
+	.initial_stack = &irq_stack[sizeof(irq_stack)],
+	.entry = (vector *)_main,
+	.vectors = {
+		NMI_Handler,
+		HardFault_Handler,
+		MemManage_Handler,
+		BusFault_Handler,
+		UsageFault_Handler,
+		0,
+		0,
+		0,
+		0,
+		vPortSVCHandler,
+		DebugMon_Handler,
+		0,
+		xPortPendSVHandler,
+		xPortSysTickHandler,
+	}
 };
 
 /**

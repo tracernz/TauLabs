@@ -97,7 +97,7 @@ static void VisualizationTask(void *parameters)
 	s = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
 	memset(&server,0,sizeof(server));
-  	server.sin_family = AF_INET;
+	server.sin_family = AF_INET;
 	server.sin_addr.s_addr = inet_addr("127.0.0.1");
 	server.sin_port = htons(3000);
 	inet_aton("127.0.0.1", &server.sin_addr);

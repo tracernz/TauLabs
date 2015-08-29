@@ -66,31 +66,31 @@ int32_t PIOS_TIM_InitClock(const struct pios_tim_clock_cfg * cfg)
 
 	/* Enable appropriate clock to timer module */
 	switch((uint32_t) cfg->timer) {
-		case (uint32_t)TIM1:
-			RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1, ENABLE);
-			break;
-		case (uint32_t)TIM2:
-			RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
-			break;
-		case (uint32_t)TIM3:
-			RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
-			break;
-		case (uint32_t)TIM4:
-			RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
-			break;
+	case (uint32_t)TIM1:
+		RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1, ENABLE);
+		break;
+	case (uint32_t)TIM2:
+		RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
+		break;
+	case (uint32_t)TIM3:
+		RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
+		break;
+	case (uint32_t)TIM4:
+		RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
+		break;
 #ifdef STM32F10X_HD
-		case (uint32_t)TIM5:
-			RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM5, ENABLE);
-			break;
-		case (uint32_t)TIM6:
-			RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM6, ENABLE);
-			break;
-		case (uint32_t)TIM7:
-			RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM7, ENABLE);
-			break;
-		case (uint32_t)TIM8:
-			RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM8, ENABLE);
-			break;
+	case (uint32_t)TIM5:
+		RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM5, ENABLE);
+		break;
+	case (uint32_t)TIM6:
+		RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM6, ENABLE);
+		break;
+	case (uint32_t)TIM7:
+		RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM7, ENABLE);
+		break;
+	case (uint32_t)TIM8:
+		RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM8, ENABLE);
+		break;
 #endif
 	}
 
@@ -260,108 +260,109 @@ static void PIOS_TIM_generic_irq_handler(TIM_TypeDef * timer)
 					/* Call the overflow callback first */
 					if (tim_dev->callbacks->overflow) {
 						(*tim_dev->callbacks->overflow)((uintptr_t)tim_dev,
-									tim_dev->context,
-									j,
-									overflow_count);
+						                                tim_dev->context,
+						                                j,
+						                                overflow_count);
 					}
 					/* Call the edge callback second */
 					if (tim_dev->callbacks->edge) {
 						(*tim_dev->callbacks->edge)((uintptr_t)tim_dev,
-									tim_dev->context,
-									j,
-									edge_count);
+						                            tim_dev->context,
+						                            j,
+						                            edge_count);
 					}
 				} else {
 					/* Call the edge callback first */
 					if (tim_dev->callbacks->edge) {
 						(*tim_dev->callbacks->edge)((uintptr_t)tim_dev,
-									tim_dev->context,
-									j,
-									edge_count);
+						                            tim_dev->context,
+						                            j,
+						                            edge_count);
 					}
 					/* Call the overflow callback second */
 					if (tim_dev->callbacks->overflow) {
 						(*tim_dev->callbacks->overflow)((uintptr_t)tim_dev,
-									tim_dev->context,
-									j,
-									overflow_count);
+						                                tim_dev->context,
+						                                j,
+						                                overflow_count);
 					}
 				}
 			} else if (overflow_event && tim_dev->callbacks->overflow) {
 				(*tim_dev->callbacks->overflow)((uintptr_t)tim_dev,
-								tim_dev->context,
-								j,
-								overflow_count);
+				                                tim_dev->context,
+				                                j,
+				                                overflow_count);
 			} else if (edge_event && tim_dev->callbacks->edge) {
 				(*tim_dev->callbacks->edge)((uintptr_t)tim_dev,
-							tim_dev->context,
-							j,
-							edge_count);
+				                            tim_dev->context,
+				                            j,
+				                            edge_count);
 			}
 		}
 	}
 }
 #if 0
-	uint16_t val = 0;
-	for(uint8_t i = 0; i < pios_pwm_cfg.num_channels; i++) {
-		struct pios_pwm_channel channel = pios_pwm_cfg.channels[i];
-		if ((channel.timer == timer) && (TIM_GetITStatus(channel.timer, channel.ccr) == SET)) {
-			
-			TIM_ClearITPendingBit(channel.timer, channel.ccr);
-			
-			switch(channel.channel) {
-				case TIM_Channel_1:
-					val = TIM_GetCapture1(channel.timer);
-					break;
-				case TIM_Channel_2:
-					val = TIM_GetCapture2(channel.timer);
-					break;
-				case TIM_Channel_3:
-					val = TIM_GetCapture3(channel.timer);
-					break;
-				case TIM_Channel_4:
-					val = TIM_GetCapture4(channel.timer);
-					break;					
-			}
-			
-			if (CaptureState[i] == 0) {
-				RiseValue[i] = val; 
+uint16_t val = 0;
+for(uint8_t i = 0; i < pios_pwm_cfg.num_channels; i++)
+{
+	struct pios_pwm_channel channel = pios_pwm_cfg.channels[i];
+	if ((channel.timer == timer) && (TIM_GetITStatus(channel.timer, channel.ccr) == SET)) {
+
+		TIM_ClearITPendingBit(channel.timer, channel.ccr);
+
+		switch(channel.channel) {
+		case TIM_Channel_1:
+			val = TIM_GetCapture1(channel.timer);
+			break;
+		case TIM_Channel_2:
+			val = TIM_GetCapture2(channel.timer);
+			break;
+		case TIM_Channel_3:
+			val = TIM_GetCapture3(channel.timer);
+			break;
+		case TIM_Channel_4:
+			val = TIM_GetCapture4(channel.timer);
+			break;
+		}
+
+		if (CaptureState[i] == 0) {
+			RiseValue[i] = val;
+		} else {
+			FallValue[i] = val;
+		}
+
+		// flip state machine and capture value here
+		/* Simple rise or fall state machine */
+		TIM_ICInitTypeDef TIM_ICInitStructure = pios_pwm_cfg.tim_ic_init;
+		if (CaptureState[i] == 0) {
+			/* Switch states */
+			CaptureState[i] = 1;
+
+			/* Switch polarity of input capture */
+			TIM_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Falling;
+			TIM_ICInitStructure.TIM_Channel = channel.channel;
+			TIM_ICInit(channel.timer, &TIM_ICInitStructure);
+		} else {
+			/* Capture computation */
+			if (FallValue[i] > RiseValue[i]) {
+				CaptureValue[i] = (FallValue[i] - RiseValue[i]);
 			} else {
-				FallValue[i] = val;
+				CaptureValue[i] = ((channel.timer->ARR - RiseValue[i]) + FallValue[i]);
 			}
-			
-			// flip state machine and capture value here
-			/* Simple rise or fall state machine */
-			TIM_ICInitTypeDef TIM_ICInitStructure = pios_pwm_cfg.tim_ic_init;
-			if (CaptureState[i] == 0) {
-				/* Switch states */
-				CaptureState[i] = 1;
-				
-				/* Switch polarity of input capture */
-				TIM_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Falling;
-				TIM_ICInitStructure.TIM_Channel = channel.channel;
-				TIM_ICInit(channel.timer, &TIM_ICInitStructure);				
-			} else {
-				/* Capture computation */
-				if (FallValue[i] > RiseValue[i]) {
-					CaptureValue[i] = (FallValue[i] - RiseValue[i]);
-				} else {
-					CaptureValue[i] = ((channel.timer->ARR - RiseValue[i]) + FallValue[i]);
-				}
-				
-				/* Switch states */
-				CaptureState[i] = 0;
-				
-				/* Increase supervisor counter */
-				CapCounter[i]++;
-				
-				/* Switch polarity of input capture */
-				TIM_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Rising;
-				TIM_ICInitStructure.TIM_Channel = channel.channel;
-				TIM_ICInit(channel.timer, &TIM_ICInitStructure);
-			}
-		}		
+
+			/* Switch states */
+			CaptureState[i] = 0;
+
+			/* Increase supervisor counter */
+			CapCounter[i]++;
+
+			/* Switch polarity of input capture */
+			TIM_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Rising;
+			TIM_ICInitStructure.TIM_Channel = channel.channel;
+			TIM_ICInit(channel.timer, &TIM_ICInitStructure);
+		}
 	}
+}
 #endif
 
 /* Bind Interrupt Handlers

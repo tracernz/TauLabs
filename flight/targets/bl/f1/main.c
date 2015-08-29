@@ -5,26 +5,26 @@
  * @addtogroup CopterControlBL CopterControl bootloader
  * @{
  *
- * @file       main.c 
+ * @file       main.c
  * @author     The OpenPilot Team, http://www.openpilot.org Copyright (C) 2010.
  * @author     Tau Labs, http://taulabs.org, Copyright (C) 2012-2014
  * @brief      Start PiOS and bootloader functions
  * @see        The GNU Public License (GPL) Version 3
- * 
+ *
  *****************************************************************************/
-/* 
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 3 of the License, or 
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
  * for more details.
- * 
- * You should have received a copy of the GNU General Public License along 
- * with this program; if not, write to the Free Software Foundation, Inc., 
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 /* Bootloader Includes */
@@ -71,11 +71,12 @@ uint32_t LedPWM(uint32_t pwm_period, uint32_t pwm_sweep_steps, uint32_t count);
 uint8_t processRX();
 void jump_to_app();
 
-int main() {
-	PIOS_SYS_Init();	
+int main()
+{
+	PIOS_SYS_Init();
 	PIOS_Board_Init();
 	PIOS_IAP_Init();
-	
+
 	USB_connected = PIOS_USB_CableConnected(0);
 
 	if (PIOS_IAP_CheckRequest() == true) {
@@ -161,7 +162,7 @@ int main() {
 		if (stopwatch > 50 * 1000 * 1000)
 			stopwatch = 0;
 		if ((stopwatch > 6 * 1000 * 1000) && (DeviceState
-				== BLidle))
+		                                      == BLidle))
 			JumpToApp = true;
 
 		processRX();
@@ -169,7 +170,8 @@ int main() {
 	}
 }
 
-void jump_to_app() {
+void jump_to_app()
+{
 	const struct pios_board_info * bdinfo = &pios_board_info_blob;
 
 	if (((*(__IO uint32_t*) bdinfo->fw_base) & 0x2FFE0000) == 0x20000000) { /* Jump to user application */
@@ -190,7 +192,8 @@ void jump_to_app() {
 		return;
 	}
 }
-uint32_t LedPWM(uint32_t pwm_period, uint32_t pwm_sweep_steps, uint32_t count) {
+uint32_t LedPWM(uint32_t pwm_period, uint32_t pwm_sweep_steps, uint32_t count)
+{
 	uint32_t curr_step = (count / pwm_period) % pwm_sweep_steps; /* 0 - pwm_sweep_steps */
 	uint32_t pwm_duty = pwm_period * curr_step / pwm_sweep_steps; /* fraction of pwm_period */
 
@@ -201,7 +204,8 @@ uint32_t LedPWM(uint32_t pwm_period, uint32_t pwm_sweep_steps, uint32_t count) {
 	return ((count % pwm_period) > pwm_duty) ? 1 : 0;
 }
 
-uint8_t processRX() {
+uint8_t processRX()
+{
 	if (PIOS_COM_MSG_Receive(PIOS_COM_TELEM_USB, mReceive_Buffer, sizeof(mReceive_Buffer))) {
 		processComand(mReceive_Buffer);
 	}

@@ -1,9 +1,9 @@
 /**
  ******************************************************************************
  * @addtogroup TauLabsModules Tau Labs Modules
- * @{ 
+ * @{
  * @addtogroup Logging Logging Module
- * @{ 
+ * @{
  *
  * @file       logging.c
  * @author     Tau Labs, http://taulabs.org, Copyright (C) 2014
@@ -140,7 +140,7 @@ int32_t LoggingStart(void)
 	loggingTaskHandle = PIOS_Thread_Create(loggingTask, "Logging", STACK_SIZE_BYTES, NULL, TASK_PRIORITY);
 
 	TaskMonitorAdd(TASKINFO_RUNNING_LOGGING, loggingTaskHandle);
-	
+
 	return 0;
 }
 
@@ -192,24 +192,24 @@ static void loggingTask(void *parameters)
 	while (1) {
 
 		// Sleep for some time depending on logging rate
-		switch(settings.MaxLogRate){
-			case LOGGINGSETTINGS_MAXLOGRATE_5:
-				PIOS_Thread_Sleep(200);
-				break;
-			case LOGGINGSETTINGS_MAXLOGRATE_10:
-				PIOS_Thread_Sleep(100);
-				break;
-			case LOGGINGSETTINGS_MAXLOGRATE_25:
-				PIOS_Thread_Sleep(40);
-				break;
-			case LOGGINGSETTINGS_MAXLOGRATE_50:
-				PIOS_Thread_Sleep(20);
-				break;
-			case LOGGINGSETTINGS_MAXLOGRATE_100:
-				PIOS_Thread_Sleep(10);
-				break;
-			default:
-				PIOS_Thread_Sleep(1000);
+		switch(settings.MaxLogRate) {
+		case LOGGINGSETTINGS_MAXLOGRATE_5:
+			PIOS_Thread_Sleep(200);
+			break;
+		case LOGGINGSETTINGS_MAXLOGRATE_10:
+			PIOS_Thread_Sleep(100);
+			break;
+		case LOGGINGSETTINGS_MAXLOGRATE_25:
+			PIOS_Thread_Sleep(40);
+			break;
+		case LOGGINGSETTINGS_MAXLOGRATE_50:
+			PIOS_Thread_Sleep(20);
+			break;
+		case LOGGINGSETTINGS_MAXLOGRATE_100:
+			PIOS_Thread_Sleep(10);
+			break;
+		default:
+			PIOS_Thread_Sleep(1000);
 		}
 
 		LoggingStatsGet(&loggingData);
@@ -261,18 +261,18 @@ static void loggingTask(void *parameters)
 			if (!write_open)
 				continue;
 
-			if (first_run){
+			if (first_run) {
 				// Write information at start of the log file
 				writeHeader();
 
 				// Log settings
-				if (settings.LogSettingsOnStart == LOGGINGSETTINGS_LOGSETTINGSONSTART_TRUE){
+				if (settings.LogSettingsOnStart == LOGGINGSETTINGS_LOGSETTINGSONSTART_TRUE) {
 					UAVObjIterate(&logSettings);
 				}
 
 				// Log some data objects that are unlikely to change during flight
 				// Waypoints
-				if (WaypointHandle()){
+				if (WaypointHandle()) {
 					for (int i = 0; i < UAVObjGetNumInstances(WaypointHandle()); i++) {
 						UAVTalkSendObjectTimestamped(uavTalkCon, WaypointHandle(), i, false, 0);
 					}
@@ -286,12 +286,12 @@ static void loggingTask(void *parameters)
 			}
 
 			// Log objects on change
-			if (flightstatus_updated){
+			if (flightstatus_updated) {
 				UAVTalkSendObjectTimestamped(uavTalkCon, FlightStatusHandle(), 0, false, 0);
 				flightstatus_updated = false;
 			}
 
-			if (waypoint_updated && WaypointActiveHandle()){
+			if (waypoint_updated && WaypointActiveHandle()) {
 				UAVTalkSendObjectTimestamped(uavTalkCon, WaypointActiveHandle(), 0, false, 0);
 				waypoint_updated = false;
 			}
@@ -416,7 +416,7 @@ static void writeHeader()
 	const struct pios_board_info * bdinfo = &pios_board_info_blob;
 
 	// Header
-	#define LOG_HEADER "Tau Labs git hash:\n"
+#define LOG_HEADER "Tau Labs git hash:\n"
 	send_data((uint8_t *)LOG_HEADER, strlen(LOG_HEADER));
 
 	// Commit tag name
@@ -426,7 +426,7 @@ static void writeHeader()
 	// Git commit hash
 	pos = 0;
 	tmp_str[pos++] = ':';
-	for (int i = 0; i < 4; i++){
+	for (int i = 0; i < 4; i++) {
 		this_char = *(char*)(bdinfo->fw_base + bdinfo->fw_size + 7 - i);
 		tmp_str[pos++] = DIGITS[(this_char & 0xF0) >> 4];
 		tmp_str[pos++] = DIGITS[(this_char & 0x0F)];
@@ -440,7 +440,7 @@ static void writeHeader()
 
 	// UAVO SHA1
 	pos = 0;
-	for (int i = 0; i < 20; i++){
+	for (int i = 0; i < 20; i++) {
 		this_char = *(char*)(bdinfo->fw_base + bdinfo->fw_size + 60 + i);
 		tmp_str[pos++] = DIGITS[(this_char & 0xF0) >> 4];
 		tmp_str[pos++] = DIGITS[(this_char & 0x0F)];

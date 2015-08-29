@@ -9,25 +9,25 @@
  * @file       pios_delay.c
  * @author     Michael Smith Copyright (C) 2012
  * @author     Tau Labs, http://taulabs.org, Copyright (C) 2012-2013
- * @brief      Delay Functions 
+ * @brief      Delay Functions
  *                 - Provides a micro-second granular delay using the CPU
  *                   cycle counter.
  * @see        The GNU Public License (GPL) Version 3
  *
  *****************************************************************************/
-/* 
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 3 of the License, or 
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
  * for more details.
- * 
- * You should have received a copy of the GNU General Public License along 
- * with this program; if not, write to the Free Software Foundation, Inc., 
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
@@ -90,7 +90,7 @@ int32_t PIOS_DELAY_WaituS(uint32_t uS)
 	/* turn on access to the DWT registers */
 	CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
 	last_count = DWT->CYCCNT;
-	
+
 	for (;;) {
 		uint32_t current_count;
 		uint32_t elapsed_uS;
@@ -141,7 +141,7 @@ int32_t PIOS_DELAY_WaitmS(uint32_t mS)
 }
 
 /**
- * @brief Query the Delay timer for the current uS 
+ * @brief Query the Delay timer for the current uS
  * @return A microsecond value
  */
 uint32_t PIOS_DELAY_GetuS()
@@ -173,7 +173,7 @@ uint32_t PIOS_DELAY_GetRaw()
 }
 
 /**
- * @brief Compare to raw times to and convert to us 
+ * @brief Compare to raw times to and convert to us
  * @return A microsecond value
  */
 uint32_t PIOS_DELAY_DiffuS(uint32_t raw)

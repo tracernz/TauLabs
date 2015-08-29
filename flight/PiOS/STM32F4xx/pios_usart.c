@@ -209,12 +209,12 @@ int32_t PIOS_USART_Init(uintptr_t * usart_id, const struct pios_usart_cfg * cfg)
 	if (usart_dev->cfg->remap) {
 		if (usart_dev->cfg->rx.gpio != 0)
 			GPIO_PinAFConfig(usart_dev->cfg->rx.gpio,
-				__builtin_ctz(usart_dev->cfg->rx.init.GPIO_Pin),
-				usart_dev->cfg->remap);
+			                 __builtin_ctz(usart_dev->cfg->rx.init.GPIO_Pin),
+			                 usart_dev->cfg->remap);
 		if (usart_dev->cfg->tx.gpio != 0)
 			GPIO_PinAFConfig(usart_dev->cfg->tx.gpio,
-				__builtin_ctz(usart_dev->cfg->tx.init.GPIO_Pin),
-				usart_dev->cfg->remap);
+			                 __builtin_ctz(usart_dev->cfg->tx.init.GPIO_Pin),
+			                 usart_dev->cfg->remap);
 	}
 
 	/* Initialize the USART Rx and Tx pins */
@@ -267,19 +267,19 @@ out_fail:
 static void PIOS_USART_RxStart(uintptr_t usart_id, uint16_t rx_bytes_avail)
 {
 	struct pios_usart_dev * usart_dev = (struct pios_usart_dev *)usart_id;
-	
+
 	bool valid = PIOS_USART_validate(usart_dev);
 	PIOS_Assert(valid);
-	
+
 	USART_ITConfig(usart_dev->cfg->regs, USART_IT_RXNE, ENABLE);
 }
 static void PIOS_USART_TxStart(uintptr_t usart_id, uint16_t tx_bytes_avail)
 {
 	struct pios_usart_dev * usart_dev = (struct pios_usart_dev *)usart_id;
-	
+
 	bool valid = PIOS_USART_validate(usart_dev);
 	PIOS_Assert(valid);
-	
+
 	USART_ITConfig(usart_dev->cfg->regs, USART_IT_TXE, ENABLE);
 }
 
@@ -313,8 +313,8 @@ static void PIOS_USART_RegisterRxCallback(uintptr_t usart_id, pios_com_callback 
 
 	bool valid = PIOS_USART_validate(usart_dev);
 	PIOS_Assert(valid);
-	
-	/* 
+
+	/*
 	 * Order is important in these assignments since ISR uses _cb
 	 * field to determine if it's ok to dereference _cb and _context
 	 */
@@ -328,8 +328,8 @@ static void PIOS_USART_RegisterTxCallback(uintptr_t usart_id, pios_com_callback 
 
 	bool valid = PIOS_USART_validate(usart_dev);
 	PIOS_Assert(valid);
-	
-	/* 
+
+	/*
 	 * Order is important in these assignments since ISR uses _cb
 	 * field to determine if it's ok to dereference _cb and _context
 	 */
@@ -343,11 +343,11 @@ static void PIOS_USART_generic_irq_handler(uintptr_t usart_id)
 
 	bool valid = PIOS_USART_validate(usart_dev);
 	PIOS_Assert(valid);
-	
+
 	/* Force read of dr after sr to make sure to clear error flags */
 	volatile uint16_t sr = usart_dev->cfg->regs->SR;
 	volatile uint8_t dr = usart_dev->cfg->regs->DR;
-	
+
 	/* Check if RXNE flag is set */
 	bool rx_need_yield = false;
 	if (sr & USART_SR_RXNE) {
@@ -356,16 +356,16 @@ static void PIOS_USART_generic_irq_handler(uintptr_t usart_id)
 			(void) (usart_dev->rx_in_cb)(usart_dev->rx_in_context, &byte, 1, NULL, &rx_need_yield);
 		}
 	}
-	
+
 	/* Check if TXE flag is set */
 	bool tx_need_yield = false;
 	if (sr & USART_SR_TXE) {
 		if (usart_dev->tx_out_cb) {
 			uint8_t b;
 			uint16_t bytes_to_send;
-			
+
 			bytes_to_send = (usart_dev->tx_out_cb)(usart_dev->tx_out_context, &b, 1, NULL, &tx_need_yield);
-			
+
 			if (bytes_to_send > 0) {
 				/* Send the byte we've been given */
 				usart_dev->cfg->regs->DR = b;
@@ -378,7 +378,7 @@ static void PIOS_USART_generic_irq_handler(uintptr_t usart_id)
 			USART_ITConfig(usart_dev->cfg->regs, USART_IT_TXE, DISABLE);
 		}
 	}
-	
+
 #if defined(PIOS_INCLUDE_FREERTOS)
 	portEND_SWITCHING_ISR((rx_need_yield || tx_need_yield) ? pdTRUE : pdFALSE);
 #endif	/* defined(PIOS_INCLUDE_FREERTOS) */

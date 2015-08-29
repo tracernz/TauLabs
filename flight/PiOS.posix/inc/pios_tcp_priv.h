@@ -47,21 +47,21 @@ struct pios_tcp_cfg {
 typedef struct {
 	const struct pios_tcp_cfg * cfg;
 	pthread_t rxThread;
-	
+
 	int socket;
 	struct sockaddr_in server;
 	struct sockaddr_in client;
 	uint32_t clientLength;
 	int socket_connection;
-	
+
 	pthread_cond_t cond;
 	pthread_mutex_t mutex;
-	
+
 	pios_com_callback tx_out_cb;
 	uintptr_t tx_out_context;
 	pios_com_callback rx_in_cb;
 	uintptr_t rx_in_context;
-	
+
 	t_fifo_buffer rx_fifo;
 	uint8_t rx_buffer[PIOS_TCP_RX_BUFFER_SIZE];
 	uint8_t tx_buffer[PIOS_TCP_RX_BUFFER_SIZE];

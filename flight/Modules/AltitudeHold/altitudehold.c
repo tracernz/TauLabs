@@ -140,7 +140,7 @@ static void altitudeHoldTask(void *parameters)
 
 	AltitudeHoldSettingsGet(&altitudeHoldSettings);
 	pid_configure(&velocity_pid, altitudeHoldSettings.VelocityKp,
-		          altitudeHoldSettings.VelocityKi, 0.0f, 1.0f);
+	              altitudeHoldSettings.VelocityKi, 0.0f, 1.0f);
 
 	AlarmsSet(SYSTEMALARMS_ALARM_ALTITUDEHOLD, SYSTEMALARMS_ALARM_OK);
 
@@ -181,7 +181,7 @@ static void altitudeHoldTask(void *parameters)
 			AltitudeHoldSettingsGet(&altitudeHoldSettings);
 
 			pid_configure(&velocity_pid, altitudeHoldSettings.VelocityKp,
-				          altitudeHoldSettings.VelocityKi, 0.0f, 1.0f);
+			              altitudeHoldSettings.VelocityKi, 0.0f, 1.0f);
 		}
 
 		bool landing = altitudeHoldDesired.Land == ALTITUDEHOLDDESIRED_LAND_TRUE;
@@ -204,10 +204,10 @@ static void altitudeHoldTask(void *parameters)
 
 			// Velocity desired is from the outer controller plus the set point
 			float velocity_desired = altitude_error * altitudeHoldSettings.PositionKp + altitudeHoldDesired.ClimbRate;
-			float throttle_desired = pid_apply_antiwindup(&velocity_pid, 
-			                    velocity_desired - velocity_z,
-			                    min_throttle, 1.0f, // positive limits since this is throttle
-			                    dt_s);
+			float throttle_desired = pid_apply_antiwindup(&velocity_pid,
+			                         velocity_desired - velocity_z,
+			                         min_throttle, 1.0f, // positive limits since this is throttle
+			                         dt_s);
 
 			AltitudeHoldStateData altitudeHoldState;
 			altitudeHoldState.VelocityDesired = velocity_desired;

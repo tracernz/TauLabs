@@ -56,7 +56,7 @@ static bool armed_when_enabled;
 int32_t failsafe_control_select(bool reset_controller)
 {
 	if (reset_controller) {
-		FlightStatusArmedOptions armed; 
+		FlightStatusArmedOptions armed;
 		FlightStatusArmedGet(&armed);
 		armed_when_enabled = (armed == FLIGHTSTATUS_ARMED_ARMED);
 	}
@@ -94,7 +94,7 @@ int32_t failsafe_control_select(bool reset_controller)
 		stabilization_desired.Yaw   = 0;
 		stabilization_desired.StabilizationMode[STABILIZATIONDESIRED_STABILIZATIONMODE_ROLL] = STABILIZATIONDESIRED_STABILIZATIONMODE_NONE;
 		stabilization_desired.StabilizationMode[STABILIZATIONDESIRED_STABILIZATIONMODE_PITCH] = STABILIZATIONDESIRED_STABILIZATIONMODE_NONE;
-		stabilization_desired.StabilizationMode[STABILIZATIONDESIRED_STABILIZATIONMODE_YAW] = STABILIZATIONDESIRED_STABILIZATIONMODE_NONE;		
+		stabilization_desired.StabilizationMode[STABILIZATIONDESIRED_STABILIZATIONMODE_YAW] = STABILIZATIONDESIRED_STABILIZATIONMODE_NONE;
 	} else {
 		/* Pick default values that will roughly cause a plane to circle down and */
 		/* a quad to fall straight down */

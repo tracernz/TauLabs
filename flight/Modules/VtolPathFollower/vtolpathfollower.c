@@ -116,7 +116,7 @@ int32_t VtolPathFollowerInitialize()
 	VelocityDesiredInitialize();
 	VtolPathFollowerSettingsInitialize();
 	VtolPathFollowerStatusInitialize();
-	
+
 	return 0;
 }
 
@@ -135,25 +135,24 @@ static void vtolPathFollowerTask(void *parameters)
 	VtolPathFollowerSettingsConnectCallback(vtol_follower_control_settings_updated);
 	AltitudeHoldSettingsConnectCallback(vtol_follower_control_settings_updated);
 	vtol_follower_control_settings_updated(NULL);
-	
+
 	VtolPathFollowerSettingsGet(&guidanceSettings);
-	
+
 	// Main task loop
 	while (1) {
 
 		SystemSettingsGet(&systemSettings);
 		if ( (systemSettings.AirframeType != SYSTEMSETTINGS_AIRFRAMETYPE_VTOL) &&
-			(systemSettings.AirframeType != SYSTEMSETTINGS_AIRFRAMETYPE_QUADP) &&
-			(systemSettings.AirframeType != SYSTEMSETTINGS_AIRFRAMETYPE_QUADX) &&
-			(systemSettings.AirframeType != SYSTEMSETTINGS_AIRFRAMETYPE_HEXA) &&
-			(systemSettings.AirframeType != SYSTEMSETTINGS_AIRFRAMETYPE_HEXAX) &&
-			(systemSettings.AirframeType != SYSTEMSETTINGS_AIRFRAMETYPE_HEXACOAX) &&
-			(systemSettings.AirframeType != SYSTEMSETTINGS_AIRFRAMETYPE_OCTO) &&
-			(systemSettings.AirframeType != SYSTEMSETTINGS_AIRFRAMETYPE_OCTOV) &&
-			(systemSettings.AirframeType != SYSTEMSETTINGS_AIRFRAMETYPE_OCTOCOAXP) &&
-			(systemSettings.AirframeType != SYSTEMSETTINGS_AIRFRAMETYPE_OCTOCOAXX) &&
-			(systemSettings.AirframeType != SYSTEMSETTINGS_AIRFRAMETYPE_TRI) )
-		{
+		     (systemSettings.AirframeType != SYSTEMSETTINGS_AIRFRAMETYPE_QUADP) &&
+		     (systemSettings.AirframeType != SYSTEMSETTINGS_AIRFRAMETYPE_QUADX) &&
+		     (systemSettings.AirframeType != SYSTEMSETTINGS_AIRFRAMETYPE_HEXA) &&
+		     (systemSettings.AirframeType != SYSTEMSETTINGS_AIRFRAMETYPE_HEXAX) &&
+		     (systemSettings.AirframeType != SYSTEMSETTINGS_AIRFRAMETYPE_HEXACOAX) &&
+		     (systemSettings.AirframeType != SYSTEMSETTINGS_AIRFRAMETYPE_OCTO) &&
+		     (systemSettings.AirframeType != SYSTEMSETTINGS_AIRFRAMETYPE_OCTOV) &&
+		     (systemSettings.AirframeType != SYSTEMSETTINGS_AIRFRAMETYPE_OCTOCOAXP) &&
+		     (systemSettings.AirframeType != SYSTEMSETTINGS_AIRFRAMETYPE_OCTOCOAXX) &&
+		     (systemSettings.AirframeType != SYSTEMSETTINGS_AIRFRAMETYPE_TRI) ) {
 			// This should be a critical alarm since the system will not attempt to
 			// control in this situation.
 			AlarmsSet(SYSTEMALARMS_ALARM_PATHFOLLOWER,SYSTEMALARMS_ALARM_CRITICAL);
@@ -164,7 +163,7 @@ static void vtolPathFollowerTask(void *parameters)
 		// Make sure when flight mode toggles, to immediately update the path
 		UAVObjEvent ev;
 		PIOS_Queue_Receive(queue, &ev, guidanceSettings.UpdatePeriod);
-		
+
 		static uint8_t last_flight_mode;
 		FlightStatusGet(&flightStatus);
 
@@ -207,7 +206,7 @@ static void vtolPathFollowerTask(void *parameters)
 		} else {
 			for (uint32_t i = 0; i < VTOL_PID_NUM; i++)
 				pid_zero(&vtol_pids[i]);
-		
+
 			// Track throttle before engaging this mode.  Cheap system ident
 			StabilizationDesiredThrottleGet(&vtol_pids[DOWN_VELOCITY].iAccumulator);
 			// pid library scales up accumulator by 1000. Note the negative sign because this

@@ -1,9 +1,9 @@
 /**
  ******************************************************************************
  * @addtogroup TauLabsModules TauLabs Modules
- * @{ 
+ * @{
  * @addtogroup PicoC Interpreter Module
- * @{ 
+ * @{
  *
  * @file       picoc_platform.c
  * @author     Tau Labs, http://taulabs.org, Copyright (C) 2014
@@ -72,18 +72,17 @@ int picoc(const char * source, size_t stack_size)
 	Picoc pc;
 	PicocInitialise(&pc, stack_size);
 
-	if (PicocPlatformSetExitPoint(&pc))
-	{	/* we get here, if an error occures or 'exit();' was called. */
+	if (PicocPlatformSetExitPoint(&pc)) {
+		/* we get here, if an error occures or 'exit();' was called. */
 		PicocCleanup(&pc);
 		return pc.PicocExitValue;
 	}
 
-	if (source)
-	{	/* start with complete source file */
+	if (source) {
+		/* start with complete source file */
 		PicocParse(&pc, "nofile", source, strlen(source), true, true, false, false);
-	}
-	else
-	{	/* start interactive */
+	} else {
+		/* start interactive */
 		PicocParseInteractive(&pc);
 	}
 
@@ -117,15 +116,13 @@ char *PlatformGetLine(char *line, int length, const char *prompt)
 	PIOS_COM_SendFormattedString(PIOS_COM_PICOC, "\n%s", prompt);
 	length -= 2;
 
-	while (1)
-	{
+	while (1) {
 		ch = 0;
 		while (PIOS_COM_ReceiveBuffer(PIOS_COM_PICOC, &ch, 1, 10) == 0);
 
-		if (ch == '\b')
-		{	// Backspace pressed
-			if (ix > 0)
-			{
+		if (ch == '\b') {
+			// Backspace pressed
+			if (ix > 0) {
 				PIOS_COM_SendString(PIOS_COM_PICOC, "\b \b");
 				--ix;
 				--cp;
@@ -133,16 +130,14 @@ char *PlatformGetLine(char *line, int length, const char *prompt)
 			continue;
 		}
 
-		if (ch == 0x1b || ch == 0x03)
-		{	// ESC character or Ctrl-C - exit
+		if (ch == 0x1b || ch == 0x03) {
+			// ESC character or Ctrl-C - exit
 			PIOS_COM_SendString(PIOS_COM_PICOC, "\nLeaving PicoC\n");
 			break;
 		}
 
-		if (ix < length)
-		{
-			if (ch == '\r' || ch == '\n')
-			{
+		if (ix < length) {
+			if (ch == '\r' || ch == '\n') {
 				*cp++ = '\n'; // if newline, send newline character followed by null
 				*cp = 0;
 				PIOS_COM_SendChar(PIOS_COM_PICOC, '\n');
@@ -151,9 +146,7 @@ char *PlatformGetLine(char *line, int length, const char *prompt)
 			*cp++ = ch;
 			ix++;
 			PIOS_COM_SendChar(PIOS_COM_PICOC, ch);
-		}
-		else
-		{
+		} else {
 			PIOS_COM_SendFormattedString(PIOS_COM_PICOC, "\nLine too long\n%s", prompt);
 			ix = 0;
 			cp = line;
@@ -201,13 +194,13 @@ void PlatformExit(Picoc *pc, int RetVal)
  */
 void *PlatformMalloc(size_t size)
 {
-	if (heap_memory == NULL)
-	{	/* no heap memory used yet. try to get some */
+	if (heap_memory == NULL) {
+		/* no heap memory used yet. try to get some */
 		heap_size = size;
 		heap_memory = (char *)PIOS_malloc(heap_size);
 	}
-	if ((heap_size >= size) && (heap_memory != NULL) && (!heap_used))
-	{	/* memory is free and size fits */
+	if ((heap_size >= size) && (heap_memory != NULL) && (!heap_used)) {
+		/* memory is free and size fits */
 		heap_used = true;
 		return heap_memory;
 	}
@@ -216,14 +209,15 @@ void *PlatformMalloc(size_t size)
 
 void PlatformFree(void *ptr)
 {
-	if (ptr == heap_memory)
-	{	/* fake free() */
+	if (ptr == heap_memory) {
+		/* fake free() */
 		heap_used = false;
 	}
 }
 
 size_t PlatformHeapSize()
-{	/* a replacement for #define HEAP_SIZE. So it is variable */
+{
+	/* a replacement for #define HEAP_SIZE. So it is variable */
 	return heap_size;
 }
 

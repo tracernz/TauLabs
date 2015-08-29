@@ -164,7 +164,7 @@ MODULE_INITCALL(CameraStabInitialize, CameraStabStart)
  * and recalculates the desied gimbal angle.
  */
 static void attitudeUpdated(UAVObjEvent* ev)
-{	
+{
 	if (ev->obj != AttitudeActualHandle())
 		return;
 
@@ -232,7 +232,7 @@ static void attitudeUpdated(UAVObjEvent* ev)
 				break;
 			}
 		}
-#if defined(CAMERASTAB_POI_MODE)		
+#if defined(CAMERASTAB_POI_MODE)
 		else if (settings->Input[i] == CAMERASTABSETTINGS_INPUT_POI) {
 			// Process any updates of the tablet location if it wants to
 			// be the POI
@@ -274,7 +274,7 @@ static void attitudeUpdated(UAVObjEvent* ev)
 				}
 			}
 		}
-#endif /* CAMERASTAB_POI_MODE */		
+#endif /* CAMERASTAB_POI_MODE */
 
 		// Add Servo FeedForward
 		applyFF(i, dT_ms, &attitude, settings);
@@ -328,8 +328,7 @@ static void applyFF(uint8_t index, float dT_ms, float *attitude, CameraStabSetti
 	//acceleration and deceleration limit
 	float delta = *attitude - csd->FFlastFilteredAttitude[index];
 	float maxDelta = cameraStab->MaxAccel * dT_ms / 1000.0f;
-	if(fabsf(delta) > maxDelta) //we are accelerating too hard
-	{
+	if(fabsf(delta) > maxDelta) { //we are accelerating too hard
 		*attitude = csd->FFlastFilteredAttitude[index] + (delta > 0 ? maxDelta : - maxDelta);
 	}
 	csd->FFlastFilteredAttitude[index] = *attitude;
@@ -360,7 +359,8 @@ static void tablet_info_flag_update(UAVObjEvent * ev)
 /**
  * @brief Convert tablet location (LLA) to local coordinates (NED)
 */
-static void tablet_info_process() {
+static void tablet_info_process()
+{
 
 	// Only process new information
 	if (tablet_info_updated == false)
@@ -369,8 +369,7 @@ static void tablet_info_process() {
 
 	TabletInfoData tablet;
 	TabletInfoGet(&tablet);
-	if (tablet.Connected == TABLETINFO_CONNECTED_TRUE && tablet.POI == TABLETINFO_POI_TRUE)
-	{
+	if (tablet.Connected == TABLETINFO_CONNECTED_TRUE && tablet.POI == TABLETINFO_POI_TRUE) {
 		HomeLocationData homeLocation;
 		HomeLocationGet(&homeLocation);
 
@@ -386,8 +385,9 @@ static void tablet_info_process() {
 		T[2] = -1.0f;
 
 		float dL[3] = {(tablet.Latitude - homeLocation.Latitude) / 10.0e6f * DEG2RAD,
-			(tablet.Longitude - homeLocation.Longitude) / 10.0e6f * DEG2RAD,
-			(tablet.Altitude)};
+		               (tablet.Longitude - homeLocation.Longitude) / 10.0e6f * DEG2RAD,
+		               (tablet.Altitude)
+		              };
 
 		poi.North = T[0] * dL[0];
 		poi.East = T[1] * dL[1];

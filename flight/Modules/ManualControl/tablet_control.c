@@ -89,96 +89,94 @@ int32_t tablet_control_select(bool reset_controller)
 	uint8_t mode = flightStatus.FlightMode;
 
 	switch(tabletInfo.TabletModeDesired) {
-		case TABLETINFO_TABLETMODEDESIRED_POSITIONHOLD:
-			// Use the position hold FSM. This will take the current position
-			// when flight mode first is position hold. The tablet does not
-			// set the position explicitly
-			mode = FLIGHTSTATUS_FLIGHTMODE_POSITIONHOLD;
+	case TABLETINFO_TABLETMODEDESIRED_POSITIONHOLD:
+		// Use the position hold FSM. This will take the current position
+		// when flight mode first is position hold. The tablet does not
+		// set the position explicitly
+		mode = FLIGHTSTATUS_FLIGHTMODE_POSITIONHOLD;
 
-			// Command to not move. This code is identical to that in manualcontrol
-			LoiterCommandData loiterCommand;
-			loiterCommand.Pitch = 0;
-			loiterCommand.Roll = 0;
-			loiterCommand.Throttle = 0.5f;
-			loiterCommand.Frame = LOITERCOMMAND_FRAME_BODY;
-			LoiterCommandSet(&loiterCommand);
+		// Command to not move. This code is identical to that in manualcontrol
+		LoiterCommandData loiterCommand;
+		loiterCommand.Pitch = 0;
+		loiterCommand.Roll = 0;
+		loiterCommand.Throttle = 0.5f;
+		loiterCommand.Frame = LOITERCOMMAND_FRAME_BODY;
+		LoiterCommandSet(&loiterCommand);
 
-			break;
-		case TABLETINFO_TABLETMODEDESIRED_RETURNTOHOME:
+		break;
+	case TABLETINFO_TABLETMODEDESIRED_RETURNTOHOME:
 
-			// Use the return to home FSM.
-			mode = FLIGHTSTATUS_FLIGHTMODE_RETURNTOHOME;
+		// Use the return to home FSM.
+		mode = FLIGHTSTATUS_FLIGHTMODE_RETURNTOHOME;
 
-			break;
-		case TABLETINFO_TABLETMODEDESIRED_RETURNTOTABLET:
-		{
-			float NED[3];
+		break;
+	case TABLETINFO_TABLETMODEDESIRED_RETURNTOTABLET: {
+		float NED[3];
 
-			mode = FLIGHTSTATUS_FLIGHTMODE_TABLETCONTROL;
-			tabletInfo_to_ned(&tabletInfo, NED);
+		mode = FLIGHTSTATUS_FLIGHTMODE_TABLETCONTROL;
+		tabletInfo_to_ned(&tabletInfo, NED);
 
-			pathDesired.End[0] = NED[0];
-			pathDesired.End[1] = NED[1];
+		pathDesired.End[0] = NED[0];
+		pathDesired.End[1] = NED[1];
+		pathDesired.End[2] = -HOME_ALTITUDE_OFFSET;
+		pathDesired.Mode = PATHDESIRED_MODE_HOLDPOSITION;
+		pathDesired.StartingVelocity = 5;
+		pathDesired.EndingVelocity = 5;
+
+		PathDesiredSet(&pathDesired);
+	}
+
+	break;
+	case TABLETINFO_TABLETMODEDESIRED_PATHPLANNER:
+		mode = FLIGHTSTATUS_FLIGHTMODE_PATHPLANNER;
+		break;
+	case TABLETINFO_TABLETMODEDESIRED_FOLLOWME: {
+		mode = FLIGHTSTATUS_FLIGHTMODE_TABLETCONTROL;
+
+		// Follow the tablet location at a fixed height, but always following by
+		// a set radius. This mode is updated every cycle, unlike the others.
+		float NED[3];
+		tabletInfo_to_ned(&tabletInfo, NED);
+
+		PositionActualData positionActual;
+		PositionActualGet(&positionActual);
+
+		float DeltaN = NED[0] - positionActual.North;
+		float DeltaE = NED[1] - positionActual.East;
+		float dist = sqrt(DeltaN * DeltaN + DeltaE * DeltaE);
+
+		// If outside the follow radius code to the nearest point on the border
+		// otherwise stay in the same location
+		if (dist > FOLLOWME_RADIUS) {
+			float frac = (dist - FOLLOWME_RADIUS) / dist;
+			pathDesired.End[0] = positionActual.North + frac * DeltaN;
+			pathDesired.End[1] = positionActual.East + frac * DeltaE;
 			pathDesired.End[2] = -HOME_ALTITUDE_OFFSET;
-			pathDesired.Mode = PATHDESIRED_MODE_HOLDPOSITION;
-			pathDesired.StartingVelocity = 5;
-			pathDesired.EndingVelocity = 5;
-
-			PathDesiredSet(&pathDesired);
+		} else {
+			pathDesired.End[0] = positionActual.North;
+			pathDesired.End[1] = positionActual.East;
+			pathDesired.End[2] = -HOME_ALTITUDE_OFFSET;
 		}
+		pathDesired.Mode = FLIGHTSTATUS_FLIGHTMODE_PATHPLANNER;
+		pathDesired.StartingVelocity = 5;
+		pathDesired.EndingVelocity = 5;
 
-			break;
-		case TABLETINFO_TABLETMODEDESIRED_PATHPLANNER:
-			mode = FLIGHTSTATUS_FLIGHTMODE_PATHPLANNER;
-			break;
-		case TABLETINFO_TABLETMODEDESIRED_FOLLOWME:
-		{
-			mode = FLIGHTSTATUS_FLIGHTMODE_TABLETCONTROL;
-			
-			// Follow the tablet location at a fixed height, but always following by
-			// a set radius. This mode is updated every cycle, unlike the others.
-			float NED[3];
-			tabletInfo_to_ned(&tabletInfo, NED);
+		PathDesiredSet(&pathDesired);
+	}
+	break;
+	case TABLETINFO_TABLETMODEDESIRED_LAND:
+	default:
+		AlarmsSet(SYSTEMALARMS_ALARM_MANUALCONTROL, SYSTEMALARMS_ALARM_ERROR);
 
-			PositionActualData positionActual;
-			PositionActualGet(&positionActual);
-
-			float DeltaN = NED[0] - positionActual.North;
-			float DeltaE = NED[1] - positionActual.East;
-			float dist = sqrt(DeltaN * DeltaN + DeltaE * DeltaE);
-
-			// If outside the follow radius code to the nearest point on the border
-			// otherwise stay in the same location
-			if (dist > FOLLOWME_RADIUS) {
-				float frac = (dist - FOLLOWME_RADIUS) / dist;
-				pathDesired.End[0] = positionActual.North + frac * DeltaN;
-				pathDesired.End[1] = positionActual.East + frac * DeltaE;
-				pathDesired.End[2] = -HOME_ALTITUDE_OFFSET;
-			} else {
-				pathDesired.End[0] = positionActual.North;
-				pathDesired.End[1] = positionActual.East;
-				pathDesired.End[2] = -HOME_ALTITUDE_OFFSET;
-			}
-			pathDesired.Mode = FLIGHTSTATUS_FLIGHTMODE_PATHPLANNER;
-			pathDesired.StartingVelocity = 5;
-			pathDesired.EndingVelocity = 5;
-
-			PathDesiredSet(&pathDesired);
-		}
-			break;
-		case TABLETINFO_TABLETMODEDESIRED_LAND:
-		default:
-			AlarmsSet(SYSTEMALARMS_ALARM_MANUALCONTROL, SYSTEMALARMS_ALARM_ERROR);
-
-			// Fail out.  This will trigger failsafe mode.
-			return -1;
+		// Fail out.  This will trigger failsafe mode.
+		return -1;
 	}
 
 	// Update mode if changed
 	if (mode != flightStatus.FlightMode) {
 		flightStatus.FlightMode = mode;
 		FlightStatusSet(&flightStatus);
-	}		
+	}
 
 	return 0;
 }
@@ -223,8 +221,9 @@ static int32_t tabletInfo_to_ned(TabletInfoData *tabletInfo, float *NED)
 	// This means that "(tabletInfo->Altitude + gpsPosition.GeoidSeparation - homeLocation.Altitude)"
 	// will be correct or incorrect depending on the device.
 	float dL[3] = {(tabletInfo->Latitude - homeLocation.Latitude) / 10.0e6f * DEG2RAD,
-		(tabletInfo->Longitude - homeLocation.Longitude) / 10.0e6f * DEG2RAD,
-		(tabletInfo->Altitude + gpsPosition.GeoidSeparation - homeLocation.Altitude)};
+	               (tabletInfo->Longitude - homeLocation.Longitude) / 10.0e6f * DEG2RAD,
+	               (tabletInfo->Altitude + gpsPosition.GeoidSeparation - homeLocation.Altitude)
+	              };
 
 	NED[0] = T[0] * dL[0];
 	NED[1] = T[1] * dL[1];

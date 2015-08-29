@@ -22,14 +22,16 @@
  * @details This initialization must be performed just after stack setup
  *          and before any other initialization.
  */
-void __early_init(void) {
+void __early_init(void)
+{
 
-  stm32_clock_init();
+	stm32_clock_init();
 }
 
 /**
  * @brief   Board-specific initialization code.
  * @todo    Add your board-specific code, if any.
  */
-void boardInit(void) {
+void boardInit(void)
+{
 }

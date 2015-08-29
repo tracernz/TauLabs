@@ -65,8 +65,7 @@ struct pios_thread *PIOS_Thread_Create(void (*fp)(void *), const char *namep, si
 
 	thread->task_handle = (uintptr_t)NULL;
 
-	if (xTaskCreate(fp, (signed char*)namep, stack_bytes / 4, argp, prio, (xTaskHandle*)&thread->task_handle) != pdPASS)
-	{
+	if (xTaskCreate(fp, (signed char*)namep, stack_bytes / 4, argp, prio, (xTaskHandle*)&thread->task_handle) != pdPASS) {
 		PIOS_free(thread);
 		return NULL;
 	}
@@ -208,7 +207,7 @@ void PIOS_Thread_Scheduler_Resume(void)
 /**
  * Compute size that is at rounded up to the nearest
  * multiple of 8
- */ 
+ */
 static uint32_t ceil_size(uint32_t size)
 {
 	const uint32_t a = sizeof(stkalign_t);
@@ -264,15 +263,13 @@ struct pios_thread *PIOS_Thread_Create(void (*fp)(void *), const char *namep, si
 	// Use special functions to ensure ChibiOS stack requirements
 	stack_bytes = ceil_size(stack_bytes);
 	uint8_t *wap = align8_alloc(stack_bytes);
-	if (wap == NULL)
-	{
+	if (wap == NULL) {
 		PIOS_free(thread);
 		return NULL;
 	}
 
 	thread->threadp = chThdCreateStatic(wap, stack_bytes, prio, (msg_t (*)(void *))fp, argp);
-	if (thread->threadp == NULL)
-	{
+	if (thread->threadp == NULL) {
 		PIOS_free(thread);
 		PIOS_free(wap);
 		return NULL;
@@ -295,12 +292,9 @@ struct pios_thread *PIOS_Thread_Create(void (*fp)(void *), const char *namep, si
  */
 void PIOS_Thread_Delete(struct pios_thread *threadp)
 {
-	if (threadp == NULL)
-	{
+	if (threadp == NULL) {
 		chThdExit(0);
-	}
-	else
-	{
+	} else {
 		chThdTerminate(threadp->threadp);
 		chThdWait(threadp->threadp);
 	}
@@ -351,9 +345,9 @@ void PIOS_Thread_Sleep_Until(uint32_t *previous_ms, uint32_t increment_ms)
 	chSysLock();
 	systime_t now = chTimeNow();
 	int mustDelay =
-		now < MS2ST(*previous_ms) ?
-		(now < future && future < MS2ST(*previous_ms)) :
-		(now < future || future < MS2ST(*previous_ms));
+	    now < MS2ST(*previous_ms) ?
+	    (now < future && future < MS2ST(*previous_ms)) :
+	    (now < future || future < MS2ST(*previous_ms));
 	if (mustDelay)
 		chThdSleepS(future - now);
 	chSysUnlock();
@@ -374,10 +368,10 @@ uint32_t PIOS_Thread_Get_Stack_Usage(struct pios_thread *threadp)
 	uint32_t *stack = (uint32_t*)((size_t)threadp->threadp + sizeof(*threadp->threadp));
 	uint32_t *stklimit = stack;
 	while (*stack ==
-			((CH_STACK_FILL_VALUE << 24) |
-			(CH_STACK_FILL_VALUE << 16) |
-			(CH_STACK_FILL_VALUE << 8) |
-			(CH_STACK_FILL_VALUE << 0)))
+	       ((CH_STACK_FILL_VALUE << 24) |
+	        (CH_STACK_FILL_VALUE << 16) |
+	        (CH_STACK_FILL_VALUE << 8) |
+	        (CH_STACK_FILL_VALUE << 0)))
 		++stack;
 	return (stack - stklimit) * 4;
 #else
@@ -394,7 +388,7 @@ uint32_t PIOS_Thread_Get_Stack_Usage(struct pios_thread *threadp)
  * @return runtime in milliseconds
  *
  */
- uint32_t PIOS_Thread_Get_Runtime(struct pios_thread *threadp)
+uint32_t PIOS_Thread_Get_Runtime(struct pios_thread *threadp)
 {
 	chSysLock();
 

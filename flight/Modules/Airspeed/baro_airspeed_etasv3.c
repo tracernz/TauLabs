@@ -1,9 +1,9 @@
 /**
  ******************************************************************************
  * @addtogroup TauLabsModules Tau Labs Modules
- * @{ 
+ * @{
  * @addtogroup AirspeedModule Airspeed Module
- * @{ 
+ * @{
  *
  * @file       baro_airspeed.c
  * @author     The OpenPilot Team, http://www.openpilot.org Copyright (C) 2010.
@@ -71,7 +71,7 @@ void baro_airspeedGetETASV3(BaroAirspeedData *baroAirspeedData, uint32_t *lastSy
 		baroAirspeedData->CalibratedAirspeed = 0;
 		return;
 	}
-	
+
 	//Calibrate sensor by averaging zero point value //THIS SHOULD NOT BE DONE IF THERE IS AN IN-AIR RESET. HOW TO DETECT THIS?
 	if (calibrationCount < CALIBRATION_COUNT_IDLE) {
 		calibrationCount++;

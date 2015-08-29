@@ -1,9 +1,9 @@
 /**
  ******************************************************************************
  * @addtogroup TauLabsModules Tau Labs Modules
- * @{ 
+ * @{
  * @addtogroup OveroSyncModule OveroSync Module
- * @{ 
+ * @{
  *
  * @file       overosync.h
  * @author     The OpenPilot Team, http://www.openpilot.org Copyright (C) 2010.

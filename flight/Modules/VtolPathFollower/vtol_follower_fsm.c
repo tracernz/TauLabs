@@ -252,7 +252,8 @@ static void vtol_fsm_timer_set(int32_t ms)
  * Checks if there is a pending timer that has expired.
  * @return True if expired.
  */
-static bool vtol_fsm_timer_expired() {
+static bool vtol_fsm_timer_expired()
+{
 	/* If there's a timer... */
 	if (vtol_fsm_timer_expiration > 0) {
 		/* See if it expires. */
@@ -520,7 +521,7 @@ static int32_t do_loiter()
 	}
 
 	if (vtol_follower_control_altrate(DT, vtol_hold_position_ned,
-				alt_adj) == 0) {
+	                                  alt_adj) == 0) {
 		if (vtol_follower_control_attitude(DT, att_adj) == 0) {
 			return 0;
 		}

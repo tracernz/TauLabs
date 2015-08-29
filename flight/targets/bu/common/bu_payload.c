@@ -27,17 +27,17 @@
 #include <pios_stringify.h>	/* __stringify */
 
 asm(
-	".section .rodata\n"
+    ".section .rodata\n"
 
-	".global _bu_payload_start\n"
-	"_bu_payload_start:\n"
-	".incbin \"" __stringify(BU_PAYLOAD_FILE) "\"\n"
-	".global _bu_payload_end\n"
-	"_bu_payload_end:\n"
+    ".global _bu_payload_start\n"
+    "_bu_payload_start:\n"
+    ".incbin \"" __stringify(BU_PAYLOAD_FILE) "\"\n"
+    ".global _bu_payload_end\n"
+    "_bu_payload_end:\n"
 
-	".global _bu_payload_size\n"
-	"_bu_payload_size:\n"
-	".word _bu_payload_end - _bu_payload_start\n"
-	".previous\n"
+    ".global _bu_payload_size\n"
+    "_bu_payload_size:\n"
+    ".word _bu_payload_end - _bu_payload_start\n"
+    ".previous\n"
 );
 

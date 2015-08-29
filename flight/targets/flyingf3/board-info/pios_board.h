@@ -165,7 +165,7 @@ extern uintptr_t pios_com_debug_id;
 
 //-------------------------
 // System Settings
-// 
+//
 // See also system_stm32f30x.c
 //-------------------------
 //These macros are deprecated

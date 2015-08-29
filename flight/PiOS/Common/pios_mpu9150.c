@@ -13,19 +13,19 @@
  *
  ******************************************************************************
  */
-/* 
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 3 of the License, or 
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
  * for more details.
- * 
- * You should have received a copy of the GNU General Public License along 
- * with this program; if not, write to the Free Software Foundation, Inc., 
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
@@ -98,12 +98,12 @@ static void PIOS_MPU9150_Task(void *parameters);
 static struct mpu9150_dev * PIOS_MPU9150_alloc(void)
 {
 	struct mpu9150_dev * mpu9150_dev;
-	
+
 	mpu9150_dev = (struct mpu9150_dev *)PIOS_malloc(sizeof(*mpu9150_dev));
 	if (!mpu9150_dev) return (NULL);
-	
+
 	mpu9150_dev->magic = PIOS_MPU9150_DEV_MAGIC;
-	
+
 	mpu9150_dev->accel_queue = PIOS_Queue_Create(PIOS_MPU9150_MAX_DOWNSAMPLE, sizeof(struct pios_sensor_gyro_data));
 	if (mpu9150_dev->accel_queue == NULL) {
 		PIOS_free(mpu9150_dev);
@@ -137,7 +137,7 @@ static struct mpu9150_dev * PIOS_MPU9150_alloc(void)
  */
 static int32_t PIOS_MPU9150_Validate(struct mpu9150_dev * dev)
 {
-	if (dev == NULL) 
+	if (dev == NULL)
 		return -1;
 	if (dev->magic != PIOS_MPU9150_DEV_MAGIC)
 		return -2;
@@ -155,7 +155,7 @@ int32_t PIOS_MPU9150_Init(uint32_t i2c_id, uint8_t i2c_addr, const struct pios_m
 	dev = PIOS_MPU9150_alloc();
 	if (dev == NULL)
 		return -1;
-	
+
 	dev->i2c_id = i2c_id;
 	dev->i2c_addr = i2c_addr;
 	dev->cfg = cfg;
@@ -170,12 +170,12 @@ int32_t PIOS_MPU9150_Init(uint32_t i2c_id, uint8_t i2c_addr, const struct pios_m
 	// Wait 5 ms for data ready interrupt and make sure it happens
 	// twice
 	if ((PIOS_Semaphore_Take(dev->data_ready_sema, 5) != true) ||
-		(PIOS_Semaphore_Take(dev->data_ready_sema, 5) != true)) {
+	    (PIOS_Semaphore_Take(dev->data_ready_sema, 5) != true)) {
 		return -10;
 	}
 
 	dev->TaskHandle = PIOS_Thread_Create(
-			PIOS_MPU9150_Task, "pios_mpu9150", MPU9150_TASK_STACK_BYTES, NULL, MPU9150_TASK_PRIORITY);
+	                      PIOS_MPU9150_Task, "pios_mpu9150", MPU9150_TASK_STACK_BYTES, NULL, MPU9150_TASK_PRIORITY);
 	PIOS_Assert(dev->TaskHandle != NULL);
 
 	PIOS_SENSORS_Register(PIOS_SENSOR_ACCEL, dev->accel_queue);
@@ -225,7 +225,7 @@ static int32_t PIOS_MPU9150_Config(struct pios_mpu60x0_cfg const * cfg)
 
 	// To enable access to the mag on auxillary i2c we must set bit 0x02 in register 0x37
 	// and clear bit 0x40 in register 0x6a (PIOS_MPU60X0_USER_CTRL_REG, default condition)
-	
+
 	// Disable mag first
 	if (PIOS_MPU9150_Mag_SetReg(MPU9150_MAG_CNTR, 0x00) != 0)
 		return -1;
@@ -567,14 +567,14 @@ static int32_t PIOS_MPU9150_ReadID()
 static float PIOS_MPU9150_GetGyroScale()
 {
 	switch (dev->gyro_range) {
-		case PIOS_MPU60X0_SCALE_250_DEG:
-			return 1.0f / 131.0f;
-		case PIOS_MPU60X0_SCALE_500_DEG:
-			return 1.0f / 65.5f;
-		case PIOS_MPU60X0_SCALE_1000_DEG:
-			return 1.0f / 32.8f;
-		case PIOS_MPU60X0_SCALE_2000_DEG:
-			return 1.0f / 16.4f;
+	case PIOS_MPU60X0_SCALE_250_DEG:
+		return 1.0f / 131.0f;
+	case PIOS_MPU60X0_SCALE_500_DEG:
+		return 1.0f / 65.5f;
+	case PIOS_MPU60X0_SCALE_1000_DEG:
+		return 1.0f / 32.8f;
+	case PIOS_MPU60X0_SCALE_2000_DEG:
+		return 1.0f / 16.4f;
 	}
 	return 0;
 }
@@ -583,14 +583,14 @@ static float PIOS_MPU9150_GetGyroScale()
 static float PIOS_MPU9150_GetAccelScale()
 {
 	switch (dev->accel_range) {
-		case PIOS_MPU60X0_ACCEL_2G:
-			return GRAVITY / 16384.0f;
-		case PIOS_MPU60X0_ACCEL_4G:
-			return GRAVITY / 8192.0f;
-		case PIOS_MPU60X0_ACCEL_8G:
-			return GRAVITY / 4096.0f;
-		case PIOS_MPU60X0_ACCEL_16G:
-			return GRAVITY / 2048.0f;
+	case PIOS_MPU60X0_ACCEL_2G:
+		return GRAVITY / 16384.0f;
+	case PIOS_MPU60X0_ACCEL_4G:
+		return GRAVITY / 8192.0f;
+	case PIOS_MPU60X0_ACCEL_8G:
+		return GRAVITY / 4096.0f;
+	case PIOS_MPU60X0_ACCEL_16G:
+		return GRAVITY / 2048.0f;
 	}
 	return 0;
 }
@@ -613,10 +613,10 @@ uint8_t PIOS_MPU9150_Test(void)
 	int32_t mpu9150_id = PIOS_MPU9150_ReadID();
 	if (mpu9150_id < 0)
 		return -1;
-	
+
 	if (mpu9150_id != MPU9150_WHOAMI_ID)
 		return -2;
-	
+
 	return 0;
 }
 
@@ -643,21 +643,21 @@ static void PIOS_MPU9150_Task(void *parameters)
 			continue;
 
 		enum {
-		    IDX_ACCEL_XOUT_H = 0,
-		    IDX_ACCEL_XOUT_L,
-		    IDX_ACCEL_YOUT_H,
-		    IDX_ACCEL_YOUT_L,
-		    IDX_ACCEL_ZOUT_H,
-		    IDX_ACCEL_ZOUT_L,
-		    IDX_TEMP_OUT_H,
-		    IDX_TEMP_OUT_L,
-		    IDX_GYRO_XOUT_H,
-		    IDX_GYRO_XOUT_L,
-		    IDX_GYRO_YOUT_H,
-		    IDX_GYRO_YOUT_L,
-		    IDX_GYRO_ZOUT_H,
-		    IDX_GYRO_ZOUT_L,
-		    BUFFER_SIZE,
+			IDX_ACCEL_XOUT_H = 0,
+			IDX_ACCEL_XOUT_L,
+			IDX_ACCEL_YOUT_H,
+			IDX_ACCEL_YOUT_L,
+			IDX_ACCEL_ZOUT_H,
+			IDX_ACCEL_ZOUT_L,
+			IDX_TEMP_OUT_H,
+			IDX_TEMP_OUT_L,
+			IDX_GYRO_XOUT_H,
+			IDX_GYRO_XOUT_L,
+			IDX_GYRO_YOUT_H,
+			IDX_GYRO_YOUT_L,
+			IDX_GYRO_ZOUT_H,
+			IDX_GYRO_ZOUT_L,
+			BUFFER_SIZE,
 		};
 
 

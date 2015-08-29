@@ -1,9 +1,9 @@
 /**
  ******************************************************************************
  * @addtogroup TauLabsModules Tau Labs Modules
- * @{ 
+ * @{
  * @addtogroup OveroSyncModule OveroSync Module
- * @{ 
+ * @{
  *
  * @file       overosync.c
  * @author     The OpenPilot Team, http://www.openpilot.org Copyright (C) 2010.
@@ -120,12 +120,12 @@ int32_t OveroSyncStart(void)
 
 	// Process all registered objects and connect queue for updates
 	UAVObjIterate(&registerObject);
-	
+
 	// Start telemetry tasks
 	overoSyncTaskHandle = PIOS_Thread_Create(overoSyncTask, "OveroSync", STACK_SIZE_BYTES, NULL, TASK_PRIORITY);
-	
+
 	TaskMonitorAdd(TASKINFO_RUNNING_OVEROSYNC, overoSyncTaskHandle);
-	
+
 	return 0;
 }
 
@@ -164,20 +164,20 @@ static void overoSyncTask(void *parameters)
 	overosync->sent_objects = 0;
 	overosync->failed_objects = 0;
 	overosync->received_objects = 0;
-	
+
 	uint32_t lastUpdateTime = PIOS_Thread_Systime();
 	uint32_t updateTime;
-	
+
 	fid = fopen("sim_log.tll", "w");
 
 	// Loop forever
 	while (1) {
 		// Wait for queue message
 		if (PIOS_Queue_Receive(queue, &ev, PIOS_QUEUE_TIMEOUT_MAX) == true) {
-		
+
 			// Check it will fit before packetizing
 			if ((overosync->write_pointer + UAVObjGetNumBytes(ev.obj) + 12) >=
-				sizeof(overosync->transactions[overosync->loading_transaction_id].tx_buffer)) {
+			    sizeof(overosync->transactions[overosync->loading_transaction_id].tx_buffer)) {
 				overosync->failed_objects ++;
 			} else {
 				// Process event.  This calls transmitData
@@ -222,7 +222,7 @@ static int32_t packData(uint8_t * data, int32_t length)
 	overosync->sent_objects++;
 
 	PIOS_Mutex_Unlock(overosync->buffer_lock);
-	
+
 	return length;
 }
 

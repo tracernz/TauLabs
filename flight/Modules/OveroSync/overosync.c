@@ -1,9 +1,9 @@
 /**
  ******************************************************************************
  * @addtogroup TauLabsModules Tau Labs Modules
- * @{ 
+ * @{
  * @addtogroup OveroSyncModule OveroSync Module
- * @{ 
+ * @{
  *
  * @file       overosync.c
  * @author     The OpenPilot Team, http://www.openpilot.org Copyright (C) 2010.
@@ -93,7 +93,7 @@ int32_t OveroSyncInitialize(void)
 
 	// Create object queues
 	queue = PIOS_Queue_Create(MAX_QUEUE_SIZE, sizeof(UAVObjEvent));
-	
+
 	OveroSyncStatsInitialize();
 
 	// Initialise UAVTalk
@@ -113,7 +113,7 @@ int32_t OveroSyncStart(void)
 	if (module_enabled == false) {
 		return -1;
 	}
-	
+
 	overosync = (struct overosync *) PIOS_malloc(sizeof(*overosync));
 	if(overosync == NULL)
 		return -1;
@@ -122,12 +122,12 @@ int32_t OveroSyncStart(void)
 
 	// Process all registered objects and connect queue for updates
 	UAVObjIterate(&register_object);
-	
+
 	// Start telemetry tasks
 	overoSyncTaskHandle = PIOS_Thread_Create(overoSyncTask, "OveroSync", STACK_SIZE_BYTES, NULL, TASK_PRIORITY);
-	
+
 	TaskMonitorAdd(TASKINFO_RUNNING_OVEROSYNC, overoSyncTaskHandle);
-	
+
 	return 0;
 }
 
@@ -174,7 +174,7 @@ static void overoSyncTask(void *parameters)
 	overosync->sent_objects = 0;
 	overosync->failed_objects = 0;
 	overosync->received_objects = 0;
-	
+
 	uint32_t lastUpdateTime = PIOS_Thread_Systime();
 	uint32_t updateTime;
 
@@ -197,7 +197,7 @@ static void overoSyncTask(void *parameters)
 
 			// Process event.  This calls transmitData
 			UAVTalkSendObjectTimestamped(uavTalkCon, ev.obj, ev.instId, false, 0);
-			
+
 			updateTime = PIOS_Thread_Systime();
 			if(((uint32_t) (updateTime - lastUpdateTime)) > 1000) {
 				// Update stats.  This will trigger a local send event too
@@ -214,7 +214,7 @@ static void overoSyncTask(void *parameters)
 				// When first connected, send all the settings.  Right now this
 				// will fail since all the settings will overfill the buffer and
 				if (last_connected == OVEROSYNCSTATS_CONNECTED_FALSE &&
-					syncStats.Connected == OVEROSYNCSTATS_CONNECTED_TRUE) {
+				    syncStats.Connected == OVEROSYNCSTATS_CONNECTED_TRUE) {
 					UAVObjIterate(&send_settings);
 				}
 

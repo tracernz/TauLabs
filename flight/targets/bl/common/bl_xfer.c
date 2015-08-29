@@ -46,9 +46,9 @@ static uint32_t bl_compute_partition_crc(uintptr_t partition_id, uint32_t partit
 		uint8_t buf[128];
 		uint32_t bytes_to_read = MIN(sizeof(buf), length);
 		PIOS_FLASH_read_data(partition_id,
-				partition_offset,
-				buf,
-				bytes_to_read);
+		                     partition_offset,
+		                     buf,
+		                     bytes_to_read);
 		CRC_CalcBlockCRC((uint32_t *)buf, bytes_to_read >> 2);
 
 		partition_offset += bytes_to_read;
@@ -72,8 +72,8 @@ bool bl_xfer_crc_ok_p(const struct xfer_state * xfer)
 	}
 
 	uint32_t actual_crc = bl_compute_partition_crc(xfer->partition_id,
-						xfer->original_partition_offset,
-						xfer->bytes_to_crc);
+	                      xfer->original_partition_offset,
+	                      xfer->bytes_to_crc);
 
 	return (actual_crc == xfer->crc);
 }
@@ -129,7 +129,7 @@ bool bl_xfer_read_start(struct xfer_state * xfer, const struct msg_xfer_start *x
 	}
 
 	uint32_t bytes_to_xfer = (ntohl(xfer_start->packets_in_transfer) - 1) * XFER_BYTES_PER_PACKET +
-		xfer_start->words_in_last_packet * sizeof(uint32_t);
+	                         xfer_start->words_in_last_packet * sizeof(uint32_t);
 
 	if (bytes_to_xfer > (xfer->partition_size - xfer->original_partition_offset))
 		bytes_to_xfer = xfer->partition_size - xfer->original_partition_offset;
@@ -166,9 +166,9 @@ bool bl_xfer_send_next_read_packet(struct xfer_state * xfer)
 	PIOS_FLASH_start_transaction(xfer->partition_id);
 
 	PIOS_FLASH_read_data(xfer->partition_id,
-			xfer->current_partition_offset,
-			msg.v.xfer_cont.data,
-			bytes_this_xfer);
+	                     xfer->current_partition_offset,
+	                     msg.v.xfer_cont.data,
+	                     bytes_this_xfer);
 
 	PIOS_FLASH_end_transaction(xfer->partition_id);
 
@@ -253,7 +253,7 @@ bool bl_xfer_write_start(struct xfer_state * xfer, const struct msg_xfer_start *
 
 	/* How many bytes is the host trying to transfer? */
 	uint32_t bytes_to_xfer = (ntohl(xfer_start->packets_in_transfer) - 1) * XFER_BYTES_PER_PACKET +
-		xfer_start->words_in_last_packet * sizeof(uint32_t);
+	                         xfer_start->words_in_last_packet * sizeof(uint32_t);
 
 	uint32_t max_bytes_in_xfer = (xfer->partition_size - xfer->original_partition_offset);
 	if (bytes_to_xfer > max_bytes_in_xfer) {
@@ -304,9 +304,9 @@ bool bl_xfer_write_cont(struct xfer_state * xfer, const struct msg_xfer_cont *xf
 	PIOS_FLASH_start_transaction(xfer->partition_id);
 
 	PIOS_FLASH_write_data(xfer->partition_id,
-			xfer->current_partition_offset,
-			xfer_cont->data,
-			bytes_this_xfer);
+	                      xfer->current_partition_offset,
+	                      xfer_cont->data,
+	                      bytes_this_xfer);
 
 	PIOS_FLASH_end_transaction(xfer->partition_id);
 

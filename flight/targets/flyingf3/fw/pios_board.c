@@ -9,28 +9,28 @@
  * @author     Tau Labs, http://taulabs.org, Copyright (C) 2012-2014
  * @brief      The board specific initialization routines
  * @see        The GNU Public License (GPL) Version 3
- * 
+ *
  *****************************************************************************/
-/* 
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 3 of the License, or 
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
  * for more details.
- * 
- * You should have received a copy of the GNU General Public License along 
- * with this program; if not, write to the Free Software Foundation, Inc., 
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
 /* Pull in the board-specific static HW definitions.
  * Including .c files is a bit ugly but this allows all of
  * the HW definitions to be const and static to limit their
- * scope.  
+ * scope.
  *
  * NOTE: THIS IS THE ONLY PLACE THAT SHOULD EVER INCLUDE THIS FILE
  */
@@ -142,8 +142,8 @@ static const struct pios_lsm303_cfg pios_lsm303_cfg = {
 #if defined(PIOS_INCLUDE_BMP085)
 #include "pios_bmp085_priv.h"
 static const struct pios_bmp085_cfg pios_bmp085_cfg = {
-    .oversampling = BMP085_OSR_3,
-    .temperature_interleaving = 1,
+	.oversampling = BMP085_OSR_3,
+	.temperature_interleaving = 1,
 };
 #endif /* PIOS_INCLUDE_BMP085 */
 
@@ -206,7 +206,7 @@ uintptr_t pios_can_id;
  */
 #if defined(PIOS_INCLUDE_USART) && defined(PIOS_INCLUDE_COM)
 static void PIOS_Board_configure_com (const struct pios_usart_cfg *usart_port_cfg, size_t rx_buf_len, size_t tx_buf_len,
-		const struct pios_com_driver *com_driver, uintptr_t *pios_com_id)
+                                      const struct pios_com_driver *com_driver, uintptr_t *pios_com_id)
 {
 	uintptr_t pios_usart_id;
 	if (PIOS_USART_Init(&pios_usart_id, usart_port_cfg)) {
@@ -230,8 +230,8 @@ static void PIOS_Board_configure_com (const struct pios_usart_cfg *usart_port_cf
 	}
 
 	if (PIOS_COM_Init(pios_com_id, com_driver, pios_usart_id,
-				rx_buffer, rx_buf_len,
-				tx_buffer, tx_buf_len)) {
+	                  rx_buffer, rx_buf_len,
+	                  tx_buffer, tx_buf_len)) {
 		PIOS_Assert(0);
 	}
 }
@@ -239,8 +239,8 @@ static void PIOS_Board_configure_com (const struct pios_usart_cfg *usart_port_cf
 
 #ifdef PIOS_INCLUDE_DSM
 static void PIOS_Board_configure_dsm(const struct pios_usart_cfg *pios_usart_dsm_cfg, const struct pios_dsm_cfg *pios_dsm_cfg,
-		const struct pios_com_driver *pios_usart_com_driver,
-		ManualControlSettingsChannelGroupsOptions channelgroup,uint8_t *bind)
+                                     const struct pios_com_driver *pios_usart_com_driver,
+                                     ManualControlSettingsChannelGroupsOptions channelgroup,uint8_t *bind)
 {
 	uintptr_t pios_usart_dsm_id;
 	if (PIOS_USART_Init(&pios_usart_dsm_id, pios_usart_dsm_cfg)) {
@@ -249,7 +249,7 @@ static void PIOS_Board_configure_dsm(const struct pios_usart_cfg *pios_usart_dsm
 
 	uintptr_t pios_dsm_id;
 	if (PIOS_DSM_Init(&pios_dsm_id, pios_dsm_cfg, pios_usart_com_driver,
-			pios_usart_dsm_id, *bind)) {
+	                  pios_usart_dsm_id, *bind)) {
 		PIOS_Assert(0);
 	}
 
@@ -263,8 +263,8 @@ static void PIOS_Board_configure_dsm(const struct pios_usart_cfg *pios_usart_dsm
 
 #ifdef PIOS_INCLUDE_HSUM
 static void PIOS_Board_configure_hsum(const struct pios_usart_cfg *pios_usart_hsum_cfg,
-		const struct pios_com_driver *pios_usart_com_driver,enum pios_hsum_proto *proto,
-		ManualControlSettingsChannelGroupsOptions channelgroup)
+                                      const struct pios_com_driver *pios_usart_com_driver,enum pios_hsum_proto *proto,
+                                      ManualControlSettingsChannelGroupsOptions channelgroup)
 {
 	uintptr_t pios_usart_hsum_id;
 	if (PIOS_USART_Init(&pios_usart_hsum_id, pios_usart_hsum_cfg)) {
@@ -292,8 +292,9 @@ static void PIOS_Board_configure_hsum(const struct pios_usart_cfg *pios_usart_hs
  * 4 pulses - external I2C bus locked
  * 6 pulses - CAN bus
  */
-void panic(int32_t code) {
-	while(1){
+void panic(int32_t code)
+{
+	while(1) {
 		for (int32_t i = 0; i < code; i++) {
 			PIOS_WDG_Clear();
 			PIOS_LED_Toggle(PIOS_LED_ALARM);
@@ -319,7 +320,8 @@ void panic(int32_t code) {
 
 #include <pios_board_info.h>
 
-void PIOS_Board_Init(void) {
+void PIOS_Board_Init(void)
+{
 
 	/* Delay system */
 	PIOS_DELAY_Init();
@@ -480,62 +482,62 @@ void PIOS_Board_Init(void) {
 		break;
 	case HWFLYINGF3_USB_VCPPORT_USBTELEMETRY:
 #if defined(PIOS_INCLUDE_COM)
-		{
-			uintptr_t pios_usb_cdc_id;
-			if (PIOS_USB_CDC_Init(&pios_usb_cdc_id, &pios_usb_cdc_cfg, pios_usb_id)) {
-				PIOS_Assert(0);
-			}
-			uint8_t * rx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_TELEM_USB_RX_BUF_LEN);
-			uint8_t * tx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_TELEM_USB_TX_BUF_LEN);
-			PIOS_Assert(rx_buffer);
-			PIOS_Assert(tx_buffer);
-			if (PIOS_COM_Init(&pios_com_telem_usb_id, &pios_usb_cdc_com_driver, pios_usb_cdc_id,
-						rx_buffer, PIOS_COM_TELEM_USB_RX_BUF_LEN,
-						tx_buffer, PIOS_COM_TELEM_USB_TX_BUF_LEN)) {
-				PIOS_Assert(0);
-			}
+	{
+		uintptr_t pios_usb_cdc_id;
+		if (PIOS_USB_CDC_Init(&pios_usb_cdc_id, &pios_usb_cdc_cfg, pios_usb_id)) {
+			PIOS_Assert(0);
 		}
+		uint8_t * rx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_TELEM_USB_RX_BUF_LEN);
+		uint8_t * tx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_TELEM_USB_TX_BUF_LEN);
+		PIOS_Assert(rx_buffer);
+		PIOS_Assert(tx_buffer);
+		if (PIOS_COM_Init(&pios_com_telem_usb_id, &pios_usb_cdc_com_driver, pios_usb_cdc_id,
+		                  rx_buffer, PIOS_COM_TELEM_USB_RX_BUF_LEN,
+		                  tx_buffer, PIOS_COM_TELEM_USB_TX_BUF_LEN)) {
+			PIOS_Assert(0);
+		}
+	}
 #endif	/* PIOS_INCLUDE_COM */
-		break;
+	break;
 	case HWFLYINGF3_USB_VCPPORT_COMBRIDGE:
 #if defined(PIOS_INCLUDE_COM)
-		{
-			uintptr_t pios_usb_cdc_id;
-			if (PIOS_USB_CDC_Init(&pios_usb_cdc_id, &pios_usb_cdc_cfg, pios_usb_id)) {
-				PIOS_Assert(0);
-			}
-			uint8_t * rx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_BRIDGE_RX_BUF_LEN);
-			uint8_t * tx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_BRIDGE_TX_BUF_LEN);
-			PIOS_Assert(rx_buffer);
-			PIOS_Assert(tx_buffer);
-			if (PIOS_COM_Init(&pios_com_vcp_id, &pios_usb_cdc_com_driver, pios_usb_cdc_id,
-						rx_buffer, PIOS_COM_BRIDGE_RX_BUF_LEN,
-						tx_buffer, PIOS_COM_BRIDGE_TX_BUF_LEN)) {
-				PIOS_Assert(0);
-			}
+	{
+		uintptr_t pios_usb_cdc_id;
+		if (PIOS_USB_CDC_Init(&pios_usb_cdc_id, &pios_usb_cdc_cfg, pios_usb_id)) {
+			PIOS_Assert(0);
 		}
+		uint8_t * rx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_BRIDGE_RX_BUF_LEN);
+		uint8_t * tx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_BRIDGE_TX_BUF_LEN);
+		PIOS_Assert(rx_buffer);
+		PIOS_Assert(tx_buffer);
+		if (PIOS_COM_Init(&pios_com_vcp_id, &pios_usb_cdc_com_driver, pios_usb_cdc_id,
+		                  rx_buffer, PIOS_COM_BRIDGE_RX_BUF_LEN,
+		                  tx_buffer, PIOS_COM_BRIDGE_TX_BUF_LEN)) {
+			PIOS_Assert(0);
+		}
+	}
 #endif	/* PIOS_INCLUDE_COM */
-		break;
+	break;
 	case HWFLYINGF3_USB_VCPPORT_DEBUGCONSOLE:
 #if defined(PIOS_INCLUDE_COM)
 #if defined(PIOS_INCLUDE_DEBUG_CONSOLE)
-		{
-			uintptr_t pios_usb_cdc_id;
-			if (PIOS_USB_CDC_Init(&pios_usb_cdc_id, &pios_usb_cdc_cfg, pios_usb_id)) {
-				PIOS_Assert(0);
-			}
-			uint8_t * tx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_DEBUGCONSOLE_TX_BUF_LEN);
-			PIOS_Assert(tx_buffer);
-			if (PIOS_COM_Init(&pios_com_debug_id, &pios_usb_cdc_com_driver, pios_usb_cdc_id,
-						NULL, 0,
-						tx_buffer, PIOS_COM_DEBUGCONSOLE_TX_BUF_LEN)) {
-				PIOS_Assert(0);
-			}
+	{
+		uintptr_t pios_usb_cdc_id;
+		if (PIOS_USB_CDC_Init(&pios_usb_cdc_id, &pios_usb_cdc_cfg, pios_usb_id)) {
+			PIOS_Assert(0);
 		}
+		uint8_t * tx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_DEBUGCONSOLE_TX_BUF_LEN);
+		PIOS_Assert(tx_buffer);
+		if (PIOS_COM_Init(&pios_com_debug_id, &pios_usb_cdc_com_driver, pios_usb_cdc_id,
+		                  NULL, 0,
+		                  tx_buffer, PIOS_COM_DEBUGCONSOLE_TX_BUF_LEN)) {
+			PIOS_Assert(0);
+		}
+	}
 #endif	/* PIOS_INCLUDE_DEBUG_CONSOLE */
 #endif	/* PIOS_INCLUDE_COM */
 
-		break;
+	break;
 	}
 #endif	/* PIOS_INCLUDE_USB_CDC */
 
@@ -554,23 +556,23 @@ void PIOS_Board_Init(void) {
 		break;
 	case HWFLYINGF3_USB_HIDPORT_USBTELEMETRY:
 #if defined(PIOS_INCLUDE_COM)
-		{
-			uintptr_t pios_usb_hid_id;
-			if (PIOS_USB_HID_Init(&pios_usb_hid_id, &pios_usb_hid_cfg, pios_usb_id)) {
-				PIOS_Assert(0);
-			}
-			uint8_t * rx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_TELEM_USB_RX_BUF_LEN);
-			uint8_t * tx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_TELEM_USB_TX_BUF_LEN);
-			PIOS_Assert(rx_buffer);
-			PIOS_Assert(tx_buffer);
-			if (PIOS_COM_Init(&pios_com_telem_usb_id, &pios_usb_hid_com_driver, pios_usb_hid_id,
-						rx_buffer, PIOS_COM_TELEM_USB_RX_BUF_LEN,
-						tx_buffer, PIOS_COM_TELEM_USB_TX_BUF_LEN)) {
-				PIOS_Assert(0);
-			}
+	{
+		uintptr_t pios_usb_hid_id;
+		if (PIOS_USB_HID_Init(&pios_usb_hid_id, &pios_usb_hid_cfg, pios_usb_id)) {
+			PIOS_Assert(0);
 		}
+		uint8_t * rx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_TELEM_USB_RX_BUF_LEN);
+		uint8_t * tx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_TELEM_USB_TX_BUF_LEN);
+		PIOS_Assert(rx_buffer);
+		PIOS_Assert(tx_buffer);
+		if (PIOS_COM_Init(&pios_com_telem_usb_id, &pios_usb_hid_com_driver, pios_usb_hid_id,
+		                  rx_buffer, PIOS_COM_TELEM_USB_RX_BUF_LEN,
+		                  tx_buffer, PIOS_COM_TELEM_USB_TX_BUF_LEN)) {
+			PIOS_Assert(0);
+		}
+	}
 #endif	/* PIOS_INCLUDE_COM */
-		break;
+	break;
 	}
 
 #endif	/* PIOS_INCLUDE_USB_HID */
@@ -598,52 +600,52 @@ void PIOS_Board_Init(void) {
 		break;
 	case HWFLYINGF3_UART1_SBUS:
 #if defined(PIOS_INCLUDE_SBUS) && defined(PIOS_INCLUDE_USART)
-		{
-			uintptr_t pios_usart_sbus_id;
-			if (PIOS_USART_Init(&pios_usart_sbus_id, &pios_usart1_sbus_cfg)) {
-				PIOS_Assert(0);
-			}
-			uintptr_t pios_sbus_id;
-			if (PIOS_SBus_Init(&pios_sbus_id, &pios_usart1_sbus_aux_cfg, &pios_usart_com_driver, pios_usart_sbus_id)) {
-				PIOS_Assert(0);
-			}
-			uintptr_t pios_sbus_rcvr_id;
-			if (PIOS_RCVR_Init(&pios_sbus_rcvr_id, &pios_sbus_rcvr_driver, pios_sbus_id)) {
-				PIOS_Assert(0);
-			}
-			pios_rcvr_group_map[MANUALCONTROLSETTINGS_CHANNELGROUPS_SBUS] = pios_sbus_rcvr_id;
+	{
+		uintptr_t pios_usart_sbus_id;
+		if (PIOS_USART_Init(&pios_usart_sbus_id, &pios_usart1_sbus_cfg)) {
+			PIOS_Assert(0);
 		}
+		uintptr_t pios_sbus_id;
+		if (PIOS_SBus_Init(&pios_sbus_id, &pios_usart1_sbus_aux_cfg, &pios_usart_com_driver, pios_usart_sbus_id)) {
+			PIOS_Assert(0);
+		}
+		uintptr_t pios_sbus_rcvr_id;
+		if (PIOS_RCVR_Init(&pios_sbus_rcvr_id, &pios_sbus_rcvr_driver, pios_sbus_id)) {
+			PIOS_Assert(0);
+		}
+		pios_rcvr_group_map[MANUALCONTROLSETTINGS_CHANNELGROUPS_SBUS] = pios_sbus_rcvr_id;
+	}
 #endif	/* PIOS_INCLUDE_SBUS */
-		break;
+	break;
 	case HWFLYINGF3_UART1_DSM:
 #if defined(PIOS_INCLUDE_DSM)
-		{
-			PIOS_Board_configure_dsm(&pios_usart1_dsm_hsum_cfg, &pios_usart1_dsm_aux_cfg, &pios_usart_com_driver,
-				MANUALCONTROLSETTINGS_CHANNELGROUPS_DSM, &hw_DSMxBind);
-		}
+	{
+		PIOS_Board_configure_dsm(&pios_usart1_dsm_hsum_cfg, &pios_usart1_dsm_aux_cfg, &pios_usart_com_driver,
+		                         MANUALCONTROLSETTINGS_CHANNELGROUPS_DSM, &hw_DSMxBind);
+	}
 #endif	/* PIOS_INCLUDE_DSM */
-		break;
+	break;
 	case HWFLYINGF3_UART1_HOTTSUMD:
 	case HWFLYINGF3_UART1_HOTTSUMH:
 #if defined(PIOS_INCLUDE_HSUM)
-		{
-			enum pios_hsum_proto proto;
-			switch (hw_uart1) {
-			case HWFLYINGF3_UART1_HOTTSUMD:
-				proto = PIOS_HSUM_PROTO_SUMD;
-				break;
-			case HWFLYINGF3_UART1_HOTTSUMH:
-				proto = PIOS_HSUM_PROTO_SUMH;
-				break;
-			default:
-				PIOS_Assert(0);
-				break;
-			}
-			PIOS_Board_configure_hsum(&pios_usart1_dsm_hsum_cfg, &pios_usart_com_driver,
-				&proto, MANUALCONTROLSETTINGS_CHANNELGROUPS_HOTTSUM);
+	{
+		enum pios_hsum_proto proto;
+		switch (hw_uart1) {
+		case HWFLYINGF3_UART1_HOTTSUMD:
+			proto = PIOS_HSUM_PROTO_SUMD;
+			break;
+		case HWFLYINGF3_UART1_HOTTSUMH:
+			proto = PIOS_HSUM_PROTO_SUMH;
+			break;
+		default:
+			PIOS_Assert(0);
+			break;
 		}
+		PIOS_Board_configure_hsum(&pios_usart1_dsm_hsum_cfg, &pios_usart_com_driver,
+		                          &proto, MANUALCONTROLSETTINGS_CHANNELGROUPS_HOTTSUM);
+	}
 #endif	/* PIOS_INCLUDE_HSUM */
-		break;
+	break;
 	case HWFLYINGF3_UART1_DEBUGCONSOLE:
 #if defined(PIOS_INCLUDE_DEBUG_CONSOLE) && defined(PIOS_INCLUDE_USART) && defined(PIOS_INCLUDE_COM)
 		PIOS_Board_configure_com(&pios_usart1_cfg, 0, PIOS_COM_DEBUGCONSOLE_TX_BUF_LEN, &pios_usart_com_driver, &pios_com_debug_id);
@@ -670,17 +672,17 @@ void PIOS_Board_Init(void) {
 		PIOS_Board_configure_com(&pios_usart1_cfg, PIOS_COM_HOTT_RX_BUF_LEN, PIOS_COM_HOTT_TX_BUF_LEN, &pios_usart_com_driver, &pios_com_hott_id);
 #endif /* PIOS_INCLUDE_HOTT */
 		break;
-    case HWFLYINGF3_UART1_FRSKYSENSORHUB:
+	case HWFLYINGF3_UART1_FRSKYSENSORHUB:
 #if defined(PIOS_INCLUDE_FRSKY_SENSOR_HUB) && defined(PIOS_INCLUDE_USART) && defined(PIOS_INCLUDE_COM)
 		PIOS_Board_configure_com(&pios_usart1_cfg, 0, PIOS_COM_FRSKYSENSORHUB_TX_BUF_LEN, &pios_usart_com_driver, &pios_com_frsky_sensor_hub_id);
 #endif /* PIOS_INCLUDE_FRSKY_SENSOR_HUB */
 		break;
-		case HWFLYINGF3_UART1_LIGHTTELEMETRYTX:
+	case HWFLYINGF3_UART1_LIGHTTELEMETRYTX:
 #if defined(PIOS_INCLUDE_LIGHTTELEMETRY)
 		PIOS_Board_configure_com(&pios_usart1_cfg, 0, PIOS_COM_LIGHTTELEMETRY_TX_BUF_LEN, &pios_usart_com_driver, &pios_com_lighttelemetry_id);
-#endif  
+#endif
 		break;
-		case HWFLYINGF3_UART1_FRSKYSPORTTELEMETRY:
+	case HWFLYINGF3_UART1_FRSKYSPORTTELEMETRY:
 #if defined(PIOS_INCLUDE_FRSKY_SPORT_TELEMETRY)
 		PIOS_Board_configure_com(&pios_usart1_sport_cfg, PIOS_COM_FRSKYSPORT_RX_BUF_LEN, PIOS_COM_FRSKYSPORT_TX_BUF_LEN, &pios_usart_com_driver, &pios_com_frsky_sport_id);
 #endif
@@ -707,52 +709,52 @@ void PIOS_Board_Init(void) {
 		break;
 	case HWFLYINGF3_UART2_SBUS:
 #if defined(PIOS_INCLUDE_SBUS) && defined(PIOS_INCLUDE_USART)
-		{
-			uintptr_t pios_usart_sbus_id;
-			if (PIOS_USART_Init(&pios_usart_sbus_id, &pios_usart2_sbus_cfg)) {
-				PIOS_Assert(0);
-			}
-			uintptr_t pios_sbus_id;
-			if (PIOS_SBus_Init(&pios_sbus_id, &pios_usart2_sbus_aux_cfg, &pios_usart_com_driver, pios_usart_sbus_id)) {
-				PIOS_Assert(0);
-			}
-			uintptr_t pios_sbus_rcvr_id;
-			if (PIOS_RCVR_Init(&pios_sbus_rcvr_id, &pios_sbus_rcvr_driver, pios_sbus_id)) {
-				PIOS_Assert(0);
-			}
-			pios_rcvr_group_map[MANUALCONTROLSETTINGS_CHANNELGROUPS_SBUS] = pios_sbus_rcvr_id;
+	{
+		uintptr_t pios_usart_sbus_id;
+		if (PIOS_USART_Init(&pios_usart_sbus_id, &pios_usart2_sbus_cfg)) {
+			PIOS_Assert(0);
 		}
+		uintptr_t pios_sbus_id;
+		if (PIOS_SBus_Init(&pios_sbus_id, &pios_usart2_sbus_aux_cfg, &pios_usart_com_driver, pios_usart_sbus_id)) {
+			PIOS_Assert(0);
+		}
+		uintptr_t pios_sbus_rcvr_id;
+		if (PIOS_RCVR_Init(&pios_sbus_rcvr_id, &pios_sbus_rcvr_driver, pios_sbus_id)) {
+			PIOS_Assert(0);
+		}
+		pios_rcvr_group_map[MANUALCONTROLSETTINGS_CHANNELGROUPS_SBUS] = pios_sbus_rcvr_id;
+	}
 #endif	/* PIOS_INCLUDE_SBUS */
-		break;
+	break;
 	case HWFLYINGF3_UART2_DSM:
 #if defined(PIOS_INCLUDE_DSM)
-		{
-			PIOS_Board_configure_dsm(&pios_usart2_dsm_hsum_cfg, &pios_usart2_dsm_aux_cfg, &pios_usart_com_driver,
-				MANUALCONTROLSETTINGS_CHANNELGROUPS_DSM, &hw_DSMxBind);
-		}
+	{
+		PIOS_Board_configure_dsm(&pios_usart2_dsm_hsum_cfg, &pios_usart2_dsm_aux_cfg, &pios_usart_com_driver,
+		                         MANUALCONTROLSETTINGS_CHANNELGROUPS_DSM, &hw_DSMxBind);
+	}
 #endif	/* PIOS_INCLUDE_DSM */
-		break;
+	break;
 	case HWFLYINGF3_UART2_HOTTSUMD:
 	case HWFLYINGF3_UART2_HOTTSUMH:
 #if defined(PIOS_INCLUDE_HSUM)
-		{
-			enum pios_hsum_proto proto;
-			switch (hw_uart2) {
-			case HWFLYINGF3_UART2_HOTTSUMD:
-				proto = PIOS_HSUM_PROTO_SUMD;
-				break;
-			case HWFLYINGF3_UART2_HOTTSUMH:
-				proto = PIOS_HSUM_PROTO_SUMH;
-				break;
-			default:
-				PIOS_Assert(0);
-				break;
-			}
-			PIOS_Board_configure_hsum(&pios_usart2_dsm_hsum_cfg, &pios_usart_com_driver,
-				&proto, MANUALCONTROLSETTINGS_CHANNELGROUPS_HOTTSUM);
+	{
+		enum pios_hsum_proto proto;
+		switch (hw_uart2) {
+		case HWFLYINGF3_UART2_HOTTSUMD:
+			proto = PIOS_HSUM_PROTO_SUMD;
+			break;
+		case HWFLYINGF3_UART2_HOTTSUMH:
+			proto = PIOS_HSUM_PROTO_SUMH;
+			break;
+		default:
+			PIOS_Assert(0);
+			break;
 		}
+		PIOS_Board_configure_hsum(&pios_usart2_dsm_hsum_cfg, &pios_usart_com_driver,
+		                          &proto, MANUALCONTROLSETTINGS_CHANNELGROUPS_HOTTSUM);
+	}
 #endif	/* PIOS_INCLUDE_HSUM */
-		break;
+	break;
 	case HWFLYINGF3_UART2_DEBUGCONSOLE:
 #if defined(PIOS_INCLUDE_DEBUG_CONSOLE) && defined(PIOS_INCLUDE_USART) && defined(PIOS_INCLUDE_COM)
 		PIOS_Board_configure_com(&pios_usart2_cfg, 0, PIOS_COM_DEBUGCONSOLE_TX_BUF_LEN, &pios_usart_com_driver, &pios_com_debug_id);
@@ -779,7 +781,7 @@ void PIOS_Board_Init(void) {
 		PIOS_Board_configure_com(&pios_usart2_cfg, PIOS_COM_HOTT_RX_BUF_LEN, PIOS_COM_HOTT_TX_BUF_LEN, &pios_usart_com_driver, &pios_com_hott_id);
 #endif /* PIOS_INCLUDE_HOTT */
 		break;
-    case HWFLYINGF3_UART2_FRSKYSENSORHUB:
+	case HWFLYINGF3_UART2_FRSKYSENSORHUB:
 #if defined(PIOS_INCLUDE_FRSKY_SENSOR_HUB) && defined(PIOS_INCLUDE_USART) && defined(PIOS_INCLUDE_COM)
 		PIOS_Board_configure_com(&pios_usart2_cfg, 0, PIOS_COM_FRSKYSENSORHUB_TX_BUF_LEN, &pios_usart_com_driver, &pios_com_frsky_sensor_hub_id);
 #endif /* PIOS_INCLUDE_FRSKY_SENSOR_HUB */
@@ -787,7 +789,7 @@ void PIOS_Board_Init(void) {
 	case HWFLYINGF3_UART2_LIGHTTELEMETRYTX:
 #if defined(PIOS_INCLUDE_LIGHTTELEMETRY)
 		PIOS_Board_configure_com(&pios_usart2_cfg, 0, PIOS_COM_LIGHTTELEMETRY_TX_BUF_LEN, &pios_usart_com_driver, &pios_com_lighttelemetry_id);
-#endif  
+#endif
 		break;
 	case HWFLYINGF3_UART2_FRSKYSPORTTELEMETRY:
 #if defined(PIOS_INCLUDE_FRSKY_SPORT_TELEMETRY)
@@ -815,52 +817,52 @@ void PIOS_Board_Init(void) {
 		break;
 	case HWFLYINGF3_UART3_SBUS:
 #if defined(PIOS_INCLUDE_SBUS) && defined(PIOS_INCLUDE_USART)
-		{
-			uintptr_t pios_usart_sbus_id;
-			if (PIOS_USART_Init(&pios_usart_sbus_id, &pios_usart3_sbus_cfg)) {
-				PIOS_Assert(0);
-			}
-			uintptr_t pios_sbus_id;
-			if (PIOS_SBus_Init(&pios_sbus_id, &pios_usart3_sbus_aux_cfg, &pios_usart_com_driver, pios_usart_sbus_id)) {
-				PIOS_Assert(0);
-			}
-			uintptr_t pios_sbus_rcvr_id;
-			if (PIOS_RCVR_Init(&pios_sbus_rcvr_id, &pios_sbus_rcvr_driver, pios_sbus_id)) {
-				PIOS_Assert(0);
-			}
-			pios_rcvr_group_map[MANUALCONTROLSETTINGS_CHANNELGROUPS_SBUS] = pios_sbus_rcvr_id;
+	{
+		uintptr_t pios_usart_sbus_id;
+		if (PIOS_USART_Init(&pios_usart_sbus_id, &pios_usart3_sbus_cfg)) {
+			PIOS_Assert(0);
 		}
+		uintptr_t pios_sbus_id;
+		if (PIOS_SBus_Init(&pios_sbus_id, &pios_usart3_sbus_aux_cfg, &pios_usart_com_driver, pios_usart_sbus_id)) {
+			PIOS_Assert(0);
+		}
+		uintptr_t pios_sbus_rcvr_id;
+		if (PIOS_RCVR_Init(&pios_sbus_rcvr_id, &pios_sbus_rcvr_driver, pios_sbus_id)) {
+			PIOS_Assert(0);
+		}
+		pios_rcvr_group_map[MANUALCONTROLSETTINGS_CHANNELGROUPS_SBUS] = pios_sbus_rcvr_id;
+	}
 #endif	/* PIOS_INCLUDE_SBUS */
-		break;
+	break;
 	case HWFLYINGF3_UART3_DSM:
 #if defined(PIOS_INCLUDE_DSM)
-		{
-			PIOS_Board_configure_dsm(&pios_usart3_dsm_hsum_cfg, &pios_usart3_dsm_aux_cfg, &pios_usart_com_driver,
-				MANUALCONTROLSETTINGS_CHANNELGROUPS_DSM, &hw_DSMxBind);
-		}
+	{
+		PIOS_Board_configure_dsm(&pios_usart3_dsm_hsum_cfg, &pios_usart3_dsm_aux_cfg, &pios_usart_com_driver,
+		                         MANUALCONTROLSETTINGS_CHANNELGROUPS_DSM, &hw_DSMxBind);
+	}
 #endif	/* PIOS_INCLUDE_DSM */
-		break;
+	break;
 	case HWFLYINGF3_UART3_HOTTSUMD:
 	case HWFLYINGF3_UART3_HOTTSUMH:
 #if defined(PIOS_INCLUDE_HSUM)
-		{
-			enum pios_hsum_proto proto;
-			switch (hw_uart3) {
-			case HWFLYINGF3_UART3_HOTTSUMD:
-				proto = PIOS_HSUM_PROTO_SUMD;
-				break;
-			case HWFLYINGF3_UART3_HOTTSUMH:
-				proto = PIOS_HSUM_PROTO_SUMH;
-				break;
-			default:
-				PIOS_Assert(0);
-				break;
-			}
-			PIOS_Board_configure_hsum(&pios_usart3_dsm_hsum_cfg, &pios_usart_com_driver,
-				&proto, MANUALCONTROLSETTINGS_CHANNELGROUPS_HOTTSUM);
+	{
+		enum pios_hsum_proto proto;
+		switch (hw_uart3) {
+		case HWFLYINGF3_UART3_HOTTSUMD:
+			proto = PIOS_HSUM_PROTO_SUMD;
+			break;
+		case HWFLYINGF3_UART3_HOTTSUMH:
+			proto = PIOS_HSUM_PROTO_SUMH;
+			break;
+		default:
+			PIOS_Assert(0);
+			break;
 		}
+		PIOS_Board_configure_hsum(&pios_usart3_dsm_hsum_cfg, &pios_usart_com_driver,
+		                          &proto, MANUALCONTROLSETTINGS_CHANNELGROUPS_HOTTSUM);
+	}
 #endif	/* PIOS_INCLUDE_HSUM */
-		break;
+	break;
 	case HWFLYINGF3_UART3_DEBUGCONSOLE:
 #if defined(PIOS_INCLUDE_DEBUG_CONSOLE) && defined(PIOS_INCLUDE_USART) && defined(PIOS_INCLUDE_COM)
 		PIOS_Board_configure_com(&pios_usart3_cfg, 0, PIOS_COM_DEBUGCONSOLE_TX_BUF_LEN, &pios_usart_com_driver, &pios_com_debug_id);
@@ -887,7 +889,7 @@ void PIOS_Board_Init(void) {
 		PIOS_Board_configure_com(&pios_usart3_cfg, PIOS_COM_HOTT_RX_BUF_LEN, PIOS_COM_HOTT_TX_BUF_LEN, &pios_usart_com_driver, &pios_com_hott_id);
 #endif /* PIOS_INCLUDE_HOTT */
 		break;
-    case HWFLYINGF3_UART3_FRSKYSENSORHUB:
+	case HWFLYINGF3_UART3_FRSKYSENSORHUB:
 #if defined(PIOS_INCLUDE_FRSKY_SENSOR_HUB) && defined(PIOS_INCLUDE_USART) && defined(PIOS_INCLUDE_COM)
 		PIOS_Board_configure_com(&pios_usart3_cfg, 0, PIOS_COM_FRSKYSENSORHUB_TX_BUF_LEN, &pios_usart_com_driver, &pios_com_frsky_sensor_hub_id);
 #endif /* PIOS_INCLUDE_FRSKY_SENSOR_HUB */
@@ -895,7 +897,7 @@ void PIOS_Board_Init(void) {
 	case HWFLYINGF3_UART3_LIGHTTELEMETRYTX:
 #if defined(PIOS_INCLUDE_LIGHTTELEMETRY)
 		PIOS_Board_configure_com(&pios_usart3_cfg, 0, PIOS_COM_LIGHTTELEMETRY_TX_BUF_LEN, &pios_usart_com_driver, &pios_com_lighttelemetry_id);
-#endif  
+#endif
 		break;
 	case HWFLYINGF3_UART3_FRSKYSPORTTELEMETRY:
 #if defined(PIOS_INCLUDE_FRSKY_SPORT_TELEMETRY)
@@ -923,52 +925,52 @@ void PIOS_Board_Init(void) {
 		break;
 	case HWFLYINGF3_UART4_SBUS:
 #if defined(PIOS_INCLUDE_SBUS) && defined(PIOS_INCLUDE_USART)
-		{
-			uintptr_t pios_usart_sbus_id;
-			if (PIOS_USART_Init(&pios_usart_sbus_id, &pios_usart4_sbus_cfg)) {
-				PIOS_Assert(0);
-			}
-			uintptr_t pios_sbus_id;
-			if (PIOS_SBus_Init(&pios_sbus_id, &pios_usart4_sbus_aux_cfg, &pios_usart_com_driver, pios_usart_sbus_id)) {
-				PIOS_Assert(0);
-			}
-			uintptr_t pios_sbus_rcvr_id;
-			if (PIOS_RCVR_Init(&pios_sbus_rcvr_id, &pios_sbus_rcvr_driver, pios_sbus_id)) {
-				PIOS_Assert(0);
-			}
-			pios_rcvr_group_map[MANUALCONTROLSETTINGS_CHANNELGROUPS_SBUS] = pios_sbus_rcvr_id;
+	{
+		uintptr_t pios_usart_sbus_id;
+		if (PIOS_USART_Init(&pios_usart_sbus_id, &pios_usart4_sbus_cfg)) {
+			PIOS_Assert(0);
 		}
+		uintptr_t pios_sbus_id;
+		if (PIOS_SBus_Init(&pios_sbus_id, &pios_usart4_sbus_aux_cfg, &pios_usart_com_driver, pios_usart_sbus_id)) {
+			PIOS_Assert(0);
+		}
+		uintptr_t pios_sbus_rcvr_id;
+		if (PIOS_RCVR_Init(&pios_sbus_rcvr_id, &pios_sbus_rcvr_driver, pios_sbus_id)) {
+			PIOS_Assert(0);
+		}
+		pios_rcvr_group_map[MANUALCONTROLSETTINGS_CHANNELGROUPS_SBUS] = pios_sbus_rcvr_id;
+	}
 #endif	/* PIOS_INCLUDE_SBUS */
-		break;
+	break;
 	case HWFLYINGF3_UART4_DSM:
 #if defined(PIOS_INCLUDE_DSM)
-		{
-			PIOS_Board_configure_dsm(&pios_usart4_dsm_hsum_cfg, &pios_usart4_dsm_aux_cfg, &pios_usart_com_driver,
-				MANUALCONTROLSETTINGS_CHANNELGROUPS_DSM, &hw_DSMxBind);
-		}
+	{
+		PIOS_Board_configure_dsm(&pios_usart4_dsm_hsum_cfg, &pios_usart4_dsm_aux_cfg, &pios_usart_com_driver,
+		                         MANUALCONTROLSETTINGS_CHANNELGROUPS_DSM, &hw_DSMxBind);
+	}
 #endif	/* PIOS_INCLUDE_DSM */
-		break;
+	break;
 	case HWFLYINGF3_UART4_HOTTSUMD:
 	case HWFLYINGF3_UART4_HOTTSUMH:
 #if defined(PIOS_INCLUDE_HSUM)
-		{
-			enum pios_hsum_proto proto;
-			switch (hw_uart4) {
-			case HWFLYINGF3_UART4_HOTTSUMD:
-				proto = PIOS_HSUM_PROTO_SUMD;
-				break;
-			case HWFLYINGF3_UART4_HOTTSUMH:
-				proto = PIOS_HSUM_PROTO_SUMH;
-				break;
-			default:
-				PIOS_Assert(0);
-				break;
-			}
-			PIOS_Board_configure_hsum(&pios_usart4_dsm_hsum_cfg, &pios_usart_com_driver,
-				&proto, MANUALCONTROLSETTINGS_CHANNELGROUPS_HOTTSUM);
+	{
+		enum pios_hsum_proto proto;
+		switch (hw_uart4) {
+		case HWFLYINGF3_UART4_HOTTSUMD:
+			proto = PIOS_HSUM_PROTO_SUMD;
+			break;
+		case HWFLYINGF3_UART4_HOTTSUMH:
+			proto = PIOS_HSUM_PROTO_SUMH;
+			break;
+		default:
+			PIOS_Assert(0);
+			break;
 		}
+		PIOS_Board_configure_hsum(&pios_usart4_dsm_hsum_cfg, &pios_usart_com_driver,
+		                          &proto, MANUALCONTROLSETTINGS_CHANNELGROUPS_HOTTSUM);
+	}
 #endif	/* PIOS_INCLUDE_HSUM */
-		break;
+	break;
 	case HWFLYINGF3_UART4_DEBUGCONSOLE:
 #if defined(PIOS_INCLUDE_DEBUG_CONSOLE) && defined(PIOS_INCLUDE_USART) && defined(PIOS_INCLUDE_COM)
 		PIOS_Board_configure_com(&pios_usart4_cfg, 0, PIOS_COM_DEBUGCONSOLE_TX_BUF_LEN, &pios_usart_com_driver, &pios_com_debug_id);
@@ -995,7 +997,7 @@ void PIOS_Board_Init(void) {
 		PIOS_Board_configure_com(&pios_usart4_cfg, PIOS_COM_HOTT_RX_BUF_LEN, PIOS_COM_HOTT_TX_BUF_LEN, &pios_usart_com_driver, &pios_com_hott_id);
 #endif /* PIOS_INCLUDE_HOTT */
 		break;
-    case HWFLYINGF3_UART4_FRSKYSENSORHUB:
+	case HWFLYINGF3_UART4_FRSKYSENSORHUB:
 #if defined(PIOS_INCLUDE_FRSKY_SENSOR_HUB) && defined(PIOS_INCLUDE_USART) && defined(PIOS_INCLUDE_COM)
 		PIOS_Board_configure_com(&pios_usart4_cfg, 0, PIOS_COM_FRSKYSENSORHUB_TX_BUF_LEN, &pios_usart_com_driver, &pios_com_frsky_sensor_hub_id);
 #endif /* PIOS_INCLUDE_FRSKY_SENSOR_HUB */
@@ -1003,7 +1005,7 @@ void PIOS_Board_Init(void) {
 	case HWFLYINGF3_UART4_LIGHTTELEMETRYTX:
 #if defined(PIOS_INCLUDE_LIGHTTELEMETRY)
 		PIOS_Board_configure_com(&pios_usart4_cfg, 0, PIOS_COM_LIGHTTELEMETRY_TX_BUF_LEN, &pios_usart_com_driver, &pios_com_lighttelemetry_id);
-#endif  
+#endif
 		break;
 	case HWFLYINGF3_UART4_FRSKYSPORTTELEMETRY:
 #if defined(PIOS_INCLUDE_FRSKY_SPORT_TELEMETRY)
@@ -1031,52 +1033,52 @@ void PIOS_Board_Init(void) {
 		break;
 	case HWFLYINGF3_UART5_SBUS:
 #if defined(PIOS_INCLUDE_SBUS) && defined(PIOS_INCLUDE_USART)
-		{
-			uintptr_t pios_usart_sbus_id;
-			if (PIOS_USART_Init(&pios_usart_sbus_id, &pios_usart5_sbus_cfg)) {
-				PIOS_Assert(0);
-			}
-			uintptr_t pios_sbus_id;
-			if (PIOS_SBus_Init(&pios_sbus_id, &pios_usart5_sbus_aux_cfg, &pios_usart_com_driver, pios_usart_sbus_id)) {
-				PIOS_Assert(0);
-			}
-			uintptr_t pios_sbus_rcvr_id;
-			if (PIOS_RCVR_Init(&pios_sbus_rcvr_id, &pios_sbus_rcvr_driver, pios_sbus_id)) {
-				PIOS_Assert(0);
-			}
-			pios_rcvr_group_map[MANUALCONTROLSETTINGS_CHANNELGROUPS_SBUS] = pios_sbus_rcvr_id;
+	{
+		uintptr_t pios_usart_sbus_id;
+		if (PIOS_USART_Init(&pios_usart_sbus_id, &pios_usart5_sbus_cfg)) {
+			PIOS_Assert(0);
 		}
+		uintptr_t pios_sbus_id;
+		if (PIOS_SBus_Init(&pios_sbus_id, &pios_usart5_sbus_aux_cfg, &pios_usart_com_driver, pios_usart_sbus_id)) {
+			PIOS_Assert(0);
+		}
+		uintptr_t pios_sbus_rcvr_id;
+		if (PIOS_RCVR_Init(&pios_sbus_rcvr_id, &pios_sbus_rcvr_driver, pios_sbus_id)) {
+			PIOS_Assert(0);
+		}
+		pios_rcvr_group_map[MANUALCONTROLSETTINGS_CHANNELGROUPS_SBUS] = pios_sbus_rcvr_id;
+	}
 #endif	/* PIOS_INCLUDE_SBUS */
-		break;
+	break;
 	case HWFLYINGF3_UART5_DSM:
 #if defined(PIOS_INCLUDE_DSM)
-		{
-			PIOS_Board_configure_dsm(&pios_usart5_dsm_hsum_cfg, &pios_usart5_dsm_aux_cfg, &pios_usart_com_driver,
-				MANUALCONTROLSETTINGS_CHANNELGROUPS_DSM, &hw_DSMxBind);
-		}
+	{
+		PIOS_Board_configure_dsm(&pios_usart5_dsm_hsum_cfg, &pios_usart5_dsm_aux_cfg, &pios_usart_com_driver,
+		                         MANUALCONTROLSETTINGS_CHANNELGROUPS_DSM, &hw_DSMxBind);
+	}
 #endif	/* PIOS_INCLUDE_DSM */
-		break;
+	break;
 	case HWFLYINGF3_UART5_HOTTSUMD:
 	case HWFLYINGF3_UART5_HOTTSUMH:
 #if defined(PIOS_INCLUDE_HSUM)
-		{
-			enum pios_hsum_proto proto;
-			switch (hw_uart5) {
-			case HWFLYINGF3_UART5_HOTTSUMD:
-				proto = PIOS_HSUM_PROTO_SUMD;
-				break;
-			case HWFLYINGF3_UART5_HOTTSUMH:
-				proto = PIOS_HSUM_PROTO_SUMH;
-				break;
-			default:
-				PIOS_Assert(0);
-				break;
-			}
-			PIOS_Board_configure_hsum(&pios_usart5_dsm_hsum_cfg, &pios_usart_com_driver,
-				&proto, MANUALCONTROLSETTINGS_CHANNELGROUPS_HOTTSUM);
+	{
+		enum pios_hsum_proto proto;
+		switch (hw_uart5) {
+		case HWFLYINGF3_UART5_HOTTSUMD:
+			proto = PIOS_HSUM_PROTO_SUMD;
+			break;
+		case HWFLYINGF3_UART5_HOTTSUMH:
+			proto = PIOS_HSUM_PROTO_SUMH;
+			break;
+		default:
+			PIOS_Assert(0);
+			break;
 		}
+		PIOS_Board_configure_hsum(&pios_usart5_dsm_hsum_cfg, &pios_usart_com_driver,
+		                          &proto, MANUALCONTROLSETTINGS_CHANNELGROUPS_HOTTSUM);
+	}
 #endif	/* PIOS_INCLUDE_HSUM */
-		break;
+	break;
 	case HWFLYINGF3_UART5_DEBUGCONSOLE:
 #if defined(PIOS_INCLUDE_DEBUG_CONSOLE) && defined(PIOS_INCLUDE_USART) && defined(PIOS_INCLUDE_COM)
 		PIOS_Board_configure_com(&pios_usart5_cfg, 0, PIOS_COM_DEBUGCONSOLE_TX_BUF_LEN, &pios_usart_com_driver, &pios_com_debug_id);
@@ -1103,7 +1105,7 @@ void PIOS_Board_Init(void) {
 		PIOS_Board_configure_com(&pios_usart5_cfg, PIOS_COM_HOTT_RX_BUF_LEN, PIOS_COM_HOTT_TX_BUF_LEN, &pios_usart_com_driver, &pios_com_hott_id);
 #endif /* PIOS_INCLUDE_HOTT */
 		break;
-    case HWFLYINGF3_UART5_FRSKYSENSORHUB:
+	case HWFLYINGF3_UART5_FRSKYSENSORHUB:
 #if defined(PIOS_INCLUDE_FRSKY_SENSOR_HUB) && defined(PIOS_INCLUDE_USART) && defined(PIOS_INCLUDE_COM)
 		PIOS_Board_configure_com(&pios_usart5_cfg, 0, PIOS_COM_FRSKYSENSORHUB_TX_BUF_LEN, &pios_usart_com_driver, &pios_com_frsky_sensor_hub_id);
 #endif /* PIOS_INCLUDE_FRSKY_SENSOR_HUB */
@@ -1111,7 +1113,7 @@ void PIOS_Board_Init(void) {
 	case HWFLYINGF3_UART5_LIGHTTELEMETRYTX:
 #if defined(PIOS_INCLUDE_LIGHTTELEMETRY)
 		PIOS_Board_configure_com(&pios_usart5_cfg, 0, PIOS_COM_LIGHTTELEMETRY_TX_BUF_LEN, &pios_usart_com_driver, &pios_com_lighttelemetry_id);
-#endif  
+#endif
 		break;
 	case HWFLYINGF3_UART5_FRSKYSPORTTELEMETRY:
 #if defined(PIOS_INCLUDE_FRSKY_SPORT_TELEMETRY)
@@ -1131,60 +1133,60 @@ void PIOS_Board_Init(void) {
 		break;
 	case HWFLYINGF3_RCVRPORT_PWM:
 #if defined(PIOS_INCLUDE_PWM)
-		{
-			uintptr_t pios_pwm_id;
-			PIOS_PWM_Init(&pios_pwm_id, &pios_pwm_cfg);
+	{
+		uintptr_t pios_pwm_id;
+		PIOS_PWM_Init(&pios_pwm_id, &pios_pwm_cfg);
 
-			uintptr_t pios_pwm_rcvr_id;
-			if (PIOS_RCVR_Init(&pios_pwm_rcvr_id, &pios_pwm_rcvr_driver, pios_pwm_id)) {
-				PIOS_Assert(0);
-			}
-			pios_rcvr_group_map[MANUALCONTROLSETTINGS_CHANNELGROUPS_PWM] = pios_pwm_rcvr_id;
+		uintptr_t pios_pwm_rcvr_id;
+		if (PIOS_RCVR_Init(&pios_pwm_rcvr_id, &pios_pwm_rcvr_driver, pios_pwm_id)) {
+			PIOS_Assert(0);
 		}
+		pios_rcvr_group_map[MANUALCONTROLSETTINGS_CHANNELGROUPS_PWM] = pios_pwm_rcvr_id;
+	}
 #endif	/* PIOS_INCLUDE_PWM */
-		break;
+	break;
 	case HWFLYINGF3_RCVRPORT_PPM:
 	case HWFLYINGF3_RCVRPORT_PPMOUTPUTS:
 #if defined(PIOS_INCLUDE_PPM)
-		{
-			uintptr_t pios_ppm_id;
-			PIOS_PPM_Init(&pios_ppm_id, &pios_ppm_cfg);
+	{
+		uintptr_t pios_ppm_id;
+		PIOS_PPM_Init(&pios_ppm_id, &pios_ppm_cfg);
 
-			uintptr_t pios_ppm_rcvr_id;
-			if (PIOS_RCVR_Init(&pios_ppm_rcvr_id, &pios_ppm_rcvr_driver, pios_ppm_id)) {
-				PIOS_Assert(0);
-			}
-			pios_rcvr_group_map[MANUALCONTROLSETTINGS_CHANNELGROUPS_PPM] = pios_ppm_rcvr_id;
+		uintptr_t pios_ppm_rcvr_id;
+		if (PIOS_RCVR_Init(&pios_ppm_rcvr_id, &pios_ppm_rcvr_driver, pios_ppm_id)) {
+			PIOS_Assert(0);
 		}
+		pios_rcvr_group_map[MANUALCONTROLSETTINGS_CHANNELGROUPS_PPM] = pios_ppm_rcvr_id;
+	}
 #endif	/* PIOS_INCLUDE_PPM */
-		break;
+	break;
 	case HWFLYINGF3_RCVRPORT_PPMPWM:
 		/* This is a combination of PPM and PWM inputs */
 #if defined(PIOS_INCLUDE_PPM)
-		{
-			uintptr_t pios_ppm_id;
-			PIOS_PPM_Init(&pios_ppm_id, &pios_ppm_cfg);
+	{
+		uintptr_t pios_ppm_id;
+		PIOS_PPM_Init(&pios_ppm_id, &pios_ppm_cfg);
 
-			uintptr_t pios_ppm_rcvr_id;
-			if (PIOS_RCVR_Init(&pios_ppm_rcvr_id, &pios_ppm_rcvr_driver, pios_ppm_id)) {
-				PIOS_Assert(0);
-			}
-			pios_rcvr_group_map[MANUALCONTROLSETTINGS_CHANNELGROUPS_PPM] = pios_ppm_rcvr_id;
+		uintptr_t pios_ppm_rcvr_id;
+		if (PIOS_RCVR_Init(&pios_ppm_rcvr_id, &pios_ppm_rcvr_driver, pios_ppm_id)) {
+			PIOS_Assert(0);
 		}
+		pios_rcvr_group_map[MANUALCONTROLSETTINGS_CHANNELGROUPS_PPM] = pios_ppm_rcvr_id;
+	}
 #endif	/* PIOS_INCLUDE_PPM */
 #if defined(PIOS_INCLUDE_PWM)
-		{
-			uintptr_t pios_pwm_id;
-			PIOS_PWM_Init(&pios_pwm_id, &pios_pwm_with_ppm_cfg);
+	{
+		uintptr_t pios_pwm_id;
+		PIOS_PWM_Init(&pios_pwm_id, &pios_pwm_with_ppm_cfg);
 
-			uintptr_t pios_pwm_rcvr_id;
-			if (PIOS_RCVR_Init(&pios_pwm_rcvr_id, &pios_pwm_rcvr_driver, pios_pwm_id)) {
-				PIOS_Assert(0);
-			}
-			pios_rcvr_group_map[MANUALCONTROLSETTINGS_CHANNELGROUPS_PWM] = pios_pwm_rcvr_id;
+		uintptr_t pios_pwm_rcvr_id;
+		if (PIOS_RCVR_Init(&pios_pwm_rcvr_id, &pios_pwm_rcvr_driver, pios_pwm_id)) {
+			PIOS_Assert(0);
 		}
+		pios_rcvr_group_map[MANUALCONTROLSETTINGS_CHANNELGROUPS_PWM] = pios_pwm_rcvr_id;
+	}
 #endif	/* PIOS_INCLUDE_PWM */
-		break;
+	break;
 	}
 
 
@@ -1201,20 +1203,20 @@ void PIOS_Board_Init(void) {
 
 #ifndef PIOS_DEBUG_ENABLE_DEBUG_PINS
 	switch (hw_rcvrport) {
-		case HWFLYINGF3_RCVRPORT_DISABLED:
-		case HWFLYINGF3_RCVRPORT_PWM:
-		case HWFLYINGF3_RCVRPORT_PPM:
-			/* Set up the servo outputs */
+	case HWFLYINGF3_RCVRPORT_DISABLED:
+	case HWFLYINGF3_RCVRPORT_PWM:
+	case HWFLYINGF3_RCVRPORT_PPM:
+		/* Set up the servo outputs */
 #ifdef PIOS_INCLUDE_SERVO
-			PIOS_Servo_Init(&pios_servo_cfg);
+		PIOS_Servo_Init(&pios_servo_cfg);
 #endif
-			break;
-		case HWFLYINGF3_RCVRPORT_PPMOUTPUTS:
-		case HWFLYINGF3_RCVRPORT_OUTPUTS:
+		break;
+	case HWFLYINGF3_RCVRPORT_PPMOUTPUTS:
+	case HWFLYINGF3_RCVRPORT_OUTPUTS:
 #ifdef PIOS_INCLUDE_SERVO
-			PIOS_Servo_Init(&pios_servo_rcvr_cfg);
+		PIOS_Servo_Init(&pios_servo_rcvr_cfg);
 #endif
-			break;
+		break;
 	}
 #else
 	PIOS_DEBUG_Init(&pios_tim_servo_all_channels, NELEMENTS(pios_tim_servo_all_channels));
@@ -1236,12 +1238,12 @@ void PIOS_Board_Init(void) {
 	HwFlyingF3L3GD20RateGet(&hw_l3gd20_samplerate);
 	enum pios_l3gd20_rate l3gd20_samplerate = PIOS_L3GD20_RATE_380HZ_100HZ;
 	switch(hw_l3gd20_samplerate) {
-		case HWFLYINGF3_L3GD20RATE_380:
-			l3gd20_samplerate = PIOS_L3GD20_RATE_380HZ_100HZ;
-			break;
-		case HWFLYINGF3_L3GD20RATE_760:
-			l3gd20_samplerate = PIOS_L3GD20_RATE_760HZ_100HZ;
-			break;
+	case HWFLYINGF3_L3GD20RATE_380:
+		l3gd20_samplerate = PIOS_L3GD20_RATE_380HZ_100HZ;
+		break;
+	case HWFLYINGF3_L3GD20RATE_760:
+		l3gd20_samplerate = PIOS_L3GD20_RATE_760HZ_100HZ;
+		break;
 	}
 	PIOS_Assert(PIOS_L3GD20_SetSampleRate(l3gd20_samplerate) == 0);
 
@@ -1283,18 +1285,18 @@ void PIOS_Board_Init(void) {
 	uint8_t hw_accel_range;
 	HwFlyingF3AccelRangeGet(&hw_accel_range);
 	switch(hw_accel_range) {
-		case HWFLYINGF3_ACCELRANGE_2G:
-			PIOS_LSM303_Accel_SetRange(PIOS_LSM303_ACCEL_2G);
-			break;
-		case HWFLYINGF3_ACCELRANGE_4G:
-			PIOS_LSM303_Accel_SetRange(PIOS_LSM303_ACCEL_4G);
-			break;
-		case HWFLYINGF3_ACCELRANGE_8G:
-			PIOS_LSM303_Accel_SetRange(PIOS_LSM303_ACCEL_8G);
-			break;
-		case HWFLYINGF3_ACCELRANGE_16G:
-			PIOS_LSM303_Accel_SetRange(PIOS_LSM303_ACCEL_16G);
-			break;
+	case HWFLYINGF3_ACCELRANGE_2G:
+		PIOS_LSM303_Accel_SetRange(PIOS_LSM303_ACCEL_2G);
+		break;
+	case HWFLYINGF3_ACCELRANGE_4G:
+		PIOS_LSM303_Accel_SetRange(PIOS_LSM303_ACCEL_4G);
+		break;
+	case HWFLYINGF3_ACCELRANGE_8G:
+		PIOS_LSM303_Accel_SetRange(PIOS_LSM303_ACCEL_8G);
+		break;
+	case HWFLYINGF3_ACCELRANGE_16G:
+		PIOS_LSM303_Accel_SetRange(PIOS_LSM303_ACCEL_16G);
+		break;
 	}
 
 	//there is no setting for the mag scale yet
@@ -1354,10 +1356,10 @@ void PIOS_Board_Init(void) {
 		break;
 	case HWFLYINGF3_SHIELD_BMP085:
 #if defined(PIOS_INCLUDE_BMP085) && defined(PIOS_INCLUDE_I2C)
-	if (PIOS_BMP085_Init(&pios_bmp085_cfg, pios_i2c_external_id) != 0)
-		panic(5);
-	if (PIOS_BMP085_Test() != 0)
-		panic(5);
+		if (PIOS_BMP085_Init(&pios_bmp085_cfg, pios_i2c_external_id) != 0)
+			panic(5);
+		if (PIOS_BMP085_Test() != 0)
+			panic(5);
 #endif /* PIOS_INCLUDE_BMP085 && PIOS_INCLUDE_I2C */
 		break;
 	case HWFLYINGF3_SHIELD_NONE:

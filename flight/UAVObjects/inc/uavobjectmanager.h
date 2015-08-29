@@ -148,7 +148,7 @@ int32_t UAVObjInitialize();
 void UAVObjGetStats(UAVObjStats* statsOut);
 void UAVObjClearStats();
 UAVObjHandle UAVObjRegister(uint32_t id,
-		int32_t isSingleInstance, int32_t isSettings, uint32_t numBytes, UAVObjInitializeCallback initCb);
+                            int32_t isSingleInstance, int32_t isSettings, uint32_t numBytes, UAVObjInitializeCallback initCb);
 UAVObjHandle UAVObjGetByID(uint32_t id);
 uint32_t UAVObjGetID(UAVObjHandle obj);
 uint32_t UAVObjGetNumBytes(UAVObjHandle obj);

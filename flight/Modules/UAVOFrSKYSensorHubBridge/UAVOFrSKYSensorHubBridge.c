@@ -1,9 +1,9 @@
 /**
  ******************************************************************************
  * @addtogroup TauLabsModules TauLabs Modules
- * @{ 
+ * @{
  * @addtogroup UAVOFrSKYSensorHubBridge UAVO to FrSKY Bridge Module
- * @{ 
+ * @{
  *
  * @file       uavoFrSKYSensorHubBridge.c
  * @author     Tau Labs, http://taulabs.org, Copyright (C) 2014
@@ -52,62 +52,62 @@
 static void uavoFrSKYSensorHubBridgeTask(void *parameters);
 
 static uint16_t frsky_pack_altitude(
-		float altitude,
-		uint8_t *serial_buf);
+    float altitude,
+    uint8_t *serial_buf);
 
 static uint16_t frsky_pack_temperature_01(
-		float temperature_01,
-		uint8_t *serial_buf);
+    float temperature_01,
+    uint8_t *serial_buf);
 
 static uint16_t frsky_pack_temperature_02(
-		float temperature_02,
-		uint8_t *serial_buf);
+    float temperature_02,
+    uint8_t *serial_buf);
 
 static uint16_t frsky_pack_accel(
-		float accels_x,
-		float accels_y,
-		float accels_z,
-		uint8_t *serial_buf);
+    float accels_x,
+    float accels_y,
+    float accels_z,
+    uint8_t *serial_buf);
 
 static uint16_t frsky_pack_cellvoltage(
-		uint8_t cell,
-		float cell_voltage,
-		uint8_t *serial_buf);
+    uint8_t cell,
+    float cell_voltage,
+    uint8_t *serial_buf);
 
 static uint16_t frsky_pack_fas(
-		float voltage,
-		float current,
-		uint8_t *serial_buf);
+    float voltage,
+    float current,
+    uint8_t *serial_buf);
 
 static uint16_t frsky_pack_rpm(
-		uint16_t rpm,
-		uint8_t *serial_buf);
+    uint16_t rpm,
+    uint8_t *serial_buf);
 
 static uint16_t frsky_pack_gps(
-		float course,
-		int32_t latitude,
-		int32_t longitude,
-		float altitude,
-		float speed,
-		uint8_t *serial_buf);
+    float course,
+    int32_t latitude,
+    int32_t longitude,
+    float altitude,
+    float speed,
+    uint8_t *serial_buf);
 
 static uint16_t frsky_pack_fuel(
-		float fuel_level,
-		uint8_t *serial_buf);
+    float fuel_level,
+    uint8_t *serial_buf);
 
 static uint16_t frsky_pack_stop(
-		uint8_t *serial_buf);
+    uint8_t *serial_buf);
 
 static int16_t frsky_acceleration_unit(float accel);
 
 static void frsky_serialize_value(uint8_t valueid,
-		uint8_t *value,
-		uint8_t *serial_buf,
-		uint8_t *index);
+                                  uint8_t *value,
+                                  uint8_t *serial_buf,
+                                  uint8_t *index);
 
 static void frsky_write_userdata_byte(uint8_t byte,
-		uint8_t *serial_buf,
-		uint8_t *index);
+                                      uint8_t *serial_buf,
+                                      uint8_t *index);
 
 static bool frame_trigger(uint8_t frame_num);
 // ****************
@@ -170,7 +170,7 @@ static const uint8_t frsky_rates[] = {
 	[FRSKY_FRAME_VARIO] = 0x05, //5Hz
 	[FRSKY_FRAME_BATTERY] = 0x05, //5Hz
 	[FRSKY_FRAME_GPS] = 0x01	//1Hz
-}; 
+};
 
 #define MAXSTREAMS sizeof(frsky_rates)
 
@@ -198,10 +198,10 @@ static int32_t uavoFrSKYSensorHubBridgeStart(void)
 	if (module_enabled) {
 		// Start tasks
 		uavoFrSKYSensorHubBridgeTaskHandle = PIOS_Thread_Create(
-				uavoFrSKYSensorHubBridgeTask, "uavoFrSKYSensorHubBridge",
-				STACK_SIZE_BYTES, NULL, TASK_PRIORITY);
+		        uavoFrSKYSensorHubBridgeTask, "uavoFrSKYSensorHubBridge",
+		        STACK_SIZE_BYTES, NULL, TASK_PRIORITY);
 		TaskMonitorAdd(TASKINFO_RUNNING_UAVOFRSKYSBRIDGE,
-				uavoFrSKYSensorHubBridgeTaskHandle);
+		               uavoFrSKYSensorHubBridgeTaskHandle);
 		return 0;
 	}
 	return -1;
@@ -220,7 +220,7 @@ static int32_t uavoFrSKYSensorHubBridgeInitialize(void)
 	ModuleSettingsAdminStateGet(module_state);
 
 	if (frsky_port && (module_state[MODULESETTINGS_ADMINSTATE_UAVOFRSKYSENSORHUBBRIDGE]
-					== MODULESETTINGS_ADMINSTATE_ENABLED)) {
+	                   == MODULESETTINGS_ADMINSTATE_ENABLED)) {
 		PIOS_COM_ChangeBaud(frsky_port, FRSKY_BAUD_RATE);
 
 		serial_buf = PIOS_malloc(FRSKY_MAX_PACKET_LEN);
@@ -356,10 +356,10 @@ static void uavoFrSKYSensorHubBridgeTask(void *parameters)
 			}
 
 			msg_length += frsky_pack_accel(
-					accX,
-					accY,
-					accZ,
-					serial_buf + msg_length);
+			                  accX,
+			                  accY,
+			                  accZ,
+			                  serial_buf + msg_length);
 
 			if (BaroAltitudeHandle() != NULL)
 				BaroAltitudeGet(&baroAltitude);
@@ -368,15 +368,15 @@ static void uavoFrSKYSensorHubBridgeTask(void *parameters)
 
 			// set altitude offset when arming
 			if ((flightStatus.Armed == FLIGHTSTATUS_ARMED_ARMING) ||
-					((last_armed != FLIGHTSTATUS_ARMED_ARMED) && (flightStatus.Armed == FLIGHTSTATUS_ARMED_ARMED))) {
+			    ((last_armed != FLIGHTSTATUS_ARMED_ARMED) && (flightStatus.Armed == FLIGHTSTATUS_ARMED_ARMED))) {
 				altitude_offset = baroAltitude.Altitude;
 			}
 			last_armed = flightStatus.Armed;
 
 			float altitude = baroAltitude.Altitude - altitude_offset;
 			msg_length += frsky_pack_altitude(
-					altitude,
-					serial_buf + msg_length);
+			                  altitude,
+			                  serial_buf + msg_length);
 
 			msg_length += frsky_pack_stop(serial_buf + msg_length);
 
@@ -404,22 +404,22 @@ static void uavoFrSKYSensorHubBridgeTask(void *parameters)
 				float cell_v = voltage / batSettings.NbCells;
 				for(uint8_t i = 0; i < batSettings.NbCells; ++i) {
 					msg_length += frsky_pack_cellvoltage(
-							i,
-							cell_v,
-							serial_buf + msg_length);
+					                  i,
+					                  cell_v,
+					                  serial_buf + msg_length);
 				}
 			}
 
 			msg_length += frsky_pack_fas(
-					voltage,
-					current,
-					serial_buf + msg_length);
+			                  voltage,
+			                  current,
+			                  serial_buf + msg_length);
 
 			if (batSettings.Capacity > 0) {
 				float fuel = 1.0f - batState.ConsumedEnergy / batSettings.Capacity;
 				msg_length += frsky_pack_fuel(
-					fuel,
-					serial_buf + msg_length);
+				                  fuel,
+				                  serial_buf + msg_length);
 			}
 
 			msg_length += frsky_pack_stop(serial_buf + msg_length);
@@ -451,13 +451,13 @@ static void uavoFrSKYSensorHubBridgeTask(void *parameters)
 			msg_length += frsky_pack_rpm(status, serial_buf + msg_length);
 
 			uint8_t hl_set = HOMELOCATION_SET_FALSE;
-			
+
 			if (GPSPositionHandle() != NULL)
 				GPSPositionGet(&gpsPosData);
 
 			if (HomeLocationHandle() != NULL)
 				HomeLocationSetGet(&hl_set);
-        
+
 			/**
 			 * Encode GPS status and visible satellites as T1 value
 			 * We will intentionally misuse this item to encode other useful information.
@@ -470,7 +470,7 @@ static void uavoFrSKYSensorHubBridgeTask(void *parameters)
 			 */
 			switch (gpsPosData.Status) {
 			case GPSPOSITION_STATUS_NOGPS:
-			status = 100;
+				status = 100;
 				break;
 			case GPSPOSITION_STATUS_NOFIX:
 				status = 200;
@@ -486,12 +486,12 @@ static void uavoFrSKYSensorHubBridgeTask(void *parameters)
 					status = 400;
 				break;
 			}
-	
+
 			if (gpsPosData.Satellites > 0)
 				status += gpsPosData.Satellites;
 
 			msg_length += frsky_pack_temperature_01((float)status, serial_buf + msg_length);
-			
+
 			/**
 			 * Encode GPS HDOP and VDOP as T2 value
 			 * We will intentionally misuse this item to encode other useful information.
@@ -499,26 +499,26 @@ static void uavoFrSKYSensorHubBridgeTask(void *parameters)
 			 * HDOP in the lower 16 bits, max 256 (2.56 * 100)
 			 */
 			hdop = gpsPosData.HDOP * 100.0f;
-			
+
 			if (hdop > 255.0f)
 				hdop = 255.0f;
-			
+
 			vdop = gpsPosData.VDOP * 100.0f;
-			
+
 			if (vdop > 255.0f)
 				vdop = 255.0f;
-			
+
 			msg_length += frsky_pack_temperature_02((vdop * 256 + hdop), serial_buf + msg_length);
 
 			if (gpsPosData.Status == GPSPOSITION_STATUS_FIX2D ||
 			    gpsPosData.Status == GPSPOSITION_STATUS_FIX3D) {
 				msg_length += frsky_pack_gps(
-						gpsPosData.Heading,
-						gpsPosData.Latitude,
-						gpsPosData.Longitude,
-						gpsPosData.Altitude,
-						gpsPosData.Groundspeed,
-						serial_buf + msg_length);
+				                  gpsPosData.Heading,
+				                  gpsPosData.Latitude,
+				                  gpsPosData.Longitude,
+				                  gpsPosData.Altitude,
+				                  gpsPosData.Groundspeed,
+				                  serial_buf + msg_length);
 			}
 
 			msg_length += frsky_pack_stop(serial_buf + msg_length);
@@ -574,8 +574,8 @@ static uint16_t frsky_pack_altitude(float altitude, uint8_t *serial_buf)
  * \return number of bytes written to the buffer
  */
 static uint16_t frsky_pack_temperature_01(
-		float temperature_01,
-		uint8_t *serial_buf)
+    float temperature_01,
+    uint8_t *serial_buf)
 {
 	uint8_t index = 0;
 
@@ -590,8 +590,8 @@ static uint16_t frsky_pack_temperature_01(
  * \return number of bytes written to the buffer
  */
 static uint16_t frsky_pack_temperature_02(
-		float temperature_02,
-		uint8_t *serial_buf)
+    float temperature_02,
+    uint8_t *serial_buf)
 {
 	uint8_t index = 0;
 
@@ -606,10 +606,10 @@ static uint16_t frsky_pack_temperature_02(
  * \return number of bytes written to the buffer
  */
 static uint16_t frsky_pack_accel(
-		float accels_x,
-		float accels_y,
-		float accels_z,
-		uint8_t *serial_buf)
+    float accels_x,
+    float accels_y,
+    float accels_z,
+    uint8_t *serial_buf)
 {
 	uint8_t index = 0;
 
@@ -626,9 +626,9 @@ static uint16_t frsky_pack_accel(
 }
 
 static uint16_t frsky_pack_cellvoltage(
-		uint8_t cell,
-		float cell_voltage,
-		uint8_t *serial_buf)
+    uint8_t cell,
+    float cell_voltage,
+    uint8_t *serial_buf)
 {
 	// its not possible to address more than 15 cells
 	if (cell > 15)
@@ -649,9 +649,9 @@ static uint16_t frsky_pack_cellvoltage(
  * \return number of bytes written to the buffer
  */
 static uint16_t frsky_pack_fas(
-		float voltage,
-		float current,
-		uint8_t *serial_buf)
+    float voltage,
+    float current,
+    uint8_t *serial_buf)
 {
 	uint8_t index = 0;
 
@@ -687,8 +687,8 @@ static uint16_t frsky_pack_rpm(uint16_t rpm, uint8_t *serial_buf)
  * \return number of bytes written to the buffer
  */
 static uint16_t frsky_pack_fuel(
-		float fuel_level,
-		uint8_t *serial_buf)
+    float fuel_level,
+    uint8_t *serial_buf)
 {
 	uint8_t index = 0;
 
@@ -716,12 +716,12 @@ static uint16_t frsky_pack_fuel(
  * \return number of bytes written to the buffer
  */
 static uint16_t frsky_pack_gps(
-		float course,
-		int32_t latitude,
-		int32_t longitude,
-		float altitude,
-		float speed,
-		uint8_t *serial_buf)
+    float course,
+    int32_t latitude,
+    int32_t longitude,
+    float altitude,
+    float speed,
+    uint8_t *serial_buf)
 {
 	uint8_t index = 0;
 
@@ -833,8 +833,7 @@ static void frsky_write_userdata_byte(uint8_t byte, uint8_t *serial_buf, uint8_t
 	if ((byte == 0x5E) || (byte == 0x5D)) {
 		serial_buf[(*index)++] = 0x5D;
 		serial_buf[(*index)++] = ~(byte ^ 0x60);
-	}
-	else {
+	} else {
 		serial_buf[(*index)++] = byte;
 	}
 }

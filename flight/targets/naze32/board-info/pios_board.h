@@ -5,11 +5,11 @@
  * @addtogroup Naze32 family support files
  * @{
  *
- * @file       pios_board.h 
+ * @file       pios_board.h
  * @author     Tau Labs, http://taulabs.org, Copyright (C) 2012-2015
  * @brief      Board header file for Naze32
  * @see        The GNU Public License (GPL) Version 3
- * 
+ *
  *****************************************************************************/
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -110,7 +110,7 @@ extern uintptr_t pios_com_mavlink_id;
 
 //-------------------------
 // System Settings
-// 
+//
 // See also system_stm32f10x.c
 //-------------------------
 //These macros are deprecated

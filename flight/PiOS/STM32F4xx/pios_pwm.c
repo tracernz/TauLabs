@@ -122,7 +122,7 @@ int32_t PIOS_PWM_Init(uintptr_t * pwm_id, const struct pios_pwm_cfg * cfg)
 		TIM_ICInitTypeDef TIM_ICInitStructure = cfg->tim_ic_init;
 		TIM_ICInitStructure.TIM_Channel = chan->timer_chan;
 		TIM_ICInit(chan->timer, &TIM_ICInitStructure);
-		
+
 		/* Enable the Capture Compare Interrupt Request */
 		switch (chan->timer_chan) {
 		case TIM_Channel_1:
@@ -224,7 +224,7 @@ static void PIOS_PWM_tim_edge_cb (uintptr_t tim_id, uintptr_t context, uint8_t c
 	} else {
 		pwm_dev->FallValue[chan_idx] = count;
 	}
-			
+
 	// flip state machine and capture value here
 	/* Simple rise or fall state machine */
 	TIM_ICInitTypeDef TIM_ICInitStructure = pwm_dev->cfg->tim_ic_init;
@@ -255,12 +255,12 @@ static void PIOS_PWM_tim_edge_cb (uintptr_t tim_id, uintptr_t context, uint8_t c
 		TIM_ICInitStructure.TIM_Channel = chan->timer_chan;
 		TIM_ICInit(chan->timer, &TIM_ICInitStructure);
 	}
-	
+
 }
 
 #endif
 
-/** 
+/**
   * @}
   * @}
   */

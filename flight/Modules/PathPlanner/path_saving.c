@@ -3,7 +3,7 @@
  * @addtogroup TauLabsModules Tau Labs Modules
  * @{
  * @addtogroup PathPlannerModule Path Planner Module
- * @{ 
+ * @{
  *
  * @file       path_saving.c
  * @author     Tau Labs, http://taulabs.org, Copyright (C) 2013

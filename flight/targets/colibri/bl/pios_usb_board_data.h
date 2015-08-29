@@ -37,7 +37,7 @@
 
 #include "pios_usb_defs.h"	/* struct usb_* */
 
-#define PIOS_USB_BOARD_VENDOR_ID 0x20a0	
+#define PIOS_USB_BOARD_VENDOR_ID 0x20a0
 #define PIOS_USB_BOARD_PRODUCT_ID 0x4235	// TBS Colibri
 #define PIOS_USB_BOARD_DEVICE_VER USB_OP_DEVICE_VER(0, USB_OP_BOARD_MODE_BL)
 #define PIOS_USB_BOARD_SN_SUFFIX "+BL"

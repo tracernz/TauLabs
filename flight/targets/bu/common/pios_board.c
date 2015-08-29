@@ -9,7 +9,8 @@
 
 #include <pios_board_info.h>
 
-void PIOS_Board_Init(void) {
+void PIOS_Board_Init(void)
+{
 	/* Delay system */
 	PIOS_DELAY_Init();
 

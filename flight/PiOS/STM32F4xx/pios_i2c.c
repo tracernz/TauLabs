@@ -628,12 +628,12 @@ static void i2c_adapter_reset_bus(struct pios_i2c_adapter *i2c_adapter)
 
 	retry_count_clk = 0;
 	while (GPIO_ReadInputDataBit(i2c_adapter->cfg->sda.gpio, i2c_adapter->cfg->sda.init.GPIO_Pin) == Bit_RESET &&
-		(retry_count_clk++ < MAX_I2C_RETRY_COUNT)) {
+	       (retry_count_clk++ < MAX_I2C_RETRY_COUNT)) {
 		retry_count = 0;
 		/* Set clock high and wait for any clock stretching to finish. */
 		GPIO_SetBits(i2c_adapter->cfg->scl.gpio, i2c_adapter->cfg->scl.init.GPIO_Pin);
 		while (GPIO_ReadInputDataBit(i2c_adapter->cfg->scl.gpio, i2c_adapter->cfg->scl.init.GPIO_Pin) == Bit_RESET &&
-				retry_count++ < MAX_I2C_RETRY_COUNT)
+		       retry_count++ < MAX_I2C_RETRY_COUNT)
 			PIOS_DELAY_WaituS(1);
 		PIOS_DELAY_WaituS(2);
 
@@ -660,24 +660,24 @@ static void i2c_adapter_reset_bus(struct pios_i2c_adapter *i2c_adapter)
 
 	retry_count = 0;
 	while (GPIO_ReadInputDataBit(i2c_adapter->cfg->scl.gpio, i2c_adapter->cfg->scl.init.GPIO_Pin) == Bit_RESET &&
-			retry_count++ < MAX_I2C_RETRY_COUNT)
+	       retry_count++ < MAX_I2C_RETRY_COUNT)
 		PIOS_DELAY_WaituS(1);
 
 	/* Wait for data to be high */
 	retry_count = 0;
 	while (GPIO_ReadInputDataBit(i2c_adapter->cfg->sda.gpio, i2c_adapter->cfg->sda.init.GPIO_Pin) != Bit_SET &&
-			retry_count++ < MAX_I2C_RETRY_COUNT)
+	       retry_count++ < MAX_I2C_RETRY_COUNT)
 		PIOS_DELAY_WaituS(1);
 
 	/* Bus signals are guaranteed to be high (ie. free) after this point */
 	/* Initialize the GPIO pins to the peripheral function */
 	if (i2c_adapter->cfg->remap) {
 		GPIO_PinAFConfig(i2c_adapter->cfg->scl.gpio,
-				__builtin_ctz(i2c_adapter->cfg->scl.init.GPIO_Pin),
-				i2c_adapter->cfg->remap);
+		                 __builtin_ctz(i2c_adapter->cfg->scl.init.GPIO_Pin),
+		                 i2c_adapter->cfg->remap);
 		GPIO_PinAFConfig(i2c_adapter->cfg->sda.gpio,
-				__builtin_ctz(i2c_adapter->cfg->sda.init.GPIO_Pin),
-				i2c_adapter->cfg->remap);
+		                 __builtin_ctz(i2c_adapter->cfg->sda.init.GPIO_Pin),
+		                 i2c_adapter->cfg->remap);
 	}
 	GPIO_Init(i2c_adapter->cfg->scl.gpio, (GPIO_InitTypeDef *) & (i2c_adapter->cfg->scl.init)); // Struct is const, function signature not
 	GPIO_Init(i2c_adapter->cfg->sda.gpio, (GPIO_InitTypeDef *) & (i2c_adapter->cfg->sda.init));
@@ -706,13 +706,13 @@ static void i2c_adapter_log_fault(struct pios_i2c_adapter *i2c_adapter, enum pio
 	i2c_adapter->i2c_adapter_fault_history.type = type;
 	for (uint8_t i = 0; i < I2C_LOG_DEPTH; i++) {
 		i2c_adapter->i2c_adapter_fault_history.evirq[i] =
-				i2c_adapter->i2c_evirq_history[(I2C_LOG_DEPTH + i2c_adapter->i2c_evirq_history_pointer - 1 - i) % I2C_LOG_DEPTH];
+		    i2c_adapter->i2c_evirq_history[(I2C_LOG_DEPTH + i2c_adapter->i2c_evirq_history_pointer - 1 - i) % I2C_LOG_DEPTH];
 		i2c_adapter->i2c_adapter_fault_history.erirq[i] =
-				i2c_adapter->i2c_erirq_history[(I2C_LOG_DEPTH + i2c_adapter->i2c_erirq_history_pointer - 1 - i) % I2C_LOG_DEPTH];
+		    i2c_adapter->i2c_erirq_history[(I2C_LOG_DEPTH + i2c_adapter->i2c_erirq_history_pointer - 1 - i) % I2C_LOG_DEPTH];
 		i2c_adapter->i2c_adapter_fault_history.event[i] =
-				i2c_adapter->i2c_state_event_history[(I2C_LOG_DEPTH + i2c_adapter->i2c_state_event_history_pointer - 1 - i) % I2C_LOG_DEPTH];
+		    i2c_adapter->i2c_state_event_history[(I2C_LOG_DEPTH + i2c_adapter->i2c_state_event_history_pointer - 1 - i) % I2C_LOG_DEPTH];
 		i2c_adapter->i2c_adapter_fault_history.state[i] =
-				i2c_adapter->i2c_state_history[(I2C_LOG_DEPTH + i2c_adapter->i2c_state_history_pointer - 1 - i) % I2C_LOG_DEPTH];
+		    i2c_adapter->i2c_state_history[(I2C_LOG_DEPTH + i2c_adapter->i2c_state_history_pointer - 1 - i) % I2C_LOG_DEPTH];
 	}
 	switch (type) {
 	case PIOS_I2C_ERROR_EVENT:
@@ -808,7 +808,7 @@ int32_t PIOS_I2C_CheckClear(uint32_t i2c_id)
 	}
 
 	if (GPIO_ReadInputDataBit(i2c_adapter->cfg->sda.gpio, i2c_adapter->cfg->sda.init.GPIO_Pin) == Bit_RESET ||
-		GPIO_ReadInputDataBit(i2c_adapter->cfg->scl.gpio, i2c_adapter->cfg->scl.init.GPIO_Pin) == Bit_RESET) {
+	    GPIO_ReadInputDataBit(i2c_adapter->cfg->scl.gpio, i2c_adapter->cfg->scl.init.GPIO_Pin) == Bit_RESET) {
 		PIOS_Mutex_Unlock(i2c_adapter->lock);
 		return -3;
 	}
@@ -842,7 +842,7 @@ int32_t PIOS_I2C_Transfer(uint32_t i2c_id, const struct pios_i2c_txn txn_list[],
 
 	/* Wait for the transfer to complete */
 	bool semaphore_success =
-		(PIOS_Semaphore_Take(i2c_adapter->sem_ready, i2c_adapter->cfg->transfer_timeout_ms) == true);
+	    (PIOS_Semaphore_Take(i2c_adapter->sem_ready, i2c_adapter->cfg->transfer_timeout_ms) == true);
 
 	// handle fsm timeout
 	if (i2c_adapter->state != I2C_STATE_STOPPED) {
@@ -857,9 +857,9 @@ int32_t PIOS_I2C_Transfer(uint32_t i2c_id, const struct pios_i2c_txn txn_list[],
 #endif
 
 	int32_t result = !semaphore_success ? -2 :
-			i2c_adapter->bus_error ? -1 :
-			i2c_adapter->nack ? -3 :
-			0;
+	                 i2c_adapter->bus_error ? -1 :
+	                 i2c_adapter->nack ? -3 :
+	                 0;
 
 	PIOS_Mutex_Unlock(i2c_adapter->lock);
 
@@ -982,13 +982,13 @@ void PIOS_I2C_ER_IRQ_Handler(uint32_t i2c_id)
 
 	// clear all flags
 	I2C_ClearFlag(i2c_adapter->cfg->regs,
-		I2C_FLAG_SMBALERT |
-		I2C_FLAG_TIMEOUT |
-		I2C_FLAG_PECERR |
-		I2C_FLAG_OVR |
-		I2C_FLAG_AF |
-		I2C_FLAG_ARLO |
-		I2C_FLAG_BERR);
+	              I2C_FLAG_SMBALERT |
+	              I2C_FLAG_TIMEOUT |
+	              I2C_FLAG_PECERR |
+	              I2C_FLAG_OVR |
+	              I2C_FLAG_AF |
+	              I2C_FLAG_ARLO |
+	              I2C_FLAG_BERR);
 
 #if defined(PIOS_I2C_DIAGNOSTICS)
 	i2c_adapter->i2c_erirq_history[i2c_adapter->i2c_erirq_history_pointer] = event;

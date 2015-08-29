@@ -149,16 +149,16 @@ static void PIOS_USB_HID_SendReport(struct pios_usb_hid_dev * usb_hid_dev)
 	bool need_yield = false;
 #ifdef PIOS_USB_BOARD_BL_HID_HAS_NO_LENGTH_BYTE
 	bytes_to_tx = (usb_hid_dev->tx_out_cb)(usb_hid_dev->tx_out_context,
-					       &usb_hid_dev->tx_packet_buffer[1],
-					       sizeof(usb_hid_dev->tx_packet_buffer)-1,
-					       NULL,
-					       &need_yield);
+	                                       &usb_hid_dev->tx_packet_buffer[1],
+	                                       sizeof(usb_hid_dev->tx_packet_buffer)-1,
+	                                       NULL,
+	                                       &need_yield);
 #else
 	bytes_to_tx = (usb_hid_dev->tx_out_cb)(usb_hid_dev->tx_out_context,
-					       &usb_hid_dev->tx_packet_buffer[2],
-					       sizeof(usb_hid_dev->tx_packet_buffer)-2,
-					       NULL,
-					       &need_yield);
+	                                       &usb_hid_dev->tx_packet_buffer[2],
+	                                       sizeof(usb_hid_dev->tx_packet_buffer)-2,
+	                                       NULL,
+	                                       &need_yield);
 #endif
 	if (bytes_to_tx == 0) {
 		return;
@@ -169,13 +169,13 @@ static void PIOS_USB_HID_SendReport(struct pios_usb_hid_dev * usb_hid_dev)
 
 #ifdef PIOS_USB_BOARD_BL_HID_HAS_NO_LENGTH_BYTE
 	UserToPMABufferCopy(usb_hid_dev->tx_packet_buffer,
-			GetEPTxAddr(usb_hid_dev->cfg->data_tx_ep),
-			bytes_to_tx + 1);
+	                    GetEPTxAddr(usb_hid_dev->cfg->data_tx_ep),
+	                    bytes_to_tx + 1);
 #else
 	usb_hid_dev->tx_packet_buffer[1] = bytes_to_tx;
 	UserToPMABufferCopy(usb_hid_dev->tx_packet_buffer,
-			GetEPTxAddr(usb_hid_dev->cfg->data_tx_ep),
-			bytes_to_tx + 2);
+	                    GetEPTxAddr(usb_hid_dev->cfg->data_tx_ep),
+	                    bytes_to_tx + 2);
 #endif
 	/* Is this correct?  Why do we always send the whole buffer? */
 	SetEPTxCount(usb_hid_dev->cfg->data_tx_ep, sizeof(usb_hid_dev->tx_packet_buffer));
@@ -186,7 +186,8 @@ static void PIOS_USB_HID_SendReport(struct pios_usb_hid_dev * usb_hid_dev)
 #endif	/* PIOS_INCLUDE_FREERTOS */
 }
 
-static void PIOS_USB_HID_RxStart(uintptr_t usbhid_id, uint16_t rx_bytes_avail) {
+static void PIOS_USB_HID_RxStart(uintptr_t usbhid_id, uint16_t rx_bytes_avail)
+{
 	struct pios_usb_hid_dev * usb_hid_dev = (struct pios_usb_hid_dev *)usbhid_id;
 
 	bool valid = PIOS_USB_HID_validate(usb_hid_dev);
@@ -204,7 +205,7 @@ static void PIOS_USB_HID_RxStart(uintptr_t usbhid_id, uint16_t rx_bytes_avail) {
 #endif
 
 	PIOS_IRQ_Disable();
-	if ((GetEPRxStatus(usb_hid_dev->cfg->data_rx_ep) != EP_RX_VALID) && 
+	if ((GetEPRxStatus(usb_hid_dev->cfg->data_rx_ep) != EP_RX_VALID) &&
 	    (rx_bytes_avail >= max_payload_length)) {
 		SetEPRxStatus(usb_hid_dev->cfg->data_rx_ep, EP_RX_VALID);
 	}
@@ -237,7 +238,7 @@ static void PIOS_USB_HID_RegisterRxCallback(uintptr_t usbhid_id, pios_com_callba
 	bool valid = PIOS_USB_HID_validate(usb_hid_dev);
 	PIOS_Assert(valid);
 
-	/* 
+	/*
 	 * Order is important in these assignments since ISR uses _cb
 	 * field to determine if it's ok to dereference _cb and _context
 	 */
@@ -252,7 +253,7 @@ static void PIOS_USB_HID_RegisterTxCallback(uintptr_t usbhid_id, pios_com_callba
 	bool valid = PIOS_USB_HID_validate(usb_hid_dev);
 	PIOS_Assert(valid);
 
-	/* 
+	/*
 	 * Order is important in these assignments since ISR uses _cb
 	 * field to determine if it's ok to dereference _cb and _context
 	 */
@@ -299,8 +300,8 @@ static void PIOS_USB_HID_EP_OUT_Callback(void)
 
 	/* Use the memory interface function to read from the selected endpoint */
 	PMAToUserBufferCopy((uint8_t *) usb_hid_dev->rx_packet_buffer,
-			GetEPRxAddr(usb_hid_dev->cfg->data_rx_ep),
-			DataLength);
+	                    GetEPRxAddr(usb_hid_dev->cfg->data_rx_ep),
+	                    DataLength);
 
 	if (!usb_hid_dev->rx_in_cb) {
 		/* No Rx call back registered, disable the receiver */
@@ -313,16 +314,16 @@ static void PIOS_USB_HID_EP_OUT_Callback(void)
 	bool need_yield = false;
 #ifdef PIOS_USB_BOARD_BL_HID_HAS_NO_LENGTH_BYTE
 	(usb_hid_dev->rx_in_cb)(usb_hid_dev->rx_in_context,
-				&usb_hid_dev->rx_packet_buffer[1],
-				sizeof(usb_hid_dev->rx_packet_buffer)-1,
-				&headroom,
-				&need_yield);
+	                        &usb_hid_dev->rx_packet_buffer[1],
+	                        sizeof(usb_hid_dev->rx_packet_buffer)-1,
+	                        &headroom,
+	                        &need_yield);
 #else
 	(usb_hid_dev->rx_in_cb)(usb_hid_dev->rx_in_context,
-				&usb_hid_dev->rx_packet_buffer[2],
-				usb_hid_dev->rx_packet_buffer[1],
-				&headroom,
-				&need_yield);
+	                        &usb_hid_dev->rx_packet_buffer[2],
+	                        usb_hid_dev->rx_packet_buffer[1],
+	                        &headroom,
+	                        &need_yield);
 #endif
 
 #ifdef PIOS_USB_BOARD_BL_HID_HAS_NO_LENGTH_BYTE

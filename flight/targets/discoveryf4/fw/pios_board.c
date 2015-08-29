@@ -9,28 +9,28 @@
  * @author     Tau Labs, http://taulabs.org, Copyright (C) 2012-2014
  * @brief      The board specific initialization routines
  * @see        The GNU Public License (GPL) Version 3
- * 
+ *
  *****************************************************************************/
-/* 
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 3 of the License, or 
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
  * for more details.
- * 
- * You should have received a copy of the GNU General Public License along 
- * with this program; if not, write to the Free Software Foundation, Inc., 
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
 /* Pull in the board-specific static HW definitions.
  * Including .c files is a bit ugly but this allows all of
  * the HW definitions to be const and static to limit their
- * scope.  
+ * scope.
  *
  * NOTE: THIS IS THE ONLY PLACE THAT SHOULD EVER INCLUDE THIS FILE
  */
@@ -74,7 +74,7 @@ uintptr_t pios_uavo_settings_fs_id;
  */
 #if defined(PIOS_INCLUDE_USART) && defined(PIOS_INCLUDE_COM)
 static void PIOS_Board_configure_com (const struct pios_usart_cfg *usart_port_cfg, size_t rx_buf_len, size_t tx_buf_len,
-		const struct pios_com_driver *com_driver, uintptr_t *pios_com_id)
+                                      const struct pios_com_driver *com_driver, uintptr_t *pios_com_id)
 {
 	uintptr_t pios_usart_id;
 	if (PIOS_USART_Init(&pios_usart_id, usart_port_cfg)) {
@@ -98,8 +98,8 @@ static void PIOS_Board_configure_com (const struct pios_usart_cfg *usart_port_cf
 	}
 
 	if (PIOS_COM_Init(pios_com_id, com_driver, pios_usart_id,
-				rx_buffer, rx_buf_len,
-				tx_buffer, tx_buf_len)) {
+	                  rx_buffer, rx_buf_len,
+	                  tx_buffer, tx_buf_len)) {
 		PIOS_Assert(0);
 	}
 }
@@ -109,8 +109,9 @@ static void PIOS_Board_configure_com (const struct pios_usart_cfg *usart_port_cf
  * Indicate a target-specific error code when a component fails to initialize
  * 1 pulse - flash chip
  */
-static void panic(int32_t code) {
-	while(1){
+static void panic(int32_t code)
+{
+	while(1) {
 		for (int32_t i = 0; i < code; i++) {
 			PIOS_WDG_Clear();
 			PIOS_LED_Toggle(PIOS_LED_ALARM);
@@ -134,7 +135,8 @@ static void panic(int32_t code) {
  * initializes all the core subsystems on this specific hardware
  * called from System/openpilot.c
  */
-void PIOS_Board_Init(void) {
+void PIOS_Board_Init(void)
+{
 
 	/* Delay system */
 	PIOS_DELAY_Init();
@@ -244,49 +246,49 @@ void PIOS_Board_Init(void) {
 		break;
 	case HWDISCOVERYF4_USB_VCPPORT_USBTELEMETRY:
 #if defined(PIOS_INCLUDE_COM)
-		{
-			uint8_t * rx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_TELEM_USB_RX_BUF_LEN);
-			uint8_t * tx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_TELEM_USB_TX_BUF_LEN);
-			PIOS_Assert(rx_buffer);
-			PIOS_Assert(tx_buffer);
-			if (PIOS_COM_Init(&pios_com_telem_usb_id, &pios_usb_cdc_com_driver, pios_usb_cdc_id,
-						rx_buffer, PIOS_COM_TELEM_USB_RX_BUF_LEN,
-						tx_buffer, PIOS_COM_TELEM_USB_TX_BUF_LEN)) {
-				PIOS_Assert(0);
-			}
+	{
+		uint8_t * rx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_TELEM_USB_RX_BUF_LEN);
+		uint8_t * tx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_TELEM_USB_TX_BUF_LEN);
+		PIOS_Assert(rx_buffer);
+		PIOS_Assert(tx_buffer);
+		if (PIOS_COM_Init(&pios_com_telem_usb_id, &pios_usb_cdc_com_driver, pios_usb_cdc_id,
+		                  rx_buffer, PIOS_COM_TELEM_USB_RX_BUF_LEN,
+		                  tx_buffer, PIOS_COM_TELEM_USB_TX_BUF_LEN)) {
+			PIOS_Assert(0);
 		}
+	}
 #endif	/* PIOS_INCLUDE_COM */
-		break;
+	break;
 	case HWDISCOVERYF4_USB_VCPPORT_COMBRIDGE:
 #if defined(PIOS_INCLUDE_COM)
-		{
-			uint8_t * rx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_BRIDGE_RX_BUF_LEN);
-			uint8_t * tx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_BRIDGE_TX_BUF_LEN);
-			PIOS_Assert(rx_buffer);
-			PIOS_Assert(tx_buffer);
-			if (PIOS_COM_Init(&pios_com_vcp_id, &pios_usb_cdc_com_driver, pios_usb_cdc_id,
-						rx_buffer, PIOS_COM_BRIDGE_RX_BUF_LEN,
-						tx_buffer, PIOS_COM_BRIDGE_TX_BUF_LEN)) {
-				PIOS_Assert(0);
-			}
+	{
+		uint8_t * rx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_BRIDGE_RX_BUF_LEN);
+		uint8_t * tx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_BRIDGE_TX_BUF_LEN);
+		PIOS_Assert(rx_buffer);
+		PIOS_Assert(tx_buffer);
+		if (PIOS_COM_Init(&pios_com_vcp_id, &pios_usb_cdc_com_driver, pios_usb_cdc_id,
+		                  rx_buffer, PIOS_COM_BRIDGE_RX_BUF_LEN,
+		                  tx_buffer, PIOS_COM_BRIDGE_TX_BUF_LEN)) {
+			PIOS_Assert(0);
 		}
+	}
 #endif	/* PIOS_INCLUDE_COM */
-		break;
+	break;
 	case HWDISCOVERYF4_USB_VCPPORT_DEBUGCONSOLE:
 #if defined(PIOS_INCLUDE_COM)
 #if defined(PIOS_INCLUDE_DEBUG_CONSOLE)
-		{
-			uint8_t * tx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_DEBUGCONSOLE_TX_BUF_LEN);
-			PIOS_Assert(tx_buffer);
-			if (PIOS_COM_Init(&pios_com_debug_id, &pios_usb_cdc_com_driver, pios_usb_cdc_id,
-						NULL, 0,
-						tx_buffer, PIOS_COM_DEBUGCONSOLE_TX_BUF_LEN)) {
-				PIOS_Assert(0);
-			}
+	{
+		uint8_t * tx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_DEBUGCONSOLE_TX_BUF_LEN);
+		PIOS_Assert(tx_buffer);
+		if (PIOS_COM_Init(&pios_com_debug_id, &pios_usb_cdc_com_driver, pios_usb_cdc_id,
+		                  NULL, 0,
+		                  tx_buffer, PIOS_COM_DEBUGCONSOLE_TX_BUF_LEN)) {
+			PIOS_Assert(0);
 		}
+	}
 #endif	/* PIOS_INCLUDE_DEBUG_CONSOLE */
 #endif	/* PIOS_INCLUDE_COM */
-		break;
+	break;
 	}
 #endif	/* PIOS_INCLUDE_USB_CDC */
 
@@ -310,27 +312,27 @@ void PIOS_Board_Init(void) {
 		break;
 	case HWDISCOVERYF4_USB_HIDPORT_USBTELEMETRY:
 #if defined(PIOS_INCLUDE_COM)
-		{
-			uint8_t * rx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_TELEM_USB_RX_BUF_LEN);
-			uint8_t * tx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_TELEM_USB_TX_BUF_LEN);
-			PIOS_Assert(rx_buffer);
-			PIOS_Assert(tx_buffer);
-			if (PIOS_COM_Init(&pios_com_telem_usb_id, &pios_usb_hid_com_driver, pios_usb_hid_id,
-						rx_buffer, PIOS_COM_TELEM_USB_RX_BUF_LEN,
-						tx_buffer, PIOS_COM_TELEM_USB_TX_BUF_LEN)) {
-				PIOS_Assert(0);
-			}
+	{
+		uint8_t * rx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_TELEM_USB_RX_BUF_LEN);
+		uint8_t * tx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_TELEM_USB_TX_BUF_LEN);
+		PIOS_Assert(rx_buffer);
+		PIOS_Assert(tx_buffer);
+		if (PIOS_COM_Init(&pios_com_telem_usb_id, &pios_usb_hid_com_driver, pios_usb_hid_id,
+		                  rx_buffer, PIOS_COM_TELEM_USB_RX_BUF_LEN,
+		                  tx_buffer, PIOS_COM_TELEM_USB_TX_BUF_LEN)) {
+			PIOS_Assert(0);
 		}
+	}
 #endif	/* PIOS_INCLUDE_COM */
-		break;
+	break;
 	}
 
 #endif	/* PIOS_INCLUDE_USB_HID */
-	
+
 	if (usb_hid_present || usb_cdc_present) {
 		PIOS_USBHOOK_Activate();
 	}
-	
+
 #endif	/* PIOS_INCLUDE_USB */
 
 

@@ -1,9 +1,9 @@
 /**
  ******************************************************************************
  * @addtogroup TauLabsModules Tau Labs Modules
- * @{ 
+ * @{
  * @addtogroup GimbalControl GimbalControl Module
- * @{ 
+ * @{
  *
  * @file       gimbalcontrol.c
  * @author     Tau Labs, http://taulabs.org, Copyright (C) 2013-2014
@@ -90,13 +90,13 @@ int32_t GimbalControlStart(void)
 	if (module_enabled == false) {
 		return -1;
 	}
-	
+
 	// Start relay task
 	gimbalControlTaskHandle = PIOS_Thread_Create(
-			gimbalControlTask, "GimbalControl", STACK_SIZE_BYTES, NULL, TASK_PRIORITY);
+	                              gimbalControlTask, "GimbalControl", STACK_SIZE_BYTES, NULL, TASK_PRIORITY);
 
 	TaskMonitorAdd(TASKINFO_RUNNING_UAVORELAY, gimbalControlTaskHandle);
-	
+
 	return 0;
 }
 

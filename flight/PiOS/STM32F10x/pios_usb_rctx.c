@@ -120,8 +120,8 @@ static void PIOS_USB_RCTX_SendReport(struct pios_usb_rctx_dev * usb_rctx_dev)
 	usb_rctx_dev->report.id = 3; /* FIXME: shouldn't hard-code this report ID */
 
 	UserToPMABufferCopy((uint8_t *) &usb_rctx_dev->report,
-			GetEPTxAddr(usb_rctx_dev->cfg->data_tx_ep),
-			sizeof(usb_rctx_dev->report));
+	                    GetEPTxAddr(usb_rctx_dev->cfg->data_tx_ep),
+	                    sizeof(usb_rctx_dev->report));
 
 	SetEPTxCount(usb_rctx_dev->cfg->data_tx_ep, sizeof(usb_rctx_dev->report));
 	SetEPTxValid(usb_rctx_dev->cfg->data_tx_ep);
@@ -156,7 +156,7 @@ void PIOS_USB_RCTX_Update(uintptr_t usbrctx_id, const uint16_t channel[], const 
 		return;
 	}
 
-	for (uint8_t i = 0; 
+	for (uint8_t i = 0;
 	     i < PIOS_USB_RCTX_NUM_CHANNELS && i < num_channels;
 	     i++) {
 		int16_t min = channel_min[i];

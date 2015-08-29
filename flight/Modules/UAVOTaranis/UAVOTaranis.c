@@ -1,9 +1,9 @@
 /**
  ******************************************************************************
  * @addtogroup TauLabsModules TauLabs Modules
- * @{ 
+ * @{
  * @addtogroup UAVOTaranis UAVO to Taranis S.PORT converter
- * @{ 
+ * @{
  *
  * @file       uavoFrSKYSensorHubBridge.c
  * @author     Tau Labs, http://taulabs.org, Copyright (C) 2015
@@ -33,9 +33,9 @@
  * to listen for sensor requests and respond appropriately. This
  * code simply can spew data to the Taranis (since it is talking
  * to different harware). The scheduling system is reused between
- * the two, but duplicated because it isn't really part of the 
+ * the two, but duplicated because it isn't really part of the
  * packing, and touches on the private state of the state machine
- * code in the module 
+ * code in the module
  */
 
 #include "frsky_packing.h"
@@ -134,7 +134,7 @@ static bool frsky_encode_rssi(struct frsky_settings *frsky, uint32_t *value, boo
 	if (local_link_connected == RFM22BSTATUS_LINKSTATE_CONNECTED) {
 		// report whichever link quality is worse
 		*value = (rfm22bStatus.LinkQuality < local_link_quality) ? rfm22bStatus.LinkQuality : local_link_quality;
-		
+
 		// Rescale to values that match Taranis
 		if (*value < 64) {
 			*value = 0;
@@ -176,7 +176,7 @@ static void frsky_schedule_next_item(void)
 	for (i = 0; i < NELEMENTS(frsky_value_items); i++) {
 		if (frsky_value_items[i].encode_value(&frsky->frsky_settings, 0, true, frsky_value_items[i].fn_arg)) {
 			int32_t exp_time = PIOS_DELAY_GetuSSince(frsky->item_last_triggered[i]) -
-					(frsky_value_items[i].period_ms * 1000);
+			                   (frsky_value_items[i].period_ms * 1000);
 			if (exp_time > max_exp_time) {
 				max_exp_time = exp_time;
 				most_exp_item = i;
@@ -196,7 +196,7 @@ static bool frsky_send_scheduled_item(void)
 		frsky->item_last_triggered[item] = PIOS_DELAY_GetuS();
 		uint32_t value = 0;
 		if (frsky_value_items[item].encode_value(&frsky->frsky_settings, &value, false,
-				frsky_value_items[item].fn_arg)) {
+		        frsky_value_items[item].fn_arg)) {
 			frsky_send_frame(frsky->com, (uint16_t)(frsky_value_items[item].id), value);
 			return true;
 		}
@@ -215,10 +215,10 @@ static int32_t uavoTaranisStart(void)
 	if (module_enabled) {
 		// Start tasks
 		uavoTaranisTaskHandle = PIOS_Thread_Create(
-				uavoTaranisTask, "uavoFrSKYSensorHubBridge",
-				STACK_SIZE_BYTES, NULL, TASK_PRIORITY);
+		                            uavoTaranisTask, "uavoFrSKYSensorHubBridge",
+		                            STACK_SIZE_BYTES, NULL, TASK_PRIORITY);
 		TaskMonitorAdd(TASKINFO_RUNNING_UAVOFRSKYSBRIDGE,
-				uavoTaranisTaskHandle);
+		               uavoTaranisTaskHandle);
 		return 0;
 	}
 	return -1;
@@ -293,7 +293,7 @@ static void uavoTaranisTask(void *parameters)
 
 		}
 
-		if (false) { 
+		if (false) {
 
 			// fancier schedlued message sending. doesn't appear to work
 			// currently.

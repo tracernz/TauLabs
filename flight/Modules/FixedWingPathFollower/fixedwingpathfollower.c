@@ -8,7 +8,7 @@
  * @file       fixedwingpathfollower.c
  * @author     The OpenPilot Team, http://www.openpilot.org Copyright (C) 2010.
  * @author     Tau Labs, http://taulabs.org, Copyright (C) 2013-2014
- * @brief      This module compared @ref PositionActual to @ref PathDesired 
+ * @brief      This module compared @ref PositionActual to @ref PathDesired
  * and sets @ref StabilizationDesired.  It only does this when the FlightMode field
  * of @ref ManualControlCommand is Auto.
  *
@@ -162,9 +162,9 @@ static void pathfollowerTask(void *parameters)
 {
 	SystemSettingsData systemSettings;
 	FlightStatusData flightStatus;
-	
+
 	uint32_t lastUpdateTime;
-	
+
 	AirspeedActualConnectCallback(airspeedActualUpdatedCb);
 	FixedWingPathFollowerSettingsConnectCallback(SettingsUpdatedCb);
 	FixedWingAirspeedsConnectCallback(SettingsUpdatedCb);
@@ -172,7 +172,7 @@ static void pathfollowerTask(void *parameters)
 
 	// Force update of all the settings
 	SettingsUpdatedCb(NULL);
-	
+
 	FixedWingPathFollowerSettingsGet(&fixedwingpathfollowerSettings);
 	path_desired_updated = false;
 	PathDesiredGet(&pathDesired);
@@ -189,9 +189,8 @@ static void pathfollowerTask(void *parameters)
 
 		SystemSettingsGet(&systemSettings);
 		if ( (systemSettings.AirframeType != SYSTEMSETTINGS_AIRFRAMETYPE_FIXEDWING) &&
-			(systemSettings.AirframeType != SYSTEMSETTINGS_AIRFRAMETYPE_FIXEDWINGELEVON) &&
-			(systemSettings.AirframeType != SYSTEMSETTINGS_AIRFRAMETYPE_FIXEDWINGVTAIL) )
-		{
+		     (systemSettings.AirframeType != SYSTEMSETTINGS_AIRFRAMETYPE_FIXEDWINGELEVON) &&
+		     (systemSettings.AirframeType != SYSTEMSETTINGS_AIRFRAMETYPE_FIXEDWINGVTAIL) ) {
 			AlarmsSet(SYSTEMALARMS_ALARM_PATHFOLLOWER,SYSTEMALARMS_ALARM_CRITICAL);
 			PIOS_Thread_Sleep(1000);
 			continue;
@@ -211,7 +210,7 @@ static void pathfollowerTask(void *parameters)
 		// Check whether an update to the path desired occured and we should
 		// process it. This makes sure that the follower alarm state is
 		// updated.
-		bool process_path_desired_update = 
+		bool process_path_desired_update =
 		    (last_flight_mode == FLIGHTSTATUS_FLIGHTMODE_PATHPLANNER ||
 		     last_flight_mode == FLIGHTSTATUS_FLIGHTMODE_PATHPLANNER) &&
 		    path_desired_updated;
@@ -222,8 +221,8 @@ static void pathfollowerTask(void *parameters)
 		// each iteration must make sure this has the latest
 		// PathDesired
 		if (flightStatus.FlightMode != last_flight_mode ||
-			process_path_desired_update) {
-			
+		    process_path_desired_update) {
+
 			last_flight_mode = flightStatus.FlightMode;
 
 			switch(flightStatus.FlightMode) {
@@ -269,17 +268,17 @@ static void pathfollowerTask(void *parameters)
 
 				PathDesiredGet(&pathDesired);
 				switch(pathDesired.Mode) {
-					case PATHDESIRED_MODE_ENDPOINT:
-					case PATHDESIRED_MODE_VECTOR:
-					case PATHDESIRED_MODE_CIRCLERIGHT:
-					case PATHDESIRED_MODE_CIRCLELEFT:
-						break;
-					default:
-						state = FW_FOLLOWER_ERR;
-						pathStatus.Status = PATHSTATUS_STATUS_CRITICAL;
-						PathStatusSet(&pathStatus);
-						AlarmsSet(SYSTEMALARMS_ALARM_PATHFOLLOWER,SYSTEMALARMS_ALARM_CRITICAL);
-						break;
+				case PATHDESIRED_MODE_ENDPOINT:
+				case PATHDESIRED_MODE_VECTOR:
+				case PATHDESIRED_MODE_CIRCLERIGHT:
+				case PATHDESIRED_MODE_CIRCLELEFT:
+					break;
+				default:
+					state = FW_FOLLOWER_ERR;
+					pathStatus.Status = PATHSTATUS_STATUS_CRITICAL;
+					PathStatusSet(&pathStatus);
+					AlarmsSet(SYSTEMALARMS_ALARM_PATHFOLLOWER,SYSTEMALARMS_ALARM_CRITICAL);
+					break;
 				}
 				break;
 			default:
@@ -289,8 +288,7 @@ static void pathfollowerTask(void *parameters)
 		}
 
 		switch(state) {
-		case FW_FOLLOWER_RUNNING:
-		{
+		case FW_FOLLOWER_RUNNING: {
 			updatePathVelocity();
 			uint8_t result = updateFixedDesiredAttitude();
 			if (result) {
@@ -324,7 +322,7 @@ static void pathfollowerTask(void *parameters)
 /**
  * Compute desired velocity from the current position and path
  *
- * Takes in @ref PositionActual and compares it to @ref PathDesired 
+ * Takes in @ref PositionActual and compares it to @ref PathDesired
  * and computes @ref VelocityDesired
  */
 static void updatePathVelocity()
@@ -338,39 +336,39 @@ static void updatePathVelocity()
 	struct path_status progress;
 
 	path_progress(&pathDesired, cur, &progress);
-	
+
 	float groundspeed = 0;
 	float altitudeSetpoint = 0;
 	switch (pathDesired.Mode) {
-		case PATHDESIRED_MODE_CIRCLERIGHT:
-		case PATHDESIRED_MODE_CIRCLELEFT:
-			groundspeed = pathDesired.EndingVelocity;
-			altitudeSetpoint = pathDesired.End[2];
-			break;
-		case PATHDESIRED_MODE_ENDPOINT:
-		case PATHDESIRED_MODE_VECTOR:
-		default:
-			groundspeed = pathDesired.StartingVelocity + (pathDesired.EndingVelocity - pathDesired.StartingVelocity) *
-				bound_min_max(progress.fractional_progress,0,1);
-			altitudeSetpoint = pathDesired.Start[2] + (pathDesired.End[2] - pathDesired.Start[2]) *
-				bound_min_max(progress.fractional_progress,0,1);
-			break;
+	case PATHDESIRED_MODE_CIRCLERIGHT:
+	case PATHDESIRED_MODE_CIRCLELEFT:
+		groundspeed = pathDesired.EndingVelocity;
+		altitudeSetpoint = pathDesired.End[2];
+		break;
+	case PATHDESIRED_MODE_ENDPOINT:
+	case PATHDESIRED_MODE_VECTOR:
+	default:
+		groundspeed = pathDesired.StartingVelocity + (pathDesired.EndingVelocity - pathDesired.StartingVelocity) *
+		              bound_min_max(progress.fractional_progress,0,1);
+		altitudeSetpoint = pathDesired.Start[2] + (pathDesired.End[2] - pathDesired.Start[2]) *
+		                   bound_min_max(progress.fractional_progress,0,1);
+		break;
 	}
 	// this ensures a significant forward component at least close to the real trajectory
 	if (groundspeed<fixedWingAirspeeds.BestClimbRateSpeed/10.0f)
 		groundspeed=fixedWingAirspeeds.BestClimbRateSpeed/10.0f;
-	
+
 	// calculate velocity - can be zero if waypoints are too close
 	VelocityDesiredData velocityDesired;
 	velocityDesired.North = progress.path_direction[0] * groundspeed;
 	velocityDesired.East = progress.path_direction[1] * groundspeed;
-	
+
 	float error_speed = progress.error * fixedwingpathfollowerSettings.HorizontalPosP;
 
 	// calculate correction - can also be zero if correction vector is 0 or no error present
 	velocityDesired.North += progress.correction_direction[0] * error_speed;
 	velocityDesired.East += progress.correction_direction[1] * error_speed;
-	
+
 	float downError = altitudeSetpoint - positionActual.Down;
 	velocityDesired.Down = downError * fixedwingpathfollowerSettings.VerticalPosP;
 
@@ -392,8 +390,8 @@ static void updatePathVelocity()
 /**
  * Compute desired attitude from the desired velocity
  *
- * Takes in @ref NedActual which has the acceleration in the 
- * NED frame as the feedback term and then compares the 
+ * Takes in @ref NedActual which has the acceleration in the
+ * NED frame as the feedback term and then compares the
  * @ref VelocityActual against the @ref VelocityDesired
  */
 static uint8_t updateFixedDesiredAttitude()
@@ -409,13 +407,13 @@ static uint8_t updateFixedDesiredAttitude()
 	AttitudeActualData attitudeActual;
 	FixedWingPathFollowerStatusData fixedwingpathfollowerStatus;
 	AirspeedActualData airspeedActual;
-	
+
 	float groundspeedActual;
 	float groundspeedDesired;
 	float indicatedAirspeedActual;
 	float indicatedAirspeedDesired;
 	float airspeedError;
-	
+
 	float pitchCommand;
 
 	float descentspeedDesired;
@@ -427,7 +425,7 @@ static uint8_t updateFixedDesiredAttitude()
 	float bearingCommand;
 
 	FixedWingPathFollowerStatusGet(&fixedwingpathfollowerStatus);
-	
+
 	VelocityActualGet(&velocityActual);
 	StabilizationDesiredGet(&stabDesired);
 	VelocityDesiredGet(&velocityDesired);
@@ -449,17 +447,17 @@ static uint8_t updateFixedDesiredAttitude()
 	// Desired ground speed
 	groundspeedDesired = sqrtf(velocityDesired.North*velocityDesired.North + velocityDesired.East*velocityDesired.East);
 	indicatedAirspeedDesired = bound_min_max( groundspeedDesired + indicatedAirspeedActualBias,
-							fixedWingAirspeeds.BestClimbRateSpeed,
-							fixedWingAirspeeds.CruiseSpeed);
+	                           fixedWingAirspeeds.BestClimbRateSpeed,
+	                           fixedWingAirspeeds.CruiseSpeed);
 
 	// Airspeed error (positive means not enough airspeed)
 	airspeedError = indicatedAirspeedDesired - indicatedAirspeedActual;
 
 	// Vertical speed error
 	descentspeedDesired = bound_min_max (
-						velocityDesired.Down,
-						-fixedWingAirspeeds.VerticalVelMax,
-						fixedWingAirspeeds.VerticalVelMax);
+	                          velocityDesired.Down,
+	                          -fixedWingAirspeeds.VerticalVelMax,
+	                          fixedWingAirspeeds.VerticalVelMax);
 	descentspeedError = descentspeedDesired - velocityActual.Down;
 
 	// Error condition: wind speed is higher than maximum allowed speed. We are forced backwards!
@@ -491,7 +489,7 @@ static uint8_t updateFixedDesiredAttitude()
 		fixedwingpathfollowerStatus.Errors[FIXEDWINGPATHFOLLOWERSTATUS_ERRORS_STALLSPEED] = 1;
 		result = 0;
 	}
-	
+
 	if (indicatedAirspeedActual<1e-6f) {
 		// prevent division by zero, abort without controlling anything. This guidance mode is not suited for takeoff or touchdown, or handling stationary planes
 		// also we cannot handle planes flying backwards, lets just wait until the nose drops
@@ -506,27 +504,27 @@ static uint8_t updateFixedDesiredAttitude()
 	 */
 	// compute proportional throttle response
 	powerError = -descentspeedError +
-		bound_min_max(
-			 (airspeedError / fixedWingAirspeeds.BestClimbRateSpeed)* fixedwingpathfollowerSettings.AirspeedToVerticalCrossFeed[FIXEDWINGPATHFOLLOWERSETTINGS_AIRSPEEDTOVERTICALCROSSFEED_KP] ,
-			 -fixedwingpathfollowerSettings.AirspeedToVerticalCrossFeed[FIXEDWINGPATHFOLLOWERSETTINGS_AIRSPEEDTOVERTICALCROSSFEED_MAX],
-			 fixedwingpathfollowerSettings.AirspeedToVerticalCrossFeed[FIXEDWINGPATHFOLLOWERSETTINGS_AIRSPEEDTOVERTICALCROSSFEED_MAX]
-			 );
-	
+	             bound_min_max(
+	                 (airspeedError / fixedWingAirspeeds.BestClimbRateSpeed)* fixedwingpathfollowerSettings.AirspeedToVerticalCrossFeed[FIXEDWINGPATHFOLLOWERSETTINGS_AIRSPEEDTOVERTICALCROSSFEED_KP] ,
+	                 -fixedwingpathfollowerSettings.AirspeedToVerticalCrossFeed[FIXEDWINGPATHFOLLOWERSETTINGS_AIRSPEEDTOVERTICALCROSSFEED_MAX],
+	                 fixedwingpathfollowerSettings.AirspeedToVerticalCrossFeed[FIXEDWINGPATHFOLLOWERSETTINGS_AIRSPEEDTOVERTICALCROSSFEED_MAX]
+	             );
+
 	// compute saturated integral error throttle response. Make integral leaky for better performance. Approximately 30s time constant.
 	if (fixedwingpathfollowerSettings.PowerPI[FIXEDWINGPATHFOLLOWERSETTINGS_POWERPI_KI] >0) {
-		powerIntegral =	bound_min_max(powerIntegral + -descentspeedError * dT, 
-										-fixedwingpathfollowerSettings.PowerPI[FIXEDWINGPATHFOLLOWERSETTINGS_POWERPI_ILIMIT]/fixedwingpathfollowerSettings.PowerPI[FIXEDWINGPATHFOLLOWERSETTINGS_POWERPI_KI],
-										fixedwingpathfollowerSettings.PowerPI[FIXEDWINGPATHFOLLOWERSETTINGS_POWERPI_ILIMIT]/fixedwingpathfollowerSettings.PowerPI[FIXEDWINGPATHFOLLOWERSETTINGS_POWERPI_KI]
-										)*(1.0f-1.0f/(1.0f+30.0f/dT));
+		powerIntegral =	bound_min_max(powerIntegral + -descentspeedError * dT,
+		                              -fixedwingpathfollowerSettings.PowerPI[FIXEDWINGPATHFOLLOWERSETTINGS_POWERPI_ILIMIT]/fixedwingpathfollowerSettings.PowerPI[FIXEDWINGPATHFOLLOWERSETTINGS_POWERPI_KI],
+		                              fixedwingpathfollowerSettings.PowerPI[FIXEDWINGPATHFOLLOWERSETTINGS_POWERPI_ILIMIT]/fixedwingpathfollowerSettings.PowerPI[FIXEDWINGPATHFOLLOWERSETTINGS_POWERPI_KI]
+		                             )*(1.0f-1.0f/(1.0f+30.0f/dT));
 	} else
 		powerIntegral = 0;
-	
+
 	// Compute final throttle response
 	powerCommand = bound_min_max(
-			(powerError * fixedwingpathfollowerSettings.PowerPI[FIXEDWINGPATHFOLLOWERSETTINGS_POWERPI_KP] +
-			powerIntegral*	fixedwingpathfollowerSettings.PowerPI[FIXEDWINGPATHFOLLOWERSETTINGS_POWERPI_KI]) + fixedwingpathfollowerSettings.ThrottleLimit[FIXEDWINGPATHFOLLOWERSETTINGS_THROTTLELIMIT_NEUTRAL],
-			fixedwingpathfollowerSettings.ThrottleLimit[FIXEDWINGPATHFOLLOWERSETTINGS_THROTTLELIMIT_MIN],
-			fixedwingpathfollowerSettings.ThrottleLimit[FIXEDWINGPATHFOLLOWERSETTINGS_THROTTLELIMIT_MAX]);
+	                   (powerError * fixedwingpathfollowerSettings.PowerPI[FIXEDWINGPATHFOLLOWERSETTINGS_POWERPI_KP] +
+	                    powerIntegral*	fixedwingpathfollowerSettings.PowerPI[FIXEDWINGPATHFOLLOWERSETTINGS_POWERPI_KI]) + fixedwingpathfollowerSettings.ThrottleLimit[FIXEDWINGPATHFOLLOWERSETTINGS_THROTTLELIMIT_NEUTRAL],
+	                   fixedwingpathfollowerSettings.ThrottleLimit[FIXEDWINGPATHFOLLOWERSETTINGS_THROTTLELIMIT_MIN],
+	                   fixedwingpathfollowerSettings.ThrottleLimit[FIXEDWINGPATHFOLLOWERSETTINGS_THROTTLELIMIT_MAX]);
 
 	//Output internal state to telemetry
 	fixedwingpathfollowerStatus.Error[FIXEDWINGPATHFOLLOWERSTATUS_ERROR_POWER] = powerError;
@@ -539,24 +537,22 @@ static uint8_t updateFixedDesiredAttitude()
 	// Error condition: plane cannot hold altitude at current speed.
 	fixedwingpathfollowerStatus.Errors[FIXEDWINGPATHFOLLOWERSTATUS_ERRORS_LOWPOWER] = 0;
 	if (
-		powerCommand == fixedwingpathfollowerSettings.ThrottleLimit[FIXEDWINGPATHFOLLOWERSETTINGS_THROTTLELIMIT_MAX] // throttle at maximum
-		&& velocityActual.Down > 0 // we ARE going down
-		&& descentspeedDesired < 0 // we WANT to go up
-		&& airspeedError > 0 // we are too slow already
-		) 
-	{
+	    powerCommand == fixedwingpathfollowerSettings.ThrottleLimit[FIXEDWINGPATHFOLLOWERSETTINGS_THROTTLELIMIT_MAX] // throttle at maximum
+	    && velocityActual.Down > 0 // we ARE going down
+	    && descentspeedDesired < 0 // we WANT to go up
+	    && airspeedError > 0 // we are too slow already
+	) {
 		fixedwingpathfollowerStatus.Errors[FIXEDWINGPATHFOLLOWERSTATUS_ERRORS_LOWPOWER] = 1;
 		result = 0;
 	}
 	// Error condition: plane keeps climbing despite minimum throttle (opposite of above)
 	fixedwingpathfollowerStatus.Errors[FIXEDWINGPATHFOLLOWERSTATUS_ERRORS_HIGHPOWER] = 0;
 	if (
-		powerCommand == fixedwingpathfollowerSettings.ThrottleLimit[FIXEDWINGPATHFOLLOWERSETTINGS_THROTTLELIMIT_MIN] // throttle at minimum
-		&& velocityActual.Down < 0 // we ARE going up
-		&& descentspeedDesired > 0 // we WANT to go down
-		&& airspeedError < 0 // we are too fast already
-		) 
-	{
+	    powerCommand == fixedwingpathfollowerSettings.ThrottleLimit[FIXEDWINGPATHFOLLOWERSETTINGS_THROTTLELIMIT_MIN] // throttle at minimum
+	    && velocityActual.Down < 0 // we ARE going up
+	    && descentspeedDesired > 0 // we WANT to go down
+	    && airspeedError < 0 // we are too fast already
+	) {
 		fixedwingpathfollowerStatus.Errors[FIXEDWINGPATHFOLLOWERSTATUS_ERRORS_HIGHPOWER] = 1;
 		result = 0;
 	}
@@ -565,43 +561,43 @@ static uint8_t updateFixedDesiredAttitude()
 	/**
 	 * Compute desired pitch command
 	 */
-		
-	if (fixedwingpathfollowerSettings.SpeedPI[FIXEDWINGPATHFOLLOWERSETTINGS_SPEEDPI_KI] > 0){
+
+	if (fixedwingpathfollowerSettings.SpeedPI[FIXEDWINGPATHFOLLOWERSETTINGS_SPEEDPI_KI] > 0) {
 		//Integrate with saturation
-		airspeedErrorInt=bound_min_max(airspeedErrorInt + airspeedError * dT, 
-				-fixedwingpathfollowerSettings.SpeedPI[FIXEDWINGPATHFOLLOWERSETTINGS_SPEEDPI_ILIMIT]/fixedwingpathfollowerSettings.SpeedPI[FIXEDWINGPATHFOLLOWERSETTINGS_SPEEDPI_KI],
-				fixedwingpathfollowerSettings.SpeedPI[FIXEDWINGPATHFOLLOWERSETTINGS_SPEEDPI_ILIMIT]/fixedwingpathfollowerSettings.SpeedPI[FIXEDWINGPATHFOLLOWERSETTINGS_SPEEDPI_KI]);
+		airspeedErrorInt=bound_min_max(airspeedErrorInt + airspeedError * dT,
+		                               -fixedwingpathfollowerSettings.SpeedPI[FIXEDWINGPATHFOLLOWERSETTINGS_SPEEDPI_ILIMIT]/fixedwingpathfollowerSettings.SpeedPI[FIXEDWINGPATHFOLLOWERSETTINGS_SPEEDPI_KI],
+		                               fixedwingpathfollowerSettings.SpeedPI[FIXEDWINGPATHFOLLOWERSETTINGS_SPEEDPI_ILIMIT]/fixedwingpathfollowerSettings.SpeedPI[FIXEDWINGPATHFOLLOWERSETTINGS_SPEEDPI_KI]);
 	} else
 		airspeedErrorInt = 0;
-	
+
 	//Compute the cross feed from vertical speed to pitch, with saturation
 	float verticalSpeedToPitchCommandComponent=bound_min_max (-descentspeedError * fixedwingpathfollowerSettings.VerticalToPitchCrossFeed[FIXEDWINGPATHFOLLOWERSETTINGS_VERTICALTOPITCHCROSSFEED_KP],
-			 -fixedwingpathfollowerSettings.VerticalToPitchCrossFeed[FIXEDWINGPATHFOLLOWERSETTINGS_VERTICALTOPITCHCROSSFEED_MAX],
-			 fixedwingpathfollowerSettings.VerticalToPitchCrossFeed[FIXEDWINGPATHFOLLOWERSETTINGS_VERTICALTOPITCHCROSSFEED_MAX]
-			 );
-	
+	        -fixedwingpathfollowerSettings.VerticalToPitchCrossFeed[FIXEDWINGPATHFOLLOWERSETTINGS_VERTICALTOPITCHCROSSFEED_MAX],
+	        fixedwingpathfollowerSettings.VerticalToPitchCrossFeed[FIXEDWINGPATHFOLLOWERSETTINGS_VERTICALTOPITCHCROSSFEED_MAX]
+	                                                         );
+
 	//Compute the pitch command as err*Kp + errInt*Ki + X_feed.
-	pitchCommand= -(airspeedError*fixedwingpathfollowerSettings.SpeedPI[FIXEDWINGPATHFOLLOWERSETTINGS_SPEEDPI_KP] 
-						 + airspeedErrorInt*fixedwingpathfollowerSettings.SpeedPI[FIXEDWINGPATHFOLLOWERSETTINGS_SPEEDPI_KI]
-						 )	+ verticalSpeedToPitchCommandComponent;
-	
+	pitchCommand= -(airspeedError*fixedwingpathfollowerSettings.SpeedPI[FIXEDWINGPATHFOLLOWERSETTINGS_SPEEDPI_KP]
+	                + airspeedErrorInt*fixedwingpathfollowerSettings.SpeedPI[FIXEDWINGPATHFOLLOWERSETTINGS_SPEEDPI_KI]
+	               )	+ verticalSpeedToPitchCommandComponent;
+
 	fixedwingpathfollowerStatus.Error[FIXEDWINGPATHFOLLOWERSTATUS_ERROR_SPEED] = airspeedError;
 	fixedwingpathfollowerStatus.ErrorInt[FIXEDWINGPATHFOLLOWERSTATUS_ERRORINT_SPEED] = airspeedErrorInt;
 	fixedwingpathfollowerStatus.Command[FIXEDWINGPATHFOLLOWERSTATUS_COMMAND_SPEED] = pitchCommand;
 
 	stabDesired.Pitch = bound_min_max(fixedwingpathfollowerSettings.PitchLimit[FIXEDWINGPATHFOLLOWERSETTINGS_PITCHLIMIT_NEUTRAL] +
-		pitchCommand,
-		fixedwingpathfollowerSettings.PitchLimit[FIXEDWINGPATHFOLLOWERSETTINGS_PITCHLIMIT_MIN],
-		fixedwingpathfollowerSettings.PitchLimit[FIXEDWINGPATHFOLLOWERSETTINGS_PITCHLIMIT_MAX]);
+	                                  pitchCommand,
+	                                  fixedwingpathfollowerSettings.PitchLimit[FIXEDWINGPATHFOLLOWERSETTINGS_PITCHLIMIT_MIN],
+	                                  fixedwingpathfollowerSettings.PitchLimit[FIXEDWINGPATHFOLLOWERSETTINGS_PITCHLIMIT_MAX]);
 
 	// Error condition: high speed dive
 	fixedwingpathfollowerStatus.Errors[FIXEDWINGPATHFOLLOWERSTATUS_ERRORS_PITCHCONTROL] = 0;
 	if (
-		pitchCommand == fixedwingpathfollowerSettings.PitchLimit[FIXEDWINGPATHFOLLOWERSETTINGS_PITCHLIMIT_MAX] // pitch demand is full up
-		&& velocityActual.Down > 0 // we ARE going down
-		&& descentspeedDesired < 0 // we WANT to go up
-		&& airspeedError < 0 // we are too fast already
-		) {
+	    pitchCommand == fixedwingpathfollowerSettings.PitchLimit[FIXEDWINGPATHFOLLOWERSETTINGS_PITCHLIMIT_MAX] // pitch demand is full up
+	    && velocityActual.Down > 0 // we ARE going down
+	    && descentspeedDesired < 0 // we WANT to go up
+	    && airspeedError < 0 // we are too fast already
+	) {
 		fixedwingpathfollowerStatus.Errors[FIXEDWINGPATHFOLLOWERSTATUS_ERRORS_PITCHCONTROL] = 1;
 		result = 0;
 	}
@@ -616,24 +612,24 @@ static uint8_t updateFixedDesiredAttitude()
 		// if we are not supposed to move, keep going wherever we are now. Don't make things worse by changing direction.
 		bearingError = 0;
 	}
-	
+
 	if (bearingError<-180.0f) bearingError+=360.0f;
 	if (bearingError>180.0f) bearingError-=360.0f;
 
-	bearingIntegral = bound_min_max(bearingIntegral + bearingError * dT * fixedwingpathfollowerSettings.BearingPI[FIXEDWINGPATHFOLLOWERSETTINGS_BEARINGPI_KI], 
-		-fixedwingpathfollowerSettings.BearingPI[FIXEDWINGPATHFOLLOWERSETTINGS_BEARINGPI_ILIMIT],
-		fixedwingpathfollowerSettings.BearingPI[FIXEDWINGPATHFOLLOWERSETTINGS_BEARINGPI_ILIMIT]);
+	bearingIntegral = bound_min_max(bearingIntegral + bearingError * dT * fixedwingpathfollowerSettings.BearingPI[FIXEDWINGPATHFOLLOWERSETTINGS_BEARINGPI_KI],
+	                                -fixedwingpathfollowerSettings.BearingPI[FIXEDWINGPATHFOLLOWERSETTINGS_BEARINGPI_ILIMIT],
+	                                fixedwingpathfollowerSettings.BearingPI[FIXEDWINGPATHFOLLOWERSETTINGS_BEARINGPI_ILIMIT]);
 	bearingCommand = (bearingError * fixedwingpathfollowerSettings.BearingPI[FIXEDWINGPATHFOLLOWERSETTINGS_BEARINGPI_KP] +
-		bearingIntegral);
+	                  bearingIntegral);
 
 	fixedwingpathfollowerStatus.Error[FIXEDWINGPATHFOLLOWERSTATUS_ERROR_BEARING] = bearingError;
 	fixedwingpathfollowerStatus.ErrorInt[FIXEDWINGPATHFOLLOWERSTATUS_ERRORINT_BEARING] = bearingIntegral;
 	fixedwingpathfollowerStatus.Command[FIXEDWINGPATHFOLLOWERSTATUS_COMMAND_BEARING] = bearingCommand;
-	
+
 	stabDesired.Roll = bound_min_max( fixedwingpathfollowerSettings.RollLimit[FIXEDWINGPATHFOLLOWERSETTINGS_ROLLLIMIT_NEUTRAL] +
-		bearingCommand,
-		fixedwingpathfollowerSettings.RollLimit[FIXEDWINGPATHFOLLOWERSETTINGS_ROLLLIMIT_MIN],
-		fixedwingpathfollowerSettings.RollLimit[FIXEDWINGPATHFOLLOWERSETTINGS_ROLLLIMIT_MAX] );
+	                                  bearingCommand,
+	                                  fixedwingpathfollowerSettings.RollLimit[FIXEDWINGPATHFOLLOWERSETTINGS_ROLLLIMIT_MIN],
+	                                  fixedwingpathfollowerSettings.RollLimit[FIXEDWINGPATHFOLLOWERSETTINGS_ROLLLIMIT_MAX] );
 
 	// TODO: find a check to determine loss of directional control. Likely needs some check of derivative
 
@@ -648,7 +644,7 @@ static uint8_t updateFixedDesiredAttitude()
 	stabDesired.StabilizationMode[STABILIZATIONDESIRED_STABILIZATIONMODE_ROLL] = STABILIZATIONDESIRED_STABILIZATIONMODE_ATTITUDE;
 	stabDesired.StabilizationMode[STABILIZATIONDESIRED_STABILIZATIONMODE_PITCH] = STABILIZATIONDESIRED_STABILIZATIONMODE_ATTITUDE;
 	stabDesired.StabilizationMode[STABILIZATIONDESIRED_STABILIZATIONMODE_YAW] = STABILIZATIONDESIRED_STABILIZATIONMODE_NONE;
-	
+
 	if (isnan(stabDesired.Roll) || isnan(stabDesired.Pitch) || isnan(stabDesired.Yaw) || isnan(stabDesired.Throttle)) {
 		northVelIntegral = 0;
 		eastVelIntegral = 0;
@@ -687,7 +683,7 @@ static void airspeedActualUpdatedCb(UAVObjEvent * ev)
 	VelocityActualGet(&velocityActual);
 	float groundspeed = sqrtf(velocityActual.East*velocityActual.East + velocityActual.North*velocityActual.North );
 
-	
+
 	indicatedAirspeedActualBias = airspeedActual.CalibratedAirspeed - groundspeed;
 	// note - we do fly by Indicated Airspeed (== calibrated airspeed)
 	// however since airspeed is updated less often than groundspeed, we use sudden changes to groundspeed to offset the airspeed by the same measurement.

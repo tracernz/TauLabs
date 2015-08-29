@@ -6,26 +6,26 @@
  * @brief PIOS System Initialization code
  * @{
  *
- * @file       pios_sys.c  
+ * @file       pios_sys.c
  * @author     The OpenPilot Team, http://www.openpilot.org Copyright (C) 2010.
  * 	        Parts by Thorsten Klose (tk@midibox.org) (tk@midibox.org)
  * @brief      Sets up basic STM32 system hardware, functions are called from Main.
  * @see        The GNU Public License (GPL) Version 3
  *
  *****************************************************************************/
-/* 
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 3 of the License, or 
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
  * for more details.
- * 
- * You should have received a copy of the GNU General Public License along 
- * with this program; if not, write to the Free Software Foundation, Inc., 
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
@@ -40,26 +40,28 @@
 
 static bool debug_fpe=false;
 
-static void Usage(char *cmdName) {
+static void Usage(char *cmdName)
+{
 	printf( "usage: %s [-f]\n"
-		"\n"
-		"\t-f\tEnables floating point exception trapping mode\n",
-		cmdName);
+	        "\n"
+	        "\t-f\tEnables floating point exception trapping mode\n",
+	        cmdName);
 
 	exit(1);
 }
 
-void PIOS_SYS_Args(int argc, char *argv[]) {
+void PIOS_SYS_Args(int argc, char *argv[])
+{
 	int opt;
 
 	while ((opt = getopt(argc, argv, "f")) != -1) {
 		switch (opt) {
-			case 'f':
-				debug_fpe=true;
-				break;
-			default:
-				Usage(argv[0]);
-				break;
+		case 'f':
+			debug_fpe=true;
+			break;
+		default:
+			Usage(argv[0]);
+			break;
 		}
 	}
 
@@ -110,7 +112,7 @@ void PIOS_SYS_Init(void)
 		// mode?
 #ifndef __APPLE__
 		feenableexcept(FE_DIVBYZERO | FE_UNDERFLOW | FE_OVERFLOW |
-			FE_INVALID);
+		               FE_INVALID);
 #else
 		// XXX need the right magic
 		printf("UNABLE TO DBEUG FPE ON OSX!\n");

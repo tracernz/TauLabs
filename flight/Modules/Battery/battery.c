@@ -131,7 +131,7 @@ static void batteryTask(void * parameters)
 		// handle voltage
 		if (voltageADCPin >= 0) {
 			flightBatteryData.Voltage = ((float) PIOS_ADC_GetChannelVolt(voltageADCPin)) / batterySettings.SensorCalibrationFactor[FLIGHTBATTERYSETTINGS_SENSORCALIBRATIONFACTOR_VOLTAGE] * 1000.0f +
-							batterySettings.SensorCalibrationOffset[FLIGHTBATTERYSETTINGS_SENSORCALIBRATIONOFFSET_VOLTAGE]; //in Volts
+			                            batterySettings.SensorCalibrationOffset[FLIGHTBATTERYSETTINGS_SENSORCALIBRATIONOFFSET_VOLTAGE]; //in Volts
 
 			// generate alarms and warnings
 			if (flightBatteryData.Voltage < batterySettings.VoltageThresholds[FLIGHTBATTERYSETTINGS_VOLTAGETHRESHOLDS_ALARM])
@@ -147,7 +147,7 @@ static void batteryTask(void * parameters)
 		// handle current
 		if (currentADCPin >= 0) {
 			flightBatteryData.Current = ((float) PIOS_ADC_GetChannelVolt(currentADCPin)) / batterySettings.SensorCalibrationFactor[FLIGHTBATTERYSETTINGS_SENSORCALIBRATIONFACTOR_CURRENT] * 1000.0f +
-							batterySettings.SensorCalibrationOffset[FLIGHTBATTERYSETTINGS_SENSORCALIBRATIONOFFSET_CURRENT]; //in Amps
+			                            batterySettings.SensorCalibrationOffset[FLIGHTBATTERYSETTINGS_SENSORCALIBRATIONOFFSET_CURRENT]; //in Amps
 			if (flightBatteryData.Current > flightBatteryData.PeakCurrent)
 				flightBatteryData.PeakCurrent = flightBatteryData.Current; //in Amps
 
@@ -165,10 +165,10 @@ static void batteryTask(void * parameters)
 
 			// generate alarms and warnings
 			if ((batterySettings.FlightTimeThresholds[FLIGHTBATTERYSETTINGS_FLIGHTTIMETHRESHOLDS_ALARM] > 0)
-				&& (flightBatteryData.EstimatedFlightTime < batterySettings.FlightTimeThresholds[FLIGHTBATTERYSETTINGS_FLIGHTTIMETHRESHOLDS_ALARM]))
+			    && (flightBatteryData.EstimatedFlightTime < batterySettings.FlightTimeThresholds[FLIGHTBATTERYSETTINGS_FLIGHTTIMETHRESHOLDS_ALARM]))
 				AlarmsSet(SYSTEMALARMS_ALARM_FLIGHTTIME, SYSTEMALARMS_ALARM_CRITICAL);
 			else if ((batterySettings.FlightTimeThresholds[FLIGHTBATTERYSETTINGS_FLIGHTTIMETHRESHOLDS_WARNING] > 0)
-					 && (flightBatteryData.EstimatedFlightTime < batterySettings.FlightTimeThresholds[FLIGHTBATTERYSETTINGS_FLIGHTTIMETHRESHOLDS_WARNING]))
+			         && (flightBatteryData.EstimatedFlightTime < batterySettings.FlightTimeThresholds[FLIGHTBATTERYSETTINGS_FLIGHTTIMETHRESHOLDS_WARNING]))
 				AlarmsSet(SYSTEMALARMS_ALARM_FLIGHTTIME, SYSTEMALARMS_ALARM_WARNING);
 			else
 				AlarmsClear(SYSTEMALARMS_ALARM_FLIGHTTIME);

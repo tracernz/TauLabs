@@ -1,9 +1,9 @@
 /**
  ******************************************************************************
  * @addtogroup TauLabsModules Tau Labs Modules
- * @{ 
+ * @{
  * @addtogroup PathPlannerModule Path Planner Module
- * @{ 
+ * @{
  *
  * @file       pathplanner.c
  * @author     Tau Labs, http://taulabs.org, Copyright (C) 2013-2014
@@ -155,8 +155,7 @@ static void pathPlannerTask(void *parameters)
 	pathStatusUpdated(NULL);
 	path_completed = false;
 
-	while (1)
-	{
+	while (1) {
 
 		// Make sure when flight mode toggles, to immediately update the path
 		UAVObjEvent ev;
@@ -227,7 +226,7 @@ static void pathStatusUpdated(UAVObjEvent * ev)
 	PathStatusGet(&pathStatus);
 
 	if ((pathStatus.Status == PATHSTATUS_STATUS_COMPLETED) &&
-			(pathStatus.Waypoint == active_waypoint)) {
+	    (pathStatus.Waypoint == active_waypoint)) {
 		path_completed = true;
 	}
 }
@@ -285,7 +284,8 @@ static void holdPosition(uint32_t idx)
 	PathDesiredSet(&pathDesired);
 }
 
-static bool waypointValid(int32_t idx) {
+static bool waypointValid(int32_t idx)
+{
 	if (idx < 0) return false;
 
 	if (idx >= UAVObjGetNumInstances(WaypointHandle())) {
@@ -315,7 +315,7 @@ static void advanceWaypoint()
 	// conditional logic desired here.
 	// Note: In the case of conditional logic it is the responsibilty of the implementer
 	// to ensure all possible paths are valid.
-	
+
 	int32_t next_waypoint = waypointActive.Index + 1;
 
 	if (!waypointValid(next_waypoint)) {
@@ -363,25 +363,25 @@ static void activateWaypoint(int idx)
 	// Use this to ensure the cases match up (catastrophic if not) and to cover any cases
 	// that don't make sense to come from the path planner
 	switch(waypoint.Mode) {
-		case WAYPOINT_MODE_VECTOR:
-			pathDesired.Mode = PATHDESIRED_MODE_VECTOR;
-			break;
-		case WAYPOINT_MODE_ENDPOINT:
-			pathDesired.Mode = PATHDESIRED_MODE_ENDPOINT;
-			break;
-		case WAYPOINT_MODE_CIRCLELEFT:
-			pathDesired.Mode = PATHDESIRED_MODE_CIRCLELEFT;
-			break;
-		case WAYPOINT_MODE_CIRCLERIGHT:
-			pathDesired.Mode = PATHDESIRED_MODE_CIRCLERIGHT;
-			break;
-		case WAYPOINT_MODE_LAND:
-			pathDesired.Mode = PATHDESIRED_MODE_LAND;
-			break;
-		default:
-			holdCurrentPosition();
-			AlarmsSet(SYSTEMALARMS_ALARM_PATHPLANNER, SYSTEMALARMS_ALARM_ERROR);
-			return;
+	case WAYPOINT_MODE_VECTOR:
+		pathDesired.Mode = PATHDESIRED_MODE_VECTOR;
+		break;
+	case WAYPOINT_MODE_ENDPOINT:
+		pathDesired.Mode = PATHDESIRED_MODE_ENDPOINT;
+		break;
+	case WAYPOINT_MODE_CIRCLELEFT:
+		pathDesired.Mode = PATHDESIRED_MODE_CIRCLELEFT;
+		break;
+	case WAYPOINT_MODE_CIRCLERIGHT:
+		pathDesired.Mode = PATHDESIRED_MODE_CIRCLERIGHT;
+		break;
+	case WAYPOINT_MODE_LAND:
+		pathDesired.Mode = PATHDESIRED_MODE_LAND;
+		break;
+	default:
+		holdCurrentPosition();
+		AlarmsSet(SYSTEMALARMS_ALARM_PATHPLANNER, SYSTEMALARMS_ALARM_ERROR);
+		return;
 	}
 
 	pathDesired.EndingVelocity = waypoint.Velocity;
@@ -414,7 +414,8 @@ static void activateWaypoint(int idx)
 	AlarmsClear(SYSTEMALARMS_ALARM_PATHPLANNER);
 }
 
-void settingsUpdated(UAVObjEvent * ev) {
+void settingsUpdated(UAVObjEvent * ev)
+{
 	uint8_t preprogrammedPath = pathPlannerSettings.PreprogrammedPath;
 	int32_t retval = 0;
 	bool    operation = false;
@@ -466,14 +467,14 @@ void settingsUpdated(UAVObjEvent * ev) {
 	if (pathPlannerSettings.PreprogrammedPath != preprogrammedPath &&
 	    pathPlannerSettings.FlashOperation == PATHPLANNERSETTINGS_FLASHOPERATION_NONE) {
 		switch(pathPlannerSettings.PreprogrammedPath) {
-			case PATHPLANNERSETTINGS_PREPROGRAMMEDPATH_NONE:
-				break;
-			case PATHPLANNERSETTINGS_PREPROGRAMMEDPATH_10M_BOX:
-				createPathBox();
-				break;
-			case PATHPLANNERSETTINGS_PREPROGRAMMEDPATH_LOGO:
-				createPathLogo();
-				break;
+		case PATHPLANNERSETTINGS_PREPROGRAMMEDPATH_NONE:
+			break;
+		case PATHPLANNERSETTINGS_PREPROGRAMMEDPATH_10M_BOX:
+			createPathBox();
+			break;
+		case PATHPLANNERSETTINGS_PREPROGRAMMEDPATH_LOGO:
+			createPathLogo();
+			break;
 
 		}
 	}

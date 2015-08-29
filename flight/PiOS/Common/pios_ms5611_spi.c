@@ -162,7 +162,7 @@ int32_t PIOS_MS5611_SPI_Init(uint32_t spi_id, uint32_t slave_num, const struct p
 	PIOS_SENSORS_Register(PIOS_SENSOR_BARO, dev->queue);
 
 	dev->task = PIOS_Thread_Create(
-			PIOS_MS5611_Task, "pios_ms5611", MS5611_TASK_STACK_BYTES, NULL, MS5611_TASK_PRIORITY);
+	                PIOS_MS5611_Task, "pios_ms5611", MS5611_TASK_STACK_BYTES, NULL, MS5611_TASK_PRIORITY);
 	PIOS_Assert(dev->task != NULL);
 
 	return 0;
@@ -432,9 +432,9 @@ int32_t PIOS_MS5611_SPI_Test()
 
 	// check range for sanity according to datasheet
 	if (dev->temperature_unscaled < -4000 ||
-		dev->temperature_unscaled > 8500 ||
-		dev->pressure_unscaled < 1000 ||
-		dev->pressure_unscaled > 120000)
+	    dev->temperature_unscaled > 8500 ||
+	    dev->pressure_unscaled < 1000 ||
+	    dev->pressure_unscaled > 120000)
 		return -1;
 
 	return 0;
@@ -450,8 +450,7 @@ static void PIOS_MS5611_Task(void *parameters)
 
 		--temp_press_interleave_count;
 
-		if (temp_press_interleave_count == 0)
-		{
+		if (temp_press_interleave_count == 0) {
 			// Update the temperature data
 			PIOS_MS5611_ClaimDevice();
 			PIOS_MS5611_StartADC(TEMPERATURE_CONV);

@@ -9,7 +9,7 @@
  * @author     Tau Labs, http://taulabs.org, Copyright (C) 2012-2013
  * @brief      Board header file for Sparky BGC board.
  * @see        The GNU Public License (GPL) Version 3
- * 
+ *
  *****************************************************************************/
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -122,7 +122,7 @@ extern uintptr_t pios_com_debug_id;
 
 //-------------------------
 // System Settings
-// 
+//
 // See also system_stm32f30x.c
 //-------------------------
 //These macros are deprecated

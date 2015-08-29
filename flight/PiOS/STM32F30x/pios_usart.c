@@ -6,26 +6,26 @@
  * @brief PIOS interface for USART port
  * @{
  *
- * @file       pios_usart.c   
+ * @file       pios_usart.c
  * @author     The OpenPilot Team, http://www.openpilot.org Copyright (C) 2012.
  * @author     Tau Labs, http://taulabs.org, Copyright (C) 2012-2014
  * @brief      USART commands. Inits USARTs, controls USARTs & Interupt handlers. (STM32 dependent)
  * @see        The GNU Public License (GPL) Version 3
  *
  *****************************************************************************/
-/* 
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 3 of the License, or 
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
  * for more details.
- * 
- * You should have received a copy of the GNU General Public License along 
- * with this program; if not, write to the Free Software Foundation, Inc., 
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
@@ -198,12 +198,12 @@ int32_t PIOS_USART_Init(uintptr_t * usart_id, const struct pios_usart_cfg * cfg)
 	if (usart_dev->cfg->remap) {
 		if (usart_dev->cfg->rx.gpio != 0)
 			GPIO_PinAFConfig(usart_dev->cfg->rx.gpio,
-				usart_dev->cfg->rx.pin_source,
-				usart_dev->cfg->remap);
+			                 usart_dev->cfg->rx.pin_source,
+			                 usart_dev->cfg->remap);
 		if (usart_dev->cfg->tx.gpio != 0)
 			GPIO_PinAFConfig(usart_dev->cfg->tx.gpio,
-				usart_dev->cfg->tx.pin_source,
-				usart_dev->cfg->remap);
+			                 usart_dev->cfg->tx.pin_source,
+			                 usart_dev->cfg->remap);
 	}
 
 	/* Initialize the USART Rx and Tx pins */
@@ -274,19 +274,19 @@ out_fail:
 static void PIOS_USART_RxStart(uintptr_t usart_id, uint16_t rx_bytes_avail)
 {
 	struct pios_usart_dev * usart_dev = (struct pios_usart_dev *)usart_id;
-	
+
 	bool valid = PIOS_USART_validate(usart_dev);
 	PIOS_Assert(valid);
-	
+
 	USART_ITConfig(usart_dev->cfg->regs, USART_IT_RXNE, ENABLE);
 }
 static void PIOS_USART_TxStart(uintptr_t usart_id, uint16_t tx_bytes_avail)
 {
 	struct pios_usart_dev * usart_dev = (struct pios_usart_dev *)usart_id;
-	
+
 	bool valid = PIOS_USART_validate(usart_dev);
 	PIOS_Assert(valid);
-	
+
 	USART_ITConfig(usart_dev->cfg->regs, USART_IT_TXE, ENABLE);
 }
 
@@ -325,8 +325,8 @@ static void PIOS_USART_RegisterRxCallback(uintptr_t usart_id, pios_com_callback 
 
 	bool valid = PIOS_USART_validate(usart_dev);
 	PIOS_Assert(valid);
-	
-	/* 
+
+	/*
 	 * Order is important in these assignments since ISR uses _cb
 	 * field to determine if it's ok to dereference _cb and _context
 	 */
@@ -340,8 +340,8 @@ static void PIOS_USART_RegisterTxCallback(uintptr_t usart_id, pios_com_callback 
 
 	bool valid = PIOS_USART_validate(usart_dev);
 	PIOS_Assert(valid);
-	
-	/* 
+
+	/*
 	 * Order is important in these assignments since ISR uses _cb
 	 * field to determine if it's ok to dereference _cb and _context
 	 */
@@ -358,7 +358,7 @@ static void PIOS_USART_generic_irq_handler(uintptr_t usart_id)
 
 	bool valid = PIOS_USART_validate(usart_dev);
 	PIOS_Assert(valid);
-	
+
 	/* Check if RXNE flag is set */
 	if (USART_GetITStatus(usart_dev->cfg->regs, USART_IT_RXNE)) {
 		uint8_t byte = (uint8_t)USART_ReceiveData(usart_dev->cfg->regs);
@@ -371,9 +371,9 @@ static void PIOS_USART_generic_irq_handler(uintptr_t usart_id)
 		if (usart_dev->tx_out_cb) {
 			uint8_t b;
 			uint16_t bytes_to_send;
-			
+
 			bytes_to_send = (usart_dev->tx_out_cb)(usart_dev->tx_out_context, &b, 1, NULL, &tx_need_yield);
-			
+
 			if (bytes_to_send > 0) {
 				/* Send the byte we've been given */
 				USART_SendData(usart_dev->cfg->regs, b);
@@ -395,7 +395,7 @@ static void PIOS_USART_generic_irq_handler(uintptr_t usart_id)
 		USART_ClearITPendingBit(usart_dev->cfg->regs, USART_IT_ORE);
 		++usart_dev->error_overruns;
 	}
-	
+
 #if defined(PIOS_INCLUDE_FREERTOS)
 	portEND_SWITCHING_ISR((rx_need_yield || tx_need_yield) ? pdTRUE : pdFALSE);
 #endif	/* defined(PIOS_INCLUDE_FREERTOS) */

@@ -5,12 +5,12 @@
  * @addtogroup FlyingF3 FlyingF3 support files
  * @{
  *
- * @file       board_hw_defs.c 
+ * @file       board_hw_defs.c
  * @author     Tau Labs, http://taulabs.org, Copyright (C) 2012-2013
  * @brief      Defines board specific static initializers for hardware for the
  *             flying f3 board.
  * @see        The GNU Public License (GPL) Version 3
- * 
+ *
  *****************************************************************************/
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -27,7 +27,7 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
- 
+
 #include <pios_config.h>
 #include <pios_board_info.h>
 
@@ -212,15 +212,16 @@ static const struct pios_spi_cfg pios_spi_internal_cfg = {
 	},
 	.slave_count = 1,
 	.ssel = { {
-		.gpio = GPIOE,
-		.init = {
-			.GPIO_Pin = GPIO_Pin_3,
-			.GPIO_Speed = GPIO_Speed_50MHz,
-			.GPIO_Mode  = GPIO_Mode_OUT,
-			.GPIO_OType = GPIO_OType_PP,
-			.GPIO_PuPd = GPIO_PuPd_UP
-		},
-	} },
+			.gpio = GPIOE,
+			.init = {
+				.GPIO_Pin = GPIO_Pin_3,
+				.GPIO_Speed = GPIO_Speed_50MHz,
+				.GPIO_Mode  = GPIO_Mode_OUT,
+				.GPIO_OType = GPIO_OType_PP,
+				.GPIO_PuPd = GPIO_PuPd_UP
+			},
+		}
+	},
 };
 
 uint32_t pios_spi_internal_id;
@@ -592,71 +593,71 @@ void I2C1_EV_EXTI23_IRQHandler() __attribute__ ((alias ("PIOS_I2C_internal_ev_ir
 void I2C1_ER_IRQHandler() __attribute__ ((alias ("PIOS_I2C_internal_er_irq_handler")));
 
 static const struct pios_i2c_adapter_cfg pios_i2c_internal_cfg = {
-  .regs = I2C1,
-  .remap = GPIO_AF_4,
-  .init = {
-    .I2C_Mode                = I2C_Mode_I2C,
-    .I2C_OwnAddress1         = 0,
-    .I2C_Ack                 = I2C_Ack_Enable,
-    .I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit,
-    .I2C_DigitalFilter       = 0x00,
-    .I2C_AnalogFilter        = I2C_AnalogFilter_Enable,
-    .I2C_Timing              = 0x00310309,			//400kHz I2C @ 8MHz input -> PRESC=0x0, SCLDEL=0x3, SDADEL=0x1, SCLH=0x03, SCLL=0x09
-  },
-  .transfer_timeout_ms = 50,
-  .scl = {
-    .gpio = GPIOB,
-    .init = {
+	.regs = I2C1,
+	.remap = GPIO_AF_4,
+	.init = {
+		.I2C_Mode                = I2C_Mode_I2C,
+		.I2C_OwnAddress1         = 0,
+		.I2C_Ack                 = I2C_Ack_Enable,
+		.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit,
+		.I2C_DigitalFilter       = 0x00,
+		.I2C_AnalogFilter        = I2C_AnalogFilter_Enable,
+		.I2C_Timing              = 0x00310309,			//400kHz I2C @ 8MHz input -> PRESC=0x0, SCLDEL=0x3, SDADEL=0x1, SCLH=0x03, SCLL=0x09
+	},
+	.transfer_timeout_ms = 50,
+	.scl = {
+		.gpio = GPIOB,
+		.init = {
 			.GPIO_Pin = GPIO_Pin_6,
-            .GPIO_Mode  = GPIO_Mode_AF,
-            .GPIO_Speed = GPIO_Speed_50MHz,
-            .GPIO_OType = GPIO_OType_PP,
-            .GPIO_PuPd  = GPIO_PuPd_NOPULL,
-    },
-	.pin_source = GPIO_PinSource6,
-  },
-  .sda = {
-    .gpio = GPIOB,
-    .init = {
+			.GPIO_Mode  = GPIO_Mode_AF,
+			.GPIO_Speed = GPIO_Speed_50MHz,
+			.GPIO_OType = GPIO_OType_PP,
+			.GPIO_PuPd  = GPIO_PuPd_NOPULL,
+		},
+		.pin_source = GPIO_PinSource6,
+	},
+	.sda = {
+		.gpio = GPIOB,
+		.init = {
 			.GPIO_Pin = GPIO_Pin_7,
-            .GPIO_Mode  = GPIO_Mode_AF,
-            .GPIO_Speed = GPIO_Speed_50MHz,
-            .GPIO_OType = GPIO_OType_PP,
-            .GPIO_PuPd  = GPIO_PuPd_NOPULL,
-    },
-	.pin_source = GPIO_PinSource7,
-  },
-  .event = {
-    .flags   = 0,		/* FIXME: check this */
-    .init = {
+			.GPIO_Mode  = GPIO_Mode_AF,
+			.GPIO_Speed = GPIO_Speed_50MHz,
+			.GPIO_OType = GPIO_OType_PP,
+			.GPIO_PuPd  = GPIO_PuPd_NOPULL,
+		},
+		.pin_source = GPIO_PinSource7,
+	},
+	.event = {
+		.flags   = 0,		/* FIXME: check this */
+		.init = {
 			.NVIC_IRQChannel = I2C1_EV_IRQn,
 			.NVIC_IRQChannelPreemptionPriority = PIOS_IRQ_PRIO_HIGHEST,
 			.NVIC_IRQChannelSubPriority = 0,
 			.NVIC_IRQChannelCmd = ENABLE,
-    },
-  },
-  .error = {
-    .flags   = 0,		/* FIXME: check this */
-    .init = {
+		},
+	},
+	.error = {
+		.flags   = 0,		/* FIXME: check this */
+		.init = {
 			.NVIC_IRQChannel = I2C1_ER_IRQn,
 			.NVIC_IRQChannelPreemptionPriority = PIOS_IRQ_PRIO_HIGHEST,
 			.NVIC_IRQChannelSubPriority = 0,
 			.NVIC_IRQChannelCmd = ENABLE,
-    },
-  },
+		},
+	},
 };
 
 uint32_t pios_i2c_internal_id;
 void PIOS_I2C_internal_ev_irq_handler(void)
 {
-  /* Call into the generic code to handle the IRQ for this specific device */
-  PIOS_I2C_EV_IRQ_Handler(pios_i2c_internal_id);
+	/* Call into the generic code to handle the IRQ for this specific device */
+	PIOS_I2C_EV_IRQ_Handler(pios_i2c_internal_id);
 }
 
 void PIOS_I2C_internal_er_irq_handler(void)
 {
-  /* Call into the generic code to handle the IRQ for this specific device */
-  PIOS_I2C_ER_IRQ_Handler(pios_i2c_internal_id);
+	/* Call into the generic code to handle the IRQ for this specific device */
+	PIOS_I2C_ER_IRQ_Handler(pios_i2c_internal_id);
 }
 
 
@@ -667,71 +668,71 @@ void I2C2_EV_EXTI24_IRQHandler() __attribute__ ((alias ("PIOS_I2C_external_ev_ir
 void I2C2_ER_IRQHandler() __attribute__ ((alias ("PIOS_I2C_external_er_irq_handler")));
 
 static const struct pios_i2c_adapter_cfg pios_i2c_external_cfg = {
-  .regs = I2C2,
-  .remap = GPIO_AF_4,
-  .init = {
-    .I2C_Mode                = I2C_Mode_I2C,
-    .I2C_OwnAddress1         = 0,
-    .I2C_Ack                 = I2C_Ack_Enable,
-    .I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit,
-    .I2C_DigitalFilter       = 0x00,
-    .I2C_AnalogFilter        = I2C_AnalogFilter_Enable,
-    .I2C_Timing              = 0x00310309,			//400kHz I2C @ 8MHz input -> PRESC=0x0, SCLDEL=0x3, SDADEL=0x1, SCLH=0x03, SCLL=0x09
-  },
-  .transfer_timeout_ms = 50,
-  .scl = {
-    .gpio = GPIOF,
-    .init = {
+	.regs = I2C2,
+	.remap = GPIO_AF_4,
+	.init = {
+		.I2C_Mode                = I2C_Mode_I2C,
+		.I2C_OwnAddress1         = 0,
+		.I2C_Ack                 = I2C_Ack_Enable,
+		.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit,
+		.I2C_DigitalFilter       = 0x00,
+		.I2C_AnalogFilter        = I2C_AnalogFilter_Enable,
+		.I2C_Timing              = 0x00310309,			//400kHz I2C @ 8MHz input -> PRESC=0x0, SCLDEL=0x3, SDADEL=0x1, SCLH=0x03, SCLL=0x09
+	},
+	.transfer_timeout_ms = 50,
+	.scl = {
+		.gpio = GPIOF,
+		.init = {
 			.GPIO_Pin = GPIO_Pin_6,
-            .GPIO_Mode  = GPIO_Mode_AF,
-            .GPIO_Speed = GPIO_Speed_50MHz,
-            .GPIO_OType = GPIO_OType_PP,
-            .GPIO_PuPd  = GPIO_PuPd_NOPULL,
-    },
-	.pin_source = GPIO_PinSource6,
-  },
-  .sda = {
-    .gpio = GPIOA,
-    .init = {
+			.GPIO_Mode  = GPIO_Mode_AF,
+			.GPIO_Speed = GPIO_Speed_50MHz,
+			.GPIO_OType = GPIO_OType_PP,
+			.GPIO_PuPd  = GPIO_PuPd_NOPULL,
+		},
+		.pin_source = GPIO_PinSource6,
+	},
+	.sda = {
+		.gpio = GPIOA,
+		.init = {
 			.GPIO_Pin = GPIO_Pin_10,
-            .GPIO_Mode  = GPIO_Mode_AF,
-            .GPIO_Speed = GPIO_Speed_50MHz,
-            .GPIO_OType = GPIO_OType_PP,
-            .GPIO_PuPd  = GPIO_PuPd_NOPULL,
-    },
-	.pin_source = GPIO_PinSource10,
-  },
-  .event = {
-    .flags   = 0,		/* FIXME: check this */
-    .init = {
+			.GPIO_Mode  = GPIO_Mode_AF,
+			.GPIO_Speed = GPIO_Speed_50MHz,
+			.GPIO_OType = GPIO_OType_PP,
+			.GPIO_PuPd  = GPIO_PuPd_NOPULL,
+		},
+		.pin_source = GPIO_PinSource10,
+	},
+	.event = {
+		.flags   = 0,		/* FIXME: check this */
+		.init = {
 			.NVIC_IRQChannel = I2C2_EV_IRQn,
 			.NVIC_IRQChannelPreemptionPriority = PIOS_IRQ_PRIO_HIGHEST,
 			.NVIC_IRQChannelSubPriority = 0,
 			.NVIC_IRQChannelCmd = ENABLE,
-    },
-  },
-  .error = {
-    .flags   = 0,		/* FIXME: check this */
-    .init = {
+		},
+	},
+	.error = {
+		.flags   = 0,		/* FIXME: check this */
+		.init = {
 			.NVIC_IRQChannel = I2C2_ER_IRQn,
 			.NVIC_IRQChannelPreemptionPriority = PIOS_IRQ_PRIO_HIGHEST,
 			.NVIC_IRQChannelSubPriority = 0,
 			.NVIC_IRQChannelCmd = ENABLE,
-    },
-  },
+		},
+	},
 };
 
 uint32_t pios_i2c_external_id;
 void PIOS_I2C_external_ev_irq_handler(void)
 {
-  /* Call into the generic code to handle the IRQ for this specific device */
-  PIOS_I2C_EV_IRQ_Handler(pios_i2c_external_id);
+	/* Call into the generic code to handle the IRQ for this specific device */
+	PIOS_I2C_EV_IRQ_Handler(pios_i2c_external_id);
 }
 
 void PIOS_I2C_external_er_irq_handler(void)
 {
-  /* Call into the generic code to handle the IRQ for this specific device */
-  PIOS_I2C_ER_IRQ_Handler(pios_i2c_external_id);
+	/* Call into the generic code to handle the IRQ for this specific device */
+	PIOS_I2C_ER_IRQ_Handler(pios_i2c_external_id);
 }
 
 #endif /* PIOS_INCLUDE_I2C */
@@ -741,30 +742,30 @@ void PIOS_I2C_external_er_irq_handler(void)
 struct pios_can_cfg pios_can_cfg = {
 	.regs = CAN1,
 	.init = {
-  		.CAN_Prescaler = 16,   /*!< Specifies the length of a time quantum. 
+		.CAN_Prescaler = 16,   /*!< Specifies the length of a time quantum.
                                  It ranges from 1 to 1024. */
-  		.CAN_Mode = CAN_Mode_Normal,         /*!< Specifies the CAN operating mode.
+		.CAN_Mode = CAN_Mode_Normal,         /*!< Specifies the CAN operating mode.
                                  This parameter can be a value of @ref CAN_operating_mode */
-  		.CAN_SJW = CAN_SJW_1tq,          /*!< Specifies the maximum number of time quanta 
-                                 the CAN hardware is allowed to lengthen or 
+		.CAN_SJW = CAN_SJW_1tq,          /*!< Specifies the maximum number of time quanta
+                                 the CAN hardware is allowed to lengthen or
                                  shorten a bit to perform resynchronization.
                                  This parameter can be a value of @ref CAN_synchronisation_jump_width */
-  		.CAN_BS1 = CAN_BS1_9tq,          /*!< Specifies the number of time quanta in Bit 
-                                 Segment 1. This parameter can be a value of 
+		.CAN_BS1 = CAN_BS1_9tq,          /*!< Specifies the number of time quanta in Bit
+                                 Segment 1. This parameter can be a value of
                                  @ref CAN_time_quantum_in_bit_segment_1 */
-  		.CAN_BS2 = CAN_BS2_8tq,          /*!< Specifies the number of time quanta in Bit Segment 2.
+		.CAN_BS2 = CAN_BS2_8tq,          /*!< Specifies the number of time quanta in Bit Segment 2.
                                  This parameter can be a value of @ref CAN_time_quantum_in_bit_segment_2 */
-  		.CAN_TTCM = DISABLE, /*!< Enable or disable the time triggered communication mode.
+		.CAN_TTCM = DISABLE, /*!< Enable or disable the time triggered communication mode.
                                 This parameter can be set either to ENABLE or DISABLE. */
-  		.CAN_ABOM = DISABLE,  /*!< Enable or disable the automatic bus-off management.
+		.CAN_ABOM = DISABLE,  /*!< Enable or disable the automatic bus-off management.
                                   This parameter can be set either to ENABLE or DISABLE. */
-  		.CAN_AWUM = DISABLE,  /*!< Enable or disable the automatic wake-up mode. 
+		.CAN_AWUM = DISABLE,  /*!< Enable or disable the automatic wake-up mode.
                                   This parameter can be set either to ENABLE or DISABLE. */
-  		.CAN_NART = ENABLE,  /*!< Enable or disable the non-automatic retransmission mode.
+		.CAN_NART = ENABLE,  /*!< Enable or disable the non-automatic retransmission mode.
                                   This parameter can be set either to ENABLE or DISABLE. */
-  		.CAN_RFLM  = DISABLE,  /*!< Enable or disable the Receive FIFO Locked mode.
+		.CAN_RFLM  = DISABLE,  /*!< Enable or disable the Receive FIFO Locked mode.
                                   This parameter can be set either to ENABLE or DISABLE. */
-  		.CAN_TXFP = DISABLE,  /*!< Enable or disable the transmit FIFO priority.
+		.CAN_TXFP = DISABLE,  /*!< Enable or disable the transmit FIFO priority.
                                   This parameter can be set either to ENABLE or DISABLE. */
 	},
 	.remap = GPIO_AF_7,
@@ -1175,7 +1176,7 @@ static const struct pios_usart_cfg pios_usart1_sbus_cfg = {
 			.NVIC_IRQChannelPreemptionPriority = PIOS_IRQ_PRIO_HIGHEST,
 			.NVIC_IRQChannelSubPriority        = 0,
 			.NVIC_IRQChannelCmd                = ENABLE,
-		  },
+		},
 	},
 	.rxtx_swap = true,
 	.rx = {
@@ -1214,7 +1215,7 @@ static const struct pios_usart_cfg pios_usart2_sbus_cfg = {
 			.NVIC_IRQChannelPreemptionPriority = PIOS_IRQ_PRIO_HIGHEST,
 			.NVIC_IRQChannelSubPriority        = 0,
 			.NVIC_IRQChannelCmd                = ENABLE,
-		  },
+		},
 	},
 	.rx = {
 		.gpio = GPIOD,
@@ -1252,7 +1253,7 @@ static const struct pios_usart_cfg pios_usart3_sbus_cfg = {
 			.NVIC_IRQChannelPreemptionPriority = PIOS_IRQ_PRIO_HIGHEST,
 			.NVIC_IRQChannelSubPriority        = 0,
 			.NVIC_IRQChannelCmd                = ENABLE,
-		  },
+		},
 	},
 	.rx = {
 		.gpio = GPIOD,
@@ -1290,7 +1291,7 @@ static const struct pios_usart_cfg pios_usart4_sbus_cfg = {
 			.NVIC_IRQChannelPreemptionPriority = PIOS_IRQ_PRIO_HIGHEST,
 			.NVIC_IRQChannelSubPriority        = 0,
 			.NVIC_IRQChannelCmd                = ENABLE,
-		  },
+		},
 	},
 	.rx = {
 		.gpio = GPIOC,
@@ -1328,7 +1329,7 @@ static const struct pios_usart_cfg pios_usart5_sbus_cfg = {
 			.NVIC_IRQChannelPreemptionPriority = PIOS_IRQ_PRIO_HIGHEST,
 			.NVIC_IRQChannelSubPriority        = 0,
 			.NVIC_IRQChannelCmd                = ENABLE,
-		  },
+		},
 	},
 	.rx = {
 		.gpio = GPIOD,
@@ -2726,16 +2727,16 @@ static const struct pios_internal_adc_cfg internal_adc_cfg_rcflyer_shield = {
 		.irq = {
 			.flags   = (DMA_IT_TC | DMA_IT_HT | DMA_IT_TE),
 			.init    = {
-			.NVIC_IRQChannel                   = DMA1_Channel1_IRQn,
-			.NVIC_IRQChannelPreemptionPriority = PIOS_IRQ_PRIO_HIGH,
-			.NVIC_IRQChannelSubPriority        = 0,
-			.NVIC_IRQChannelCmd                = ENABLE,
+				.NVIC_IRQChannel                   = DMA1_Channel1_IRQn,
+				.NVIC_IRQChannelPreemptionPriority = PIOS_IRQ_PRIO_HIGH,
+				.NVIC_IRQChannelSubPriority        = 0,
+				.NVIC_IRQChannelCmd                = ENABLE,
 			},
 		},
 		.rx = {
 			.channel = DMA1_Channel1,
 			.init    = {
-			.DMA_Priority           = DMA_Priority_High,
+				.DMA_Priority           = DMA_Priority_High,
 			},
 		}
 	},

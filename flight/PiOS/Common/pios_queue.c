@@ -59,8 +59,7 @@ struct pios_queue *PIOS_Queue_Create(size_t queue_length, size_t item_size)
 
 	queuep->queue_handle = (uintptr_t)NULL;
 
-	if ((queuep->queue_handle = (uintptr_t)xQueueCreate(queue_length, item_size)) == (uintptr_t)NULL)
-	{
+	if ((queuep->queue_handle = (uintptr_t)xQueueCreate(queue_length, item_size)) == (uintptr_t)NULL) {
 		PIOS_free(queuep);
 		return NULL;
 	}
@@ -209,8 +208,7 @@ bool PIOS_Queue_Send(struct pios_queue *queuep, const void *itemp, uint32_t time
 
 	msg_t result = chMBPost(&queuep->mb, (msg_t)buf, timeout);
 
-	if (result != RDY_OK)
-	{
+	if (result != RDY_OK) {
 		chPoolFree(&queuep->mp, buf);
 		return false;
 	}
@@ -233,8 +231,7 @@ bool PIOS_Queue_Send_FromISR(struct pios_queue *queuep, const void *itemp, bool 
 {
 	chSysLockFromIsr();
 	void *buf = chPoolAllocI(&queuep->mp);
-	if (buf == NULL)
-	{
+	if (buf == NULL) {
 		chSysUnlockFromIsr();
 		return false;
 	}
@@ -243,8 +240,7 @@ bool PIOS_Queue_Send_FromISR(struct pios_queue *queuep, const void *itemp, bool 
 
 	msg_t result = chMBPostI(&queuep->mb, (msg_t)buf);
 
-	if (result != RDY_OK)
-	{
+	if (result != RDY_OK) {
 		chPoolFreeI(&queuep->mp, buf);
 		chSysUnlockFromIsr();
 		return false;

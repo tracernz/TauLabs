@@ -13,19 +13,19 @@
  *
  ******************************************************************************
  */
-/* 
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 3 of the License, or 
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
  * for more details.
- * 
- * You should have received a copy of the GNU General Public License along 
- * with this program; if not, write to the Free Software Foundation, Inc., 
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
@@ -75,12 +75,12 @@ static struct hmc5883_dev *dev;
 static struct hmc5883_dev * PIOS_HMC5883_alloc(void)
 {
 	struct hmc5883_dev *hmc5883_dev;
-	
+
 	hmc5883_dev = (struct hmc5883_dev *)PIOS_malloc(sizeof(*hmc5883_dev));
 	if (!hmc5883_dev) return (NULL);
-	
+
 	hmc5883_dev->magic = PIOS_HMC5883_DEV_MAGIC;
-	
+
 	hmc5883_dev->queue = PIOS_Queue_Create(PIOS_HMC5883_MAX_DOWNSAMPLE, sizeof(struct pios_sensor_mag_data));
 	if (hmc5883_dev->queue == NULL) {
 		PIOS_free(hmc5883_dev);
@@ -96,7 +96,7 @@ static struct hmc5883_dev * PIOS_HMC5883_alloc(void)
  */
 static int32_t PIOS_HMC5883_Validate(struct hmc5883_dev *dev)
 {
-	if (dev == NULL) 
+	if (dev == NULL)
 		return -1;
 	if (dev->magic != PIOS_HMC5883_DEV_MAGIC)
 		return -2;
@@ -125,8 +125,7 @@ int32_t PIOS_HMC5883_Init(uint32_t i2c_id, const struct pios_hmc5883_cfg *cfg)
 
 		dev->data_ready_sema = PIOS_Semaphore_Create();
 		PIOS_Assert(dev->data_ready_sema != NULL);
-	}
-	else {
+	} else {
 		dev->data_ready_sema = NULL;
 	}
 
@@ -220,15 +219,15 @@ static int32_t PIOS_HMC5883_Config(const struct pios_hmc5883_cfg * cfg)
 	// CRTL_REGA
 	if (PIOS_HMC5883_Write(PIOS_HMC5883_CONFIG_REG_A, cfg->M_ODR | cfg->Meas_Conf) != 0)
 		return -1;
-	
+
 	// CRTL_REGB
 	if (PIOS_HMC5883_Write(PIOS_HMC5883_CONFIG_REG_B, cfg->Gain) != 0)
 		return -1;
-	
+
 	// Mode register
 	if (PIOS_HMC5883_Write(PIOS_HMC5883_MODE_REG, cfg->Mode) != 0)
 		return -1;
-	
+
 	return 0;
 }
 
@@ -319,48 +318,48 @@ static int32_t PIOS_HMC5883_ReadMag(struct pios_sensor_mag_data *mag_data)
 
 	// Define "0" when the fiducial is in the front left of the board
 	switch (dev->orientation) {
-		case PIOS_HMC5883_TOP_0DEG:
-			mag_data->x = -mag_x;
-			mag_data->y = mag_y;
-			mag_data->z = -mag_z;
-			break;
-		case PIOS_HMC5883_TOP_90DEG:
-			mag_data->x = -mag_y;
-			mag_data->y = -mag_x;
-			mag_data->z = -mag_z;
-			break;
-		case PIOS_HMC5883_TOP_180DEG:
-			mag_data->x = mag_x;
-			mag_data->y = -mag_y;
-			mag_data->z = -mag_z;
-			break;
-		case PIOS_HMC5883_TOP_270DEG:
-			mag_data->x = mag_y;
-			mag_data->y = mag_x;
-			mag_data->z = -mag_z;
-			break;
-		case PIOS_HMC5883_BOTTOM_0DEG:
-			mag_data->x = -mag_x;
-			mag_data->y = -mag_y;
-			mag_data->z = mag_z;
-			break;
-		case PIOS_HMC5883_BOTTOM_90DEG:
-			mag_data->x = -mag_y;
-			mag_data->y = mag_x;
-			mag_data->z = mag_z;
-			break;
-		case PIOS_HMC5883_BOTTOM_180DEG:
-			mag_data->x = mag_x;
-			mag_data->y = mag_y;
-			mag_data->z = mag_z;
-			break;
-		case PIOS_HMC5883_BOTTOM_270DEG:
-			mag_data->x = mag_y;
-			mag_data->y = -mag_x;
-			mag_data->z = mag_z;
-			break;
+	case PIOS_HMC5883_TOP_0DEG:
+		mag_data->x = -mag_x;
+		mag_data->y = mag_y;
+		mag_data->z = -mag_z;
+		break;
+	case PIOS_HMC5883_TOP_90DEG:
+		mag_data->x = -mag_y;
+		mag_data->y = -mag_x;
+		mag_data->z = -mag_z;
+		break;
+	case PIOS_HMC5883_TOP_180DEG:
+		mag_data->x = mag_x;
+		mag_data->y = -mag_y;
+		mag_data->z = -mag_z;
+		break;
+	case PIOS_HMC5883_TOP_270DEG:
+		mag_data->x = mag_y;
+		mag_data->y = mag_x;
+		mag_data->z = -mag_z;
+		break;
+	case PIOS_HMC5883_BOTTOM_0DEG:
+		mag_data->x = -mag_x;
+		mag_data->y = -mag_y;
+		mag_data->z = mag_z;
+		break;
+	case PIOS_HMC5883_BOTTOM_90DEG:
+		mag_data->x = -mag_y;
+		mag_data->y = mag_x;
+		mag_data->z = mag_z;
+		break;
+	case PIOS_HMC5883_BOTTOM_180DEG:
+		mag_data->x = mag_x;
+		mag_data->y = mag_y;
+		mag_data->z = mag_z;
+		break;
+	case PIOS_HMC5883_BOTTOM_270DEG:
+		mag_data->x = mag_y;
+		mag_data->y = -mag_x;
+		mag_data->z = mag_z;
+		break;
 	}
-	
+
 	return 0;
 }
 
@@ -395,7 +394,7 @@ static int32_t PIOS_HMC5883_Read(uint8_t address, uint8_t * buffer, uint8_t len)
 	uint8_t addr_buffer[] = {
 		address,
 	};
-	
+
 	const struct pios_i2c_txn txn_list[] = {
 		{
 			.info = __func__,
@@ -413,7 +412,7 @@ static int32_t PIOS_HMC5883_Read(uint8_t address, uint8_t * buffer, uint8_t len)
 			.buf = buffer,
 		}
 	};
-	
+
 	return PIOS_I2C_Transfer(dev->i2c_id, txn_list, NELEMENTS(txn_list));
 }
 
@@ -434,7 +433,7 @@ static int32_t PIOS_HMC5883_Write(uint8_t address, uint8_t buffer)
 		address,
 		buffer,
 	};
-	
+
 	const struct pios_i2c_txn txn_list[] = {
 		{
 			.info = __func__,

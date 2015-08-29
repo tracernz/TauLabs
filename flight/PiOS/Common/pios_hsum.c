@@ -56,7 +56,7 @@
  *  SUMD_CRC         (N_Channels+1)*2+2 CRC Low Byte   0x00..0xff Low Byte of 16 Bit CRC
  *  SUMH_Telemetry   (N_Channels+1)*2+1 Telemetry_Req  0x00..0xff 0x00 no telemetry request
  *  SUMH_CRC         (N_Channels+1)*2+2 CRC Byte       0x00..0xff Low Byte of all added data bytes
- 
+
  * Channel Data Interpretation
  *  Stick Positon    Channel Data Remark
  *  ext. low (-150%) 0x1c20       900µs
@@ -64,7 +64,7 @@
  *  neutral (0%)     0x2ee0       1500µs
  *  high (100%)      0x3b60       1900µs
  *  ext. high(150%)  0x41a0       2100µs
- 
+
  * Channel Mapping (not sure)
  *  1 Pitch
  *  2 Aileron
@@ -90,10 +90,10 @@
 /* Forward Declarations */
 static int32_t PIOS_HSUM_Get(uintptr_t rcvr_id, uint8_t channel);
 static uint16_t PIOS_HSUM_RxInCallback(uintptr_t context,
-				       uint8_t *buf,
-				       uint16_t buf_len,
-				       uint16_t *headroom,
-				       bool *need_yield);
+                                       uint8_t *buf,
+                                       uint16_t buf_len,
+                                       uint16_t *headroom,
+                                       bool *need_yield);
 static void PIOS_HSUM_Supervisor(uintptr_t hsum_id);
 
 /* Local Variables */
@@ -239,7 +239,7 @@ static int PIOS_HSUM_UnrollChannels(struct pios_hsum_dev *hsum_dev)
 		PIOS_HSUM_ResetChannels(hsum_dev);
 		return 0;
 	}
-	
+
 	/* unroll channels */
 	uint8_t n_channels = state->received_data[2];
 	uint8_t *s = &(state->received_data[3]);

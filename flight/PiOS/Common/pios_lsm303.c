@@ -43,7 +43,7 @@
 /* Global Variables */
 
 enum pios_lsm303_dev_magic {
-    PIOS_LSM303_DEV_MAGIC = 0xef8e9e1d,
+	PIOS_LSM303_DEV_MAGIC = 0xef8e9e1d,
 };
 
 #define PIOS_LSM303_MAX_QUEUESIZE 2
@@ -175,7 +175,7 @@ int32_t PIOS_LSM303_Init(uint32_t i2c_id, const struct pios_lsm303_cfg *cfg)
 	PIOS_LSM303_Config(cfg);
 
 	pios_lsm303_dev->TaskHandle = PIOS_Thread_Create(
-			PIOS_LSM303_Task, "pios_lsm303", LSM303_TASK_STACK_BYTES, NULL, LSM303_TASK_PRIORITY);
+	                                  PIOS_LSM303_Task, "pios_lsm303", LSM303_TASK_STACK_BYTES, NULL, LSM303_TASK_PRIORITY);
 	PIOS_Assert(pios_lsm303_dev->TaskHandle != NULL);
 
 	/* Set up EXTI line */

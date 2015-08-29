@@ -1,9 +1,9 @@
 /**
  ******************************************************************************
  * @addtogroup TauLabsModules Tau Labs Modules
- * @{ 
+ * @{
  * @addtogroup ComUsbBridgeModule Com Port to USB VCP Bridge Module
- * @{ 
+ * @{
  *
  * @file       ComUsbBridge.c
  * @author     The OpenPilot Team, http://www.openpilot.org Copyright (C) 2011.
@@ -209,4 +209,4 @@ static void updateSettings()
  * @}
  * @}
  */
- 
+

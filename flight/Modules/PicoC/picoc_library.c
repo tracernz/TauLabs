@@ -1,9 +1,9 @@
 /**
  ******************************************************************************
  * @addtogroup TauLabsModules TauLabs Modules
- * @{ 
+ * @{
  * @addtogroup PicoC Interpreter Module
- * @{ 
+ * @{
  *
  * @file       picoc_library.c
  * @author     Tau Labs, http://taulabs.org, Copyright (C) 2014
@@ -46,7 +46,7 @@ bool security(int neededlevel)
 {
 
 	if (accesslevel < neededlevel)
-		// access level is insufficient 
+		// access level is insufficient
 		return false;
 
 	FlightStatusData data;
@@ -65,7 +65,7 @@ bool security(int neededlevel)
 /**
  * string.h
  */
- #ifndef NO_STRING_FUNCTIONS
+#ifndef NO_STRING_FUNCTIONS
 void LibStrcpy(struct ParseState *Parser, struct Value *ReturnValue, struct Value **Param, int NumArgs)
 {
 	char *To = (char *)Param[0]->Val->Pointer;
@@ -96,10 +96,14 @@ void LibStrcmp(struct ParseState *Parser, struct Value *ReturnValue, struct Valu
 	char *Str2 = (char *)Param[1]->Val->Pointer;
 	int StrEnded;
 
-	for (StrEnded = FALSE; !StrEnded; StrEnded = (*Str1 == '\0' || *Str2 == '\0'), Str1++, Str2++)
-	{
-		if (*Str1 < *Str2) { ReturnValue->Val->Integer = -1; return; } 
-		else if (*Str1 > *Str2) { ReturnValue->Val->Integer = 1; return; }
+	for (StrEnded = FALSE; !StrEnded; StrEnded = (*Str1 == '\0' || *Str2 == '\0'), Str1++, Str2++) {
+		if (*Str1 < *Str2) {
+			ReturnValue->Val->Integer = -1;
+			return;
+		} else if (*Str1 > *Str2) {
+			ReturnValue->Val->Integer = 1;
+			return;
+		}
 	}
 	ReturnValue->Val->Integer = 0;
 }
@@ -111,10 +115,14 @@ void LibStrncmp(struct ParseState *Parser, struct Value *ReturnValue, struct Val
 	int Len = Param[2]->Val->Integer;
 	int StrEnded;
 
-	for (StrEnded = FALSE; !StrEnded && Len > 0; StrEnded = (*Str1 == '\0' || *Str2 == '\0'), Str1++, Str2++, Len--)
-	{
-		if (*Str1 < *Str2) { ReturnValue->Val->Integer = -1; return; } 
-		else if (*Str1 > *Str2) { ReturnValue->Val->Integer = 1; return; }
+	for (StrEnded = FALSE; !StrEnded && Len > 0; StrEnded = (*Str1 == '\0' || *Str2 == '\0'), Str1++, Str2++, Len--) {
+		if (*Str1 < *Str2) {
+			ReturnValue->Val->Integer = -1;
+			return;
+		} else if (*Str1 > *Str2) {
+			ReturnValue->Val->Integer = 1;
+			return;
+		}
 	}
 	ReturnValue->Val->Integer = 0;
 }
@@ -153,8 +161,7 @@ void LibRindex(struct ParseState *Parser, struct Value *ReturnValue, struct Valu
 	int SearchChar = Param[1]->Val->Integer;
 
 	ReturnValue->Val->Pointer = NULL;
-	for (; *Pos != '\0'; Pos++)
-	{
+	for (; *Pos != '\0'; Pos++) {
 		if (*Pos == SearchChar)
 			ReturnValue->Val->Pointer = Pos;
 	}
@@ -168,12 +175,11 @@ void LibStrlen(struct ParseState *Parser, struct Value *ReturnValue, struct Valu
 	for (Len = 0; *Pos != '\0'; Pos++)
 		Len++;
 
-	 ReturnValue->Val->Integer = Len;
+	ReturnValue->Val->Integer = Len;
 }
 
 /* list of all library functions and their prototypes */
-struct LibraryFunction PlatformLibrary_string[] =
-{
+struct LibraryFunction PlatformLibrary_string[] = {
 	{ LibStrcpy,	"void strcpy(char *,char *);" },
 	{ LibStrncpy,	"void strncpy(char *,char *,int);" },
 	{ LibStrcmp,	"int strcmp(char *,char *);" },
@@ -283,8 +289,7 @@ void LibFloor(struct ParseState *Parser, struct Value *ReturnValue, struct Value
 }
 
 /* list of all library functions and their prototypes */
-struct LibraryFunction PlatformLibrary_math[] =
-{
+struct LibraryFunction PlatformLibrary_math[] = {
 	{ LibSin,		"float sin(float);" },
 	{ LibCos,		"float cos(float);" },
 	{ LibTan,		"float tan(float);" },
@@ -551,28 +556,27 @@ void SystemI2CRead(struct ParseState *Parser, struct Value *ReturnValue, struct 
 
 	switch(Param[0]->Val->Integer) {
 #if defined(PIOS_I2C_ADAPTER_0)
-		case 0:
-			i2c_adapter = PIOS_I2C_ADAPTER_0;
-			break;
+	case 0:
+		i2c_adapter = PIOS_I2C_ADAPTER_0;
+		break;
 #endif
 #if defined(PIOS_I2C_ADAPTER_1)
-		case 1:
-			i2c_adapter = PIOS_I2C_ADAPTER_1;
-			break;
+	case 1:
+		i2c_adapter = PIOS_I2C_ADAPTER_1;
+		break;
 #endif
 #if defined(PIOS_I2C_ADAPTER_2)
-		case 2:
-			i2c_adapter = PIOS_I2C_ADAPTER_2;
-			break;
+	case 2:
+		i2c_adapter = PIOS_I2C_ADAPTER_2;
+		break;
 #endif
-		default:
-			i2c_adapter = 0;
+	default:
+		i2c_adapter = 0;
 	}
 
 	if ((i2c_adapter) && (Param[2]->Val->Pointer != NULL)) {
 		ReturnValue->Val->Integer = PIOS_I2C_Transfer(i2c_adapter, txn_list, NELEMENTS(txn_list));
-	}
-	else {
+	} else {
 		ReturnValue->Val->Integer = -1;
 	}
 }
@@ -593,28 +597,27 @@ void SystemI2CWrite(struct ParseState *Parser, struct Value *ReturnValue, struct
 
 	switch(Param[0]->Val->Integer) {
 #if defined(PIOS_I2C_ADAPTER_0)
-		case 0:
-			i2c_adapter = PIOS_I2C_ADAPTER_0;
-			break;
+	case 0:
+		i2c_adapter = PIOS_I2C_ADAPTER_0;
+		break;
 #endif
 #if defined(PIOS_I2C_ADAPTER_1)
-		case 1:
-			i2c_adapter = PIOS_I2C_ADAPTER_1;
-			break;
+	case 1:
+		i2c_adapter = PIOS_I2C_ADAPTER_1;
+		break;
 #endif
 #if defined(PIOS_I2C_ADAPTER_2)
-		case 2:
-			i2c_adapter = PIOS_I2C_ADAPTER_2;
-			break;
+	case 2:
+		i2c_adapter = PIOS_I2C_ADAPTER_2;
+		break;
 #endif
-		default:
-			i2c_adapter = 0;
+	default:
+		i2c_adapter = 0;
 	}
 
 	if ((i2c_adapter) && (Param[2]->Val->Pointer != NULL)) {
 		ReturnValue->Val->Integer = PIOS_I2C_Transfer(i2c_adapter, txn_list, NELEMENTS(txn_list));
-	}
-	else {
+	} else {
 		ReturnValue->Val->Integer = -1;
 	}
 }
@@ -627,18 +630,17 @@ void SystemI2CWrite(struct ParseState *Parser, struct Value *ReturnValue, struct
 /*unsigned int command: 0=reset_pin , 1=set_pin, 2=toggle_pin*/
 void SystemGPIOWrite(struct ParseState *Parser, struct Value *ReturnValue, struct Value **Param, int NumArgs)
 {
-	if (Param[0]->Val->UnsignedInteger < PIOS_GPIO_NUM)
-	{
+	if (Param[0]->Val->UnsignedInteger < PIOS_GPIO_NUM) {
 		switch(Param[1]->Val->Integer) {
-			case 0:
-				PIOS_GPIO_Off(Param[0]->Val->UnsignedInteger);
-				break;
-			case 1:
-				PIOS_GPIO_On(Param[0]->Val->UnsignedInteger);
-				break;
-			case 2:
-				PIOS_GPIO_Toggle(Param[0]->Val->UnsignedInteger);
-				break;
+		case 0:
+			PIOS_GPIO_Off(Param[0]->Val->UnsignedInteger);
+			break;
+		case 1:
+			PIOS_GPIO_On(Param[0]->Val->UnsignedInteger);
+			break;
+		case 2:
+			PIOS_GPIO_Toggle(Param[0]->Val->UnsignedInteger);
+			break;
 		}
 	}
 }
@@ -649,12 +651,9 @@ void SystemGPIOWrite(struct ParseState *Parser, struct Value *ReturnValue, struc
 /*unsigned int pin_num: Number of the defined GPIO pin from target/board-info/pios_board.h; starting from 0; user has to check if it is a input or output pin*/
 void SystemGPIORead(struct ParseState *Parser, struct Value *ReturnValue, struct Value **Param, int NumArgs)
 {
-	if (Param[0]->Val->UnsignedInteger < PIOS_GPIO_NUM)
-	{
+	if (Param[0]->Val->UnsignedInteger < PIOS_GPIO_NUM) {
 		ReturnValue->Val->Integer = PIOS_GPIO_Read(Param[0]->Val->UnsignedInteger);
-	}
-	else
-	{
+	} else {
 		ReturnValue->Val->Integer = -1;
 	}
 }
@@ -662,8 +661,7 @@ void SystemGPIORead(struct ParseState *Parser, struct Value *ReturnValue, struct
 
 
 /* list of all library functions and their prototypes */
-struct LibraryFunction PlatformLibrary_system[] =
-{
+struct LibraryFunction PlatformLibrary_system[] = {
 	{ SystemDelay,			"void delay(int);" },
 	{ SystemSync,			"void sync(int);" },
 	{ SystemTime,			"unsigned long time();" },
@@ -729,8 +727,7 @@ void Accels_Get(struct ParseState *Parser, struct Value *ReturnValue, struct Val
 #endif
 
 /* list of all library functions and their prototypes */
-struct LibraryFunction PlatformLibrary_accels[] =
-{
+struct LibraryFunction PlatformLibrary_accels[] = {
 #ifndef NO_FP
 	{ Accels_Get,	"void AccelsGet(AccelsData *);" },
 #endif
@@ -742,11 +739,11 @@ void PlatformLibrarySetup_accels(Picoc *pc)
 {
 #ifndef NO_FP
 	const char *definition = "typedef struct {"
-		"float x;"
-		"float y;"
-		"float z;"
-		"float temperature;"
-	"} AccelsData;";
+	                         "float x;"
+	                         "float y;"
+	                         "float z;"
+	                         "float temperature;"
+	                         "} AccelsData;";
 	PicocParse(pc, "mylib", definition, strlen(definition), TRUE, TRUE, FALSE, FALSE);
 #endif
 
@@ -784,8 +781,7 @@ void AttitudeActual_Get(struct ParseState *Parser, struct Value *ReturnValue, st
 #endif
 
 /* list of all library functions and their prototypes */
-struct LibraryFunction PlatformLibrary_attitudeactual[] =
-{
+struct LibraryFunction PlatformLibrary_attitudeactual[] = {
 #ifndef NO_FP
 	{ AttitudeActual_Get,	"void AttitudeActualGet(AttitudeActualData *);" },
 #endif
@@ -797,10 +793,10 @@ void PlatformLibrarySetup_attitudeactual(Picoc *pc)
 {
 #ifndef NO_FP
 	const char *definition = "typedef struct {"
-		"float Roll;"
-		"float Pitch;"
-		"float Yaw;"
-	"} AttitudeActualData;";
+	                         "float Roll;"
+	                         "float Pitch;"
+	                         "float Yaw;"
+	                         "} AttitudeActualData;";
 	PicocParse(pc, "mylib", definition, strlen(definition), TRUE, TRUE, FALSE, FALSE);
 #endif
 
@@ -838,8 +834,7 @@ void BaroAltitude_Get(struct ParseState *Parser, struct Value *ReturnValue, stru
 #endif
 
 /* list of all library functions and their prototypes */
-struct LibraryFunction PlatformLibrary_baroaltitude[] =
-{
+struct LibraryFunction PlatformLibrary_baroaltitude[] = {
 #ifndef NO_FP
 	{ BaroAltitude_Get,	"void BaroAltitudeGet(BaroAltitudeData *);" },
 #endif
@@ -851,10 +846,10 @@ void PlatformLibrarySetup_baroaltitude(Picoc *pc)
 {
 #ifndef NO_FP
 	const char *definition = "typedef struct {"
-		"float Altitude;"
-		"float Temperature;"
-		"float Pressure;"
-	"} BaroAltitudeData;";
+	                         "float Altitude;"
+	                         "float Temperature;"
+	                         "float Pressure;"
+	                         "} BaroAltitudeData;";
 	PicocParse(pc, "mylib", definition, strlen(definition), TRUE, TRUE, FALSE, FALSE);
 #endif
 
@@ -900,8 +895,7 @@ void FlightBatteryState_Get(struct ParseState *Parser, struct Value *ReturnValue
 #endif
 
 /* list of all library functions and their prototypes */
-struct LibraryFunction PlatformLibrary_flightbatterystate[] =
-{
+struct LibraryFunction PlatformLibrary_flightbatterystate[] = {
 #ifndef NO_FP
 	{ FlightBatteryState_Get,	"void FlightBatteryStateGet(FlightBatteryStateData *);" },
 #endif
@@ -913,14 +907,14 @@ void PlatformLibrarySetup_flightbatterystate(Picoc *pc)
 {
 #ifndef NO_FP
 	const char *definition = "typedef struct {"
-		"float Voltage;"
-		"float Current;"
-		"float BoardSupplyVoltage;"
-		"float PeakCurrent;"
-		"float AvgCurrent;"
-		"float ConsumedEnergy;"
-		"float EstimatedFlightTime;"
-	"} FlightBatteryStateData;";
+	                         "float Voltage;"
+	                         "float Current;"
+	                         "float BoardSupplyVoltage;"
+	                         "float PeakCurrent;"
+	                         "float AvgCurrent;"
+	                         "float ConsumedEnergy;"
+	                         "float EstimatedFlightTime;"
+	                         "} FlightBatteryStateData;";
 	PicocParse(pc, "mylib", definition, strlen(definition), TRUE, TRUE, FALSE, FALSE);
 #endif
 
@@ -956,8 +950,7 @@ void FlightStatus_Get(struct ParseState *Parser, struct Value *ReturnValue, stru
 }
 
 /* list of all library functions and their prototypes */
-struct LibraryFunction PlatformLibrary_flightstatus[] =
-{
+struct LibraryFunction PlatformLibrary_flightstatus[] = {
 	{ FlightStatus_Get,	"void FlightStatusGet(FlightStatusData *);" },
 	{ NULL, NULL }
 };
@@ -966,10 +959,10 @@ struct LibraryFunction PlatformLibrary_flightstatus[] =
 void PlatformLibrarySetup_flightstatus(Picoc *pc)
 {
 	const char *definition = "typedef struct {"
-		"unsigned char Armed;"
-		"unsigned char FlightMode;"
-		"unsigned char ControlSource;"
-	"} FlightStatusData;";
+	                         "unsigned char Armed;"
+	                         "unsigned char FlightMode;"
+	                         "unsigned char ControlSource;"
+	                         "} FlightStatusData;";
 	PicocParse(pc, "mylib", definition, strlen(definition), TRUE, TRUE, FALSE, FALSE);
 }
 
@@ -982,7 +975,7 @@ void PlatformLibrarySetup_flightstatus(Picoc *pc)
 void GPSPosition_Get(struct ParseState *Parser, struct Value *ReturnValue, struct Value **Param, int NumArgs)
 {
 	if (Param[0]->Val->Pointer == NULL)
-	return;
+		return;
 
 	GPSPositionData data;
 	GPSPositionGet(&data);
@@ -1030,8 +1023,7 @@ void GPSPosition_Get(struct ParseState *Parser, struct Value *ReturnValue, struc
 }
 
 /* list of all library functions and their prototypes */
-struct LibraryFunction PlatformLibrary_gpsposition[] =
-{
+struct LibraryFunction PlatformLibrary_gpsposition[] = {
 	{ GPSPosition_Get,	"void GPSPositionGet(GPSPositionData *);" },
 	{ NULL, NULL }
 };
@@ -1041,25 +1033,25 @@ void PlatformLibrarySetup_gpsposition(Picoc *pc)
 {
 #ifndef NO_FP
 	const char *definition = "typedef struct {"
-		"long Latitude;"
-		"long Longitude;"
-		"float Altitude;"
-		"float GeoidSeparation;"
-		"float Heading;"
-		"float GroundSpeed;"
-		"float PDOP;"
-		"float HDOP;"
-		"float VDOP;"
-		"unsigned char Status;"
-		"char Satellites;"
-	"} GPSPositionData;";
+	                         "long Latitude;"
+	                         "long Longitude;"
+	                         "float Altitude;"
+	                         "float GeoidSeparation;"
+	                         "float Heading;"
+	                         "float GroundSpeed;"
+	                         "float PDOP;"
+	                         "float HDOP;"
+	                         "float VDOP;"
+	                         "unsigned char Status;"
+	                         "char Satellites;"
+	                         "} GPSPositionData;";
 #else
 	const char *definition = "typedef struct {"
-		"long Latitude;"
-		"long Longitude;"
-		"unsigned char Status;"
-		"char Satellites;"
-	"} GPSPositionData;";
+	                         "long Latitude;"
+	                         "long Longitude;"
+	                         "unsigned char Status;"
+	                         "char Satellites;"
+	                         "} GPSPositionData;";
 #endif
 	PicocParse(pc, "mylib", definition, strlen(definition), TRUE, TRUE, FALSE, FALSE);
 
@@ -1078,7 +1070,7 @@ void PlatformLibrarySetup_gpsposition(Picoc *pc)
 void Gyros_Get(struct ParseState *Parser, struct Value *ReturnValue, struct Value **Param, int NumArgs)
 {
 	if (Param[0]->Val->Pointer == NULL)
-	return;
+		return;
 
 	GyrosData data;
 	GyrosGet(&data);
@@ -1099,8 +1091,7 @@ void Gyros_Get(struct ParseState *Parser, struct Value *ReturnValue, struct Valu
 #endif
 
 /* list of all library functions and their prototypes */
-struct LibraryFunction PlatformLibrary_gyros[] =
-{
+struct LibraryFunction PlatformLibrary_gyros[] = {
 #ifndef NO_FP
 	{ Gyros_Get,	"void GyrosGet(GyrosData *);" },
 #endif
@@ -1111,11 +1102,11 @@ struct LibraryFunction PlatformLibrary_gyros[] =
 void PlatformLibrarySetup_gyros(Picoc *pc)
 {
 	const char *definition = "typedef struct {"
-		"float x;"
-		"float y;"
-		"float z;"
-		"float temperature;"
-	"} GyrosData;";
+	                         "float x;"
+	                         "float y;"
+	                         "float z;"
+	                         "float temperature;"
+	                         "} GyrosData;";
 	PicocParse(pc, "mylib", definition, strlen(definition), TRUE, TRUE, FALSE, FALSE);
 
 	if (GyrosHandle() == NULL)
@@ -1152,8 +1143,7 @@ void Magnetometer_Get(struct ParseState *Parser, struct Value *ReturnValue, stru
 #endif
 
 /* list of all library functions and their prototypes */
-struct LibraryFunction PlatformLibrary_magnetometer[] =
-{
+struct LibraryFunction PlatformLibrary_magnetometer[] = {
 #ifndef NO_FP
 	{ Magnetometer_Get,	"void MagnetometerGet(MagnetometerData *);" },
 #endif
@@ -1164,10 +1154,10 @@ struct LibraryFunction PlatformLibrary_magnetometer[] =
 void PlatformLibrarySetup_magnetometer(Picoc *pc)
 {
 	const char *definition = "typedef struct {"
-		"float x;"
-		"float y;"
-		"float z;"
-	"} MagnetometerData;";
+	                         "float x;"
+	                         "float y;"
+	                         "float z;"
+	                         "} MagnetometerData;";
 	PicocParse(pc, "mylib", definition, strlen(definition), TRUE, TRUE, FALSE, FALSE);
 
 	if (MagnetometerHandle() == NULL)
@@ -1230,8 +1220,7 @@ void Stabilization3SettingsSet(struct ParseState *Parser, struct Value *ReturnVa
 }
 
 /* list of all library functions and their prototypes */
-struct LibraryFunction PlatformLibrary_manualcontrol[] =
-{
+struct LibraryFunction PlatformLibrary_manualcontrol[] = {
 	{ FlightModePositionSet,		"void FlightModeSet(int,int);" },
 	{ Stabilization1SettingsSet,	"void Stabilized1Set(int,int,int);" },
 	{ Stabilization2SettingsSet,	"void Stabilized2Set(int,int,int);" },
@@ -1311,8 +1300,7 @@ void PathDesired_Set(struct ParseState *Parser, struct Value *ReturnValue, struc
 #endif
 
 /* list of all library functions and their prototypes */
-struct LibraryFunction PlatformLibrary_pathdesired[] =
-{
+struct LibraryFunction PlatformLibrary_pathdesired[] = {
 #ifndef NO_FP
 	{ PathDesired_Get,	"void PathDesiredGet(PathDesiredData *);" },
 	{ PathDesired_Set,	"void PathDesiredSet(PathDesiredData *);" },
@@ -1324,13 +1312,13 @@ struct LibraryFunction PlatformLibrary_pathdesired[] =
 void PlatformLibrarySetup_pathdesired(Picoc *pc)
 {
 	const char *definition = "typedef struct {"
-		"float Start[3];"
-		"float End[3];"
-		"float StartingVelocity;"
-		"float EndingVelocity;"
-		"float ModeParameters;"
-		"unsigned char Mode;"
-	"} PathDesiredData;";
+	                         "float Start[3];"
+	                         "float End[3];"
+	                         "float StartingVelocity;"
+	                         "float EndingVelocity;"
+	                         "float ModeParameters;"
+	                         "unsigned char Mode;"
+	                         "} PathDesiredData;";
 	PicocParse(pc, "mylib", definition, strlen(definition), TRUE, TRUE, FALSE, FALSE);
 
 	if (PathDesiredHandle() == NULL)
@@ -1367,8 +1355,7 @@ void PathStatus_Get(struct ParseState *Parser, struct Value *ReturnValue, struct
 #endif
 
 /* list of all library functions and their prototypes */
-struct LibraryFunction PlatformLibrary_pathstatus[] =
-{
+struct LibraryFunction PlatformLibrary_pathstatus[] = {
 #ifndef NO_FP
 	{ PathStatus_Get,	"void PathStatusGet(PathStatusData *);" },
 #endif
@@ -1379,10 +1366,10 @@ struct LibraryFunction PlatformLibrary_pathstatus[] =
 void PlatformLibrarySetup_pathstatus(Picoc *pc)
 {
 	const char *definition = "typedef struct {"
-		"float fractional_progress;"
-		"float error;"
-		"unsigned char Status;"
-	"} PathStatusData;";
+	                         "float fractional_progress;"
+	                         "float error;"
+	                         "unsigned char Status;"
+	                         "} PathStatusData;";
 	PicocParse(pc, "mylib", definition, strlen(definition), TRUE, TRUE, FALSE, FALSE);
 
 	if (PathStatusHandle() == NULL)
@@ -1419,8 +1406,7 @@ void PositionActual_Get(struct ParseState *Parser, struct Value *ReturnValue, st
 #endif
 
 /* list of all library functions and their prototypes */
-struct LibraryFunction PlatformLibrary_positionactual[] =
-{
+struct LibraryFunction PlatformLibrary_positionactual[] = {
 #ifndef NO_FP
 	{ PositionActual_Get,	"void PositionActualGet(PositionActualData *);" },
 #endif
@@ -1431,10 +1417,10 @@ struct LibraryFunction PlatformLibrary_positionactual[] =
 void PlatformLibrarySetup_positionactual(Picoc *pc)
 {
 	const char *definition = "typedef struct {"
-		"float North;"
-		"float East;"
-		"float Down;"
-	"} PositionActualData;";
+	                         "float North;"
+	                         "float East;"
+	                         "float Down;"
+	                         "} PositionActualData;";
 	PicocParse(pc, "mylib", definition, strlen(definition), TRUE, TRUE, FALSE, FALSE);
 
 	if (PositionActualHandle() == NULL)
@@ -1481,12 +1467,11 @@ void PID_apply(struct ParseState *Parser, struct Value *ReturnValue, struct Valu
 	double diff = (err - pid->lastErr);
 	double dterm = 0;
 	pid->lastErr = err;
-	if(pid->d && dT)
-	{
+	if(pid->d && dT) {
 		dterm = pid->lastDer +  dT / ( dT + pid->dTau) * ((diff * pid->d / dT) - pid->lastDer);
 		pid->lastDer = dterm;
 	}
- 
+
 	ReturnValue->Val->FP = (err * pid->p) + pid->iAccumulator + dterm;
 }
 
@@ -1508,8 +1493,7 @@ void PID_apply_antiwindup(struct ParseState *Parser, struct Value *ReturnValue, 
 	double diff = (err - pid->lastErr);
 	double dterm = 0;
 	pid->lastErr = err;
-	if(pid->d && dT)
-	{
+	if(pid->d && dT) {
 		dterm = pid->lastDer +  dT / ( dT + pid->dTau) * ((diff * pid->d / dT) - pid->lastDer);
 		pid->lastDer = dterm;
 	}
@@ -1550,8 +1534,7 @@ void PID_apply_setpoint(struct ParseState *Parser, struct Value *ReturnValue, st
 	double dterm = 0;
 	double diff = setpoint - measured - pid->lastErr;
 	pid->lastErr = setpoint - measured;
-	if(pid->d && dT)
-	{
+	if(pid->d && dT) {
 		dterm = pid->lastDer +  dT / ( dT + pid->dTau) * ((diff * pid->d / dT) - pid->lastDer);
 		pid->lastDer = dterm;
 	}
@@ -1587,8 +1570,7 @@ void PID_configure(struct ParseState *Parser, struct Value *ReturnValue, struct 
 }
 
 /* list of all library functions and their prototypes */
-struct LibraryFunction PlatformLibrary_pid[] =
-{
+struct LibraryFunction PlatformLibrary_pid[] = {
 	{ PID_apply,			"float pid_apply(pid *,float,float);" },
 	{ PID_apply_antiwindup,	"float pid_apply_antiwindup(pid *,float,float,float,float);" },
 	{ PID_apply_setpoint,	"float pid_apply_setpoint(pid *,float,float,float);" },
@@ -1601,15 +1583,15 @@ struct LibraryFunction PlatformLibrary_pid[] =
 void PlatformLibrarySetup_pid(Picoc *pc)
 {
 	const char *definition = "typedef struct {"
-		"float p;"
-		"float i;"
-		"float d;"
-		"float iLim;"
-		"float iAccumulator;"
-		"float lastErr;"
-		"float lastDer;"
-		"float dTau;"
-	"} pid;";
+	                         "float p;"
+	                         "float i;"
+	                         "float d;"
+	                         "float iLim;"
+	                         "float iAccumulator;"
+	                         "float lastErr;"
+	                         "float lastDer;"
+	                         "float dTau;"
+	                         "} pid;";
 	PicocParse(pc, "mylib", definition, strlen(definition), TRUE, TRUE, FALSE, FALSE);
 }
 #endif

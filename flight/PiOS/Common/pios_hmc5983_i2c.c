@@ -13,19 +13,19 @@
  *
  ******************************************************************************
  */
-/* 
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 3 of the License, or 
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
  * for more details.
- * 
- * You should have received a copy of the GNU General Public License along 
- * with this program; if not, write to the Free Software Foundation, Inc., 
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
@@ -75,12 +75,12 @@ static struct hmc5983_dev *dev;
 static struct hmc5983_dev * PIOS_HMC5983_alloc(void)
 {
 	struct hmc5983_dev *hmc5983_dev;
-	
+
 	hmc5983_dev = (struct hmc5983_dev *)PIOS_malloc(sizeof(*hmc5983_dev));
 	if (!hmc5983_dev) return (NULL);
-	
+
 	hmc5983_dev->magic = PIOS_HMC5983_DEV_MAGIC;
-	
+
 	hmc5983_dev->queue = PIOS_Queue_Create(PIOS_HMC5983_MAX_DOWNSAMPLE, sizeof(struct pios_sensor_mag_data));
 	if (hmc5983_dev->queue == NULL) {
 		PIOS_free(hmc5983_dev);
@@ -96,7 +96,7 @@ static struct hmc5983_dev * PIOS_HMC5983_alloc(void)
  */
 static int32_t PIOS_HMC5983_Validate(struct hmc5983_dev *dev)
 {
-	if (dev == NULL) 
+	if (dev == NULL)
 		return -1;
 	if (dev->magic != PIOS_HMC5983_DEV_MAGIC)
 		return -2;
@@ -126,8 +126,7 @@ int32_t PIOS_HMC5983_Init(uint32_t i2c_id, uint32_t slave_num, const struct pios
 
 		dev->data_ready_sema = PIOS_Semaphore_Create();
 		PIOS_Assert(dev->data_ready_sema != NULL);
-	}
-	else {
+	} else {
 		dev->data_ready_sema = NULL;
 	}
 #else
@@ -230,15 +229,15 @@ static int32_t PIOS_HMC5983_Config(const struct pios_hmc5983_cfg * cfg)
 	// CRTL_REGA
 	if (PIOS_HMC5983_Write(PIOS_HMC5983_CONFIG_REG_A, 0x80 | cfg->M_ODR | cfg->Meas_Conf) != 0)
 		return -1;
-	
+
 	// CRTL_REGB
 	if (PIOS_HMC5983_Write(PIOS_HMC5983_CONFIG_REG_B, cfg->Gain) != 0)
 		return -1;
-	
+
 	// Mode register
 	if (PIOS_HMC5983_Write(PIOS_HMC5983_MODE_REG, cfg->Mode) != 0)
 		return -1;
-	
+
 	return 0;
 }
 
@@ -287,7 +286,7 @@ static int32_t PIOS_HMC5983_ReadMag(struct pios_sensor_mag_data *mag_data, float
 	 */
 	uint8_t addr_read = PIOS_HMC5983_DATAOUT_XMSB_REG;
 	uint8_t buffer_read[8];
-	
+
 	if (temperature == NULL)
 		n_read = sizeof(buffer_read) - 2;
 	else
@@ -335,53 +334,53 @@ static int32_t PIOS_HMC5983_ReadMag(struct pios_sensor_mag_data *mag_data, float
 
 	// Define "0" when the fiducial is in the front left of the board
 	switch (dev->orientation) {
-		case PIOS_HMC5983_TOP_0DEG:
-			mag_data->x = -mag_x;
-			mag_data->y = mag_y;
-			mag_data->z = -mag_z;
-			break;
-		case PIOS_HMC5983_TOP_90DEG:
-			mag_data->x = -mag_y;
-			mag_data->y = -mag_x;
-			mag_data->z = -mag_z;
-			break;
-		case PIOS_HMC5983_TOP_180DEG:
-			mag_data->x = mag_x;
-			mag_data->y = -mag_y;
-			mag_data->z = -mag_z;
-			break;
-		case PIOS_HMC5983_TOP_270DEG:
-			mag_data->x = mag_y;
-			mag_data->y = mag_x;
-			mag_data->z = -mag_z;
-			break;
-		case PIOS_HMC5983_BOTTOM_0DEG:
-			mag_data->x = -mag_x;
-			mag_data->y = -mag_y;
-			mag_data->z = mag_z;
-			break;
-		case PIOS_HMC5983_BOTTOM_90DEG:
-			mag_data->x = -mag_y;
-			mag_data->y = mag_x;
-			mag_data->z = mag_z;
-			break;
-		case PIOS_HMC5983_BOTTOM_180DEG:
-			mag_data->x = mag_x;
-			mag_data->y = mag_y;
-			mag_data->z = mag_z;
-			break;
-		case PIOS_HMC5983_BOTTOM_270DEG:
-			mag_data->x = mag_y;
-			mag_data->y = -mag_x;
-			mag_data->z = mag_z;
-			break;
+	case PIOS_HMC5983_TOP_0DEG:
+		mag_data->x = -mag_x;
+		mag_data->y = mag_y;
+		mag_data->z = -mag_z;
+		break;
+	case PIOS_HMC5983_TOP_90DEG:
+		mag_data->x = -mag_y;
+		mag_data->y = -mag_x;
+		mag_data->z = -mag_z;
+		break;
+	case PIOS_HMC5983_TOP_180DEG:
+		mag_data->x = mag_x;
+		mag_data->y = -mag_y;
+		mag_data->z = -mag_z;
+		break;
+	case PIOS_HMC5983_TOP_270DEG:
+		mag_data->x = mag_y;
+		mag_data->y = mag_x;
+		mag_data->z = -mag_z;
+		break;
+	case PIOS_HMC5983_BOTTOM_0DEG:
+		mag_data->x = -mag_x;
+		mag_data->y = -mag_y;
+		mag_data->z = mag_z;
+		break;
+	case PIOS_HMC5983_BOTTOM_90DEG:
+		mag_data->x = -mag_y;
+		mag_data->y = mag_x;
+		mag_data->z = mag_z;
+		break;
+	case PIOS_HMC5983_BOTTOM_180DEG:
+		mag_data->x = mag_x;
+		mag_data->y = mag_y;
+		mag_data->z = mag_z;
+		break;
+	case PIOS_HMC5983_BOTTOM_270DEG:
+		mag_data->x = mag_y;
+		mag_data->y = -mag_x;
+		mag_data->z = mag_z;
+		break;
 	}
-	
+
 	// calculate the temperature
 	if (temperature != NULL) {
 		*temperature = (float)(((uint16_t)buffer_read[6] << 8) + buffer_read[7]) / 128.f + 25.f;
 	}
-	
+
 	return 0;
 }
 
@@ -415,7 +414,7 @@ static int32_t PIOS_HMC5983_Read(uint8_t address, uint8_t * buffer, uint8_t len)
 	uint8_t addr_buffer[] = {
 		address,
 	};
-	
+
 	const struct pios_i2c_txn txn_list[] = {
 		{
 			.info = __func__,
@@ -433,7 +432,7 @@ static int32_t PIOS_HMC5983_Read(uint8_t address, uint8_t * buffer, uint8_t len)
 			.buf = buffer,
 		}
 	};
-	
+
 	return PIOS_I2C_Transfer(dev->i2c_id, txn_list, NELEMENTS(txn_list));
 }
 
@@ -454,7 +453,7 @@ static int32_t PIOS_HMC5983_Write(uint8_t address, uint8_t buffer)
 		address,
 		buffer,
 	};
-	
+
 	const struct pios_i2c_txn txn_list[] = {
 		{
 			.info = __func__,

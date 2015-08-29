@@ -6,26 +6,26 @@
  * @brief PIOS Timer control code
  * @{
  *
- * @file       pios_tim.c  
+ * @file       pios_tim.c
  * @author     The OpenPilot Team, http://www.openpilot.org Copyright (C) 2012.
  * @author     Tau Labs, http://taulabs.org, Copyright (C) 2012-2014
  * @brief      Sets up timers and ways to register callbacks on them
  * @see        The GNU Public License (GPL) Version 3
  *
  *****************************************************************************/
-/* 
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 3 of the License, or 
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
  * for more details.
- * 
- * You should have received a copy of the GNU General Public License along 
- * with this program; if not, write to the Free Software Foundation, Inc., 
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
@@ -113,7 +113,7 @@ int32_t PIOS_TIM_InitChannels(uintptr_t * tim_id, const struct pios_tim_channel 
 		GPIO_Init(chan->pin.gpio, (GPIO_InitTypeDef*)&chan->pin.init);
 
 		PIOS_DEBUG_Assert(chan->remap);
-			
+
 		// Second parameter should technically be PinSource but they are numerically the same
 		GPIO_PinAFConfig(chan->pin.gpio, chan->pin.pin_source,chan->remap);
 	}
@@ -228,108 +228,109 @@ static void PIOS_TIM_generic_irq_handler(TIM_TypeDef * timer)
 					/* Call the overflow callback first */
 					if (tim_dev->callbacks->overflow) {
 						(*tim_dev->callbacks->overflow)((uintptr_t)tim_dev,
-									tim_dev->context,
-									j,
-									overflow_count);
+						                                tim_dev->context,
+						                                j,
+						                                overflow_count);
 					}
 					/* Call the edge callback second */
 					if (tim_dev->callbacks->edge) {
 						(*tim_dev->callbacks->edge)((uintptr_t)tim_dev,
-									tim_dev->context,
-									j,
-									edge_count);
+						                            tim_dev->context,
+						                            j,
+						                            edge_count);
 					}
 				} else {
 					/* Call the edge callback first */
 					if (tim_dev->callbacks->edge) {
 						(*tim_dev->callbacks->edge)((uintptr_t)tim_dev,
-									tim_dev->context,
-									j,
-									edge_count);
+						                            tim_dev->context,
+						                            j,
+						                            edge_count);
 					}
 					/* Call the overflow callback second */
 					if (tim_dev->callbacks->overflow) {
 						(*tim_dev->callbacks->overflow)((uintptr_t)tim_dev,
-									tim_dev->context,
-									j,
-									overflow_count);
+						                                tim_dev->context,
+						                                j,
+						                                overflow_count);
 					}
 				}
 			} else if (overflow_event && tim_dev->callbacks->overflow) {
 				(*tim_dev->callbacks->overflow)((uintptr_t)tim_dev,
-								tim_dev->context,
-								j,
-								overflow_count);
+				                                tim_dev->context,
+				                                j,
+				                                overflow_count);
 			} else if (edge_event && tim_dev->callbacks->edge) {
 				(*tim_dev->callbacks->edge)((uintptr_t)tim_dev,
-							tim_dev->context,
-							j,
-							edge_count);
+				                            tim_dev->context,
+				                            j,
+				                            edge_count);
 			}
 		}
 	}
 }
 #if 0
-	uint16_t val = 0;
-	for(uint8_t i = 0; i < pios_pwm_cfg.num_channels; i++) {
-		struct pios_pwm_channel channel = pios_pwm_cfg.channels[i];
-		if ((channel.timer == timer) && (TIM_GetITStatus(channel.timer, channel.ccr) == SET)) {
-			
-			TIM_ClearITPendingBit(channel.timer, channel.ccr);
-			
-			switch(channel.channel) {
-				case TIM_Channel_1:
-					val = TIM_GetCapture1(channel.timer);
-					break;
-				case TIM_Channel_2:
-					val = TIM_GetCapture2(channel.timer);
-					break;
-				case TIM_Channel_3:
-					val = TIM_GetCapture3(channel.timer);
-					break;
-				case TIM_Channel_4:
-					val = TIM_GetCapture4(channel.timer);
-					break;					
-			}
-			
-			if (CaptureState[i] == 0) {
-				RiseValue[i] = val; 
+uint16_t val = 0;
+for(uint8_t i = 0; i < pios_pwm_cfg.num_channels; i++)
+{
+	struct pios_pwm_channel channel = pios_pwm_cfg.channels[i];
+	if ((channel.timer == timer) && (TIM_GetITStatus(channel.timer, channel.ccr) == SET)) {
+
+		TIM_ClearITPendingBit(channel.timer, channel.ccr);
+
+		switch(channel.channel) {
+		case TIM_Channel_1:
+			val = TIM_GetCapture1(channel.timer);
+			break;
+		case TIM_Channel_2:
+			val = TIM_GetCapture2(channel.timer);
+			break;
+		case TIM_Channel_3:
+			val = TIM_GetCapture3(channel.timer);
+			break;
+		case TIM_Channel_4:
+			val = TIM_GetCapture4(channel.timer);
+			break;
+		}
+
+		if (CaptureState[i] == 0) {
+			RiseValue[i] = val;
+		} else {
+			FallValue[i] = val;
+		}
+
+		// flip state machine and capture value here
+		/* Simple rise or fall state machine */
+		TIM_ICInitTypeDef TIM_ICInitStructure = pios_pwm_cfg.tim_ic_init;
+		if (CaptureState[i] == 0) {
+			/* Switch states */
+			CaptureState[i] = 1;
+
+			/* Switch polarity of input capture */
+			TIM_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Falling;
+			TIM_ICInitStructure.TIM_Channel = channel.channel;
+			TIM_ICInit(channel.timer, &TIM_ICInitStructure);
+		} else {
+			/* Capture computation */
+			if (FallValue[i] > RiseValue[i]) {
+				CaptureValue[i] = (FallValue[i] - RiseValue[i]);
 			} else {
-				FallValue[i] = val;
+				CaptureValue[i] = ((channel.timer->ARR - RiseValue[i]) + FallValue[i]);
 			}
-			
-			// flip state machine and capture value here
-			/* Simple rise or fall state machine */
-			TIM_ICInitTypeDef TIM_ICInitStructure = pios_pwm_cfg.tim_ic_init;
-			if (CaptureState[i] == 0) {
-				/* Switch states */
-				CaptureState[i] = 1;
-				
-				/* Switch polarity of input capture */
-				TIM_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Falling;
-				TIM_ICInitStructure.TIM_Channel = channel.channel;
-				TIM_ICInit(channel.timer, &TIM_ICInitStructure);				
-			} else {
-				/* Capture computation */
-				if (FallValue[i] > RiseValue[i]) {
-					CaptureValue[i] = (FallValue[i] - RiseValue[i]);
-				} else {
-					CaptureValue[i] = ((channel.timer->ARR - RiseValue[i]) + FallValue[i]);
-				}
-				
-				/* Switch states */
-				CaptureState[i] = 0;
-				
-				/* Increase supervisor counter */
-				CapCounter[i]++;
-				
-				/* Switch polarity of input capture */
-				TIM_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Rising;
-				TIM_ICInitStructure.TIM_Channel = channel.channel;
-				TIM_ICInit(channel.timer, &TIM_ICInitStructure);
-			}
-		}		
+
+			/* Switch states */
+			CaptureState[i] = 0;
+
+			/* Increase supervisor counter */
+			CapCounter[i]++;
+
+			/* Switch polarity of input capture */
+			TIM_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Rising;
+			TIM_ICInitStructure.TIM_Channel = channel.channel;
+			TIM_ICInit(channel.timer, &TIM_ICInitStructure);
+		}
 	}
+}
 #endif
 
 /* Bind Interrupt Handlers

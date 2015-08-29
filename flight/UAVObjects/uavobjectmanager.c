@@ -49,7 +49,7 @@ extern uintptr_t pios_uavo_settings_fs_id;
  */
 
 /** opaque type for instances **/
-typedef void* InstanceHandle; 
+typedef void* InstanceHandle;
 
 struct ObjectEventEntry {
 	struct pios_queue         *queue;
@@ -110,7 +110,7 @@ struct UAVOSingle {
 	struct UAVOData   uavo;
 
 	uint8_t           instance0[];
-	/* 
+	/*
 	 * Additional space will be malloc'd here to hold the
 	 * the data for this instance.
 	 */
@@ -120,7 +120,7 @@ struct UAVOSingle {
 struct UAVOMultiInst {
 	struct UAVOMultiInst * next;
 	uint8_t                instance[];
-	/* 
+	/*
 	 * Additional space will be malloc'd here to hold the
 	 * the data for this instance.
 	 */
@@ -153,24 +153,24 @@ struct UAVOMulti {
 
 // Private functions
 static int32_t sendEvent(struct UAVOBase * obj, uint16_t instId,
-			UAVObjEventType event);
+                         UAVObjEventType event);
 static InstanceHandle createInstance(struct UAVOData * obj, uint16_t instId);
 static InstanceHandle getInstance(struct UAVOData * obj, uint16_t instId);
 static int32_t connectObj(UAVObjHandle obj_handle, struct pios_queue *queue,
-			UAVObjEventCallback cb, uint8_t eventMask);
+                          UAVObjEventCallback cb, uint8_t eventMask);
 static int32_t disconnectObj(UAVObjHandle obj_handle, struct pios_queue *queue,
-			UAVObjEventCallback cb);
+                             UAVObjEventCallback cb);
 
 // Private variables
 static struct UAVOData * uavo_list;
 static struct pios_recursive_mutex *mutex;
 static const UAVObjMetadata defMetadata = {
 	.flags = (ACCESS_READWRITE << UAVOBJ_ACCESS_SHIFT |
-		ACCESS_READWRITE << UAVOBJ_GCS_ACCESS_SHIFT |
-		1 << UAVOBJ_TELEMETRY_ACKED_SHIFT |
-		1 << UAVOBJ_GCS_TELEMETRY_ACKED_SHIFT |
-		UPDATEMODE_ONCHANGE << UAVOBJ_TELEMETRY_UPDATE_MODE_SHIFT |
-		UPDATEMODE_ONCHANGE << UAVOBJ_GCS_TELEMETRY_UPDATE_MODE_SHIFT),
+	ACCESS_READWRITE << UAVOBJ_GCS_ACCESS_SHIFT |
+	1 << UAVOBJ_TELEMETRY_ACKED_SHIFT |
+	1 << UAVOBJ_GCS_TELEMETRY_ACKED_SHIFT |
+	UPDATEMODE_ONCHANGE << UAVOBJ_TELEMETRY_UPDATE_MODE_SHIFT |
+	UPDATEMODE_ONCHANGE << UAVOBJ_GCS_TELEMETRY_UPDATE_MODE_SHIFT),
 	.telemetryUpdatePeriod    = 0,
 	.gcsTelemetryUpdatePeriod = 0,
 	.loggingUpdatePeriod      = 0,
@@ -304,10 +304,10 @@ static struct UAVOData * UAVObjAllocMulti(uint32_t num_bytes)
  * \return Object handle, or NULL if failure.
  * \return
  */
-UAVObjHandle UAVObjRegister(uint32_t id, 
-			int32_t isSingleInstance, int32_t isSettings,
-			uint32_t num_bytes,
-			UAVObjInitializeCallback initCb)
+UAVObjHandle UAVObjRegister(uint32_t id,
+                            int32_t isSingleInstance, int32_t isSettings,
+                            uint32_t num_bytes,
+                            UAVObjInitializeCallback initCb)
 {
 	struct UAVOData * uavo_data = NULL;
 
@@ -577,7 +577,7 @@ bool UAVObjIsSettings(UAVObjHandle obj_handle)
  * \return 0 if success or -1 if failure
  */
 int32_t UAVObjUnpack(UAVObjHandle obj_handle, uint16_t instId,
-		const uint8_t * dataIn)
+                     const uint8_t * dataIn)
 {
 	PIOS_Assert(obj_handle);
 
@@ -697,20 +697,20 @@ int32_t UAVObjSave(UAVObjHandle obj_handle, uint16_t instId)
 		int32_t rc;
 #if defined(PIOS_INCLUDE_FASTHEAP)
 		memcpy(uavobj_save_trampoline,
-			MetaDataPtr((struct UAVOMeta *)obj_handle),
-			UAVObjGetNumBytes(obj_handle));
+		       MetaDataPtr((struct UAVOMeta *)obj_handle),
+		       UAVObjGetNumBytes(obj_handle));
 
 		rc = PIOS_FLASHFS_ObjSave(pios_uavo_settings_fs_id,
-					UAVObjGetID(obj_handle),
-					instId,
-					uavobj_save_trampoline,
-					UAVObjGetNumBytes(obj_handle));
+		                          UAVObjGetID(obj_handle),
+		                          instId,
+		                          uavobj_save_trampoline,
+		                          UAVObjGetNumBytes(obj_handle));
 #else /* PIOS_INCLUDE_FASTHEAP */
 		rc = PIOS_FLASHFS_ObjSave(pios_uavo_settings_fs_id,
-					UAVObjGetID(obj_handle),
-					instId,
-					(uint8_t*) MetaDataPtr((struct UAVOMeta *)obj_handle),
-					UAVObjGetNumBytes(obj_handle));
+		                          UAVObjGetID(obj_handle),
+		                          instId,
+		                          (uint8_t*) MetaDataPtr((struct UAVOMeta *)obj_handle),
+		                          UAVObjGetNumBytes(obj_handle));
 #endif  /* PIOS_INCLUDE_FASTHEAP */
 
 		if (rc != 0)
@@ -728,20 +728,20 @@ int32_t UAVObjSave(UAVObjHandle obj_handle, uint16_t instId)
 		int32_t rc;
 #if defined(PIOS_INCLUDE_FASTHEAP)
 		memcpy(uavobj_save_trampoline,
-			InstanceData(instEntry),
-			UAVObjGetNumBytes(obj_handle));
+		       InstanceData(instEntry),
+		       UAVObjGetNumBytes(obj_handle));
 
 		rc = PIOS_FLASHFS_ObjSave(pios_uavo_settings_fs_id,
-					UAVObjGetID(obj_handle),
-					instId,
-					uavobj_save_trampoline,
-					UAVObjGetNumBytes(obj_handle));
+		                          UAVObjGetID(obj_handle),
+		                          instId,
+		                          uavobj_save_trampoline,
+		                          UAVObjGetNumBytes(obj_handle));
 #else /* PIOS_INCLUDE_FASTHEAP */
 		rc = PIOS_FLASHFS_ObjSave(pios_uavo_settings_fs_id,
-					UAVObjGetID(obj_handle),
-					instId,
-					InstanceData(instEntry),
-					UAVObjGetNumBytes(obj_handle));
+		                          UAVObjGetID(obj_handle),
+		                          instId,
+		                          InstanceData(instEntry),
+		                          UAVObjGetNumBytes(obj_handle));
 #endif  /* PIOS_INCLUDE_FASTHEAP */
 
 		if (rc != 0)
@@ -781,16 +781,16 @@ int32_t UAVObjLoad(UAVObjHandle obj_handle, uint16_t instId)
 		int32_t rc;
 #if defined(PIOS_INCLUDE_FASTHEAP)
 		rc = PIOS_FLASHFS_ObjLoad(pios_uavo_settings_fs_id,
-					UAVObjGetID(obj_handle),
-					instId,
-					uavobj_load_trampoline,
-					UAVObjGetNumBytes(obj_handle));
+		                          UAVObjGetID(obj_handle),
+		                          instId,
+		                          uavobj_load_trampoline,
+		                          UAVObjGetNumBytes(obj_handle));
 #else  /* PIOS_INCLUDE_FASTHEAP */
 		rc = PIOS_FLASHFS_ObjLoad(pios_uavo_settings_fs_id,
-					UAVObjGetID(obj_handle),
-					instId,
-					(uint8_t*)MetaDataPtr((struct UAVOMeta *)obj_handle),
-					UAVObjGetNumBytes(obj_handle));
+		                          UAVObjGetID(obj_handle),
+		                          instId,
+		                          (uint8_t*)MetaDataPtr((struct UAVOMeta *)obj_handle),
+		                          UAVObjGetNumBytes(obj_handle));
 #endif  /* PIOS_INCLUDE_FASTHEAP */
 
 		if (rc != 0)
@@ -811,16 +811,16 @@ int32_t UAVObjLoad(UAVObjHandle obj_handle, uint16_t instId)
 		int32_t rc;
 #if defined(PIOS_INCLUDE_FASTHEAP)
 		rc = PIOS_FLASHFS_ObjLoad(pios_uavo_settings_fs_id,
-					UAVObjGetID(obj_handle),
-					instId,
-					uavobj_load_trampoline,
-					UAVObjGetNumBytes(obj_handle));
+		                          UAVObjGetID(obj_handle),
+		                          instId,
+		                          uavobj_load_trampoline,
+		                          UAVObjGetNumBytes(obj_handle));
 #else  /* PIOS_INCLUDE_FASTHEAP */
 		rc = PIOS_FLASHFS_ObjLoad(pios_uavo_settings_fs_id,
-					UAVObjGetID(obj_handle),
-					instId,
-					InstanceData(instEntry),
-					UAVObjGetNumBytes(obj_handle));
+		                          UAVObjGetID(obj_handle),
+		                          instId,
+		                          InstanceData(instEntry),
+		                          UAVObjGetNumBytes(obj_handle));
 #endif  /* PIOS_INCLUDE_FASTHEAP */
 
 		if (rc != 0)
@@ -868,7 +868,7 @@ int32_t UAVObjSaveSettings()
 		if (UAVObjIsSettings(obj)) {
 			// Save object
 			if (UAVObjSave((UAVObjHandle) obj, 0) ==
-				-1) {
+			    -1) {
 				goto unlock_exit;
 			}
 		}
@@ -900,7 +900,7 @@ int32_t UAVObjLoadSettings()
 		if (UAVObjIsSettings(obj)) {
 			// Load object
 			if (UAVObjLoad((UAVObjHandle) obj, 0) ==
-				-1) {
+			    -1) {
 				goto unlock_exit;
 			}
 		}
@@ -932,7 +932,7 @@ int32_t UAVObjDeleteSettings()
 		if (UAVObjIsSettings(obj)) {
 			// Save object
 			if (UAVObjDeleteById(UAVObjGetID(obj), 0)
-				== -1) {
+			    == -1) {
 				goto unlock_exit;
 			}
 		}
@@ -962,7 +962,7 @@ int32_t UAVObjSaveMetaobjects()
 	LL_FOREACH(uavo_list, obj) {
 		// Save object
 		if (UAVObjSave( (UAVObjHandle) MetaObjectPtr(obj), 0) ==
-			-1) {
+		    -1) {
 			goto unlock_exit;
 		}
 	}
@@ -991,7 +991,7 @@ int32_t UAVObjLoadMetaobjects()
 	LL_FOREACH(uavo_list, obj) {
 		// Load object
 		if (UAVObjLoad((UAVObjHandle) MetaObjectPtr(obj), 0) ==
-			-1) {
+		    -1) {
 			goto unlock_exit;
 		}
 	}
@@ -1020,7 +1020,7 @@ int32_t UAVObjDeleteMetaobjects()
 	LL_FOREACH(uavo_list, obj) {
 		// Load object
 		if (UAVObjDeleteById(UAVObjGetID(MetaObjectPtr(obj)), 0)
-			== -1) {
+		    == -1) {
 			goto unlock_exit;
 		}
 	}
@@ -1084,7 +1084,7 @@ int32_t UAVObjGetDataField(UAVObjHandle obj_handle, void* dataOut, uint32_t offs
  * \return 0 if success or -1 if failure
  */
 int32_t UAVObjSetInstanceData(UAVObjHandle obj_handle, uint16_t instId,
-			const void *dataIn)
+                              const void *dataIn)
 {
 	PIOS_Assert(obj_handle);
 
@@ -1201,7 +1201,7 @@ unlock_exit:
  * \return 0 if success or -1 if failure
  */
 int32_t UAVObjGetInstanceData(UAVObjHandle obj_handle, uint16_t instId,
-			void *dataOut)
+                              void *dataOut)
 {
 	PIOS_Assert(obj_handle);
 
@@ -1286,7 +1286,7 @@ int32_t UAVObjGetInstanceDataField(UAVObjHandle obj_handle, uint16_t instId, voi
 		if ((size + offset) > obj->instance_size) {
 			goto unlock_exit;
 		}
-		
+
 		// Set data
 		memcpy(dataOut, InstanceData(instEntry) + offset, size);
 	}
@@ -1339,7 +1339,7 @@ int32_t UAVObjGetMetadata(UAVObjHandle obj_handle, UAVObjMetadata * dataOut)
 		memcpy(dataOut, &defMetadata, sizeof(UAVObjMetadata));
 	} else {
 		UAVObjGetData((UAVObjHandle) MetaObjectPtr( (struct UAVOData *)obj_handle ),
-			dataOut);
+		              dataOut);
 	}
 
 	// Unlock
@@ -1389,7 +1389,8 @@ UAVObjAccessType UAVObjGetGcsAccess(const UAVObjMetadata* metadata)
  * \param[in] metadata The metadata object
  * \param[in] mode The access mode
  */
-void UAVObjSetGcsAccess(UAVObjMetadata* metadata, UAVObjAccessType mode) {
+void UAVObjSetGcsAccess(UAVObjMetadata* metadata, UAVObjAccessType mode)
+{
 	PIOS_Assert(metadata);
 	SET_BITS(metadata->flags, UAVOBJ_GCS_ACCESS_SHIFT, mode, 1);
 }
@@ -1399,7 +1400,8 @@ void UAVObjSetGcsAccess(UAVObjMetadata* metadata, UAVObjAccessType mode) {
  * \param[in] metadata The metadata object
  * \return the telemetry acked boolean
  */
-uint8_t UAVObjGetTelemetryAcked(const UAVObjMetadata* metadata) {
+uint8_t UAVObjGetTelemetryAcked(const UAVObjMetadata* metadata)
+{
 	PIOS_Assert(metadata);
 	return (metadata->flags >> UAVOBJ_TELEMETRY_ACKED_SHIFT) & 1;
 }
@@ -1409,7 +1411,8 @@ uint8_t UAVObjGetTelemetryAcked(const UAVObjMetadata* metadata) {
  * \param[in] metadata The metadata object
  * \param[in] val The telemetry acked boolean
  */
-void UAVObjSetTelemetryAcked(UAVObjMetadata* metadata, uint8_t val) {
+void UAVObjSetTelemetryAcked(UAVObjMetadata* metadata, uint8_t val)
+{
 	PIOS_Assert(metadata);
 	SET_BITS(metadata->flags, UAVOBJ_TELEMETRY_ACKED_SHIFT, val, 1);
 }
@@ -1419,7 +1422,8 @@ void UAVObjSetTelemetryAcked(UAVObjMetadata* metadata, uint8_t val) {
  * \param[in] metadata The metadata object
  * \return the telemetry acked boolean
  */
-uint8_t UAVObjGetGcsTelemetryAcked(const UAVObjMetadata* metadata) {
+uint8_t UAVObjGetGcsTelemetryAcked(const UAVObjMetadata* metadata)
+{
 	PIOS_Assert(metadata);
 	return (metadata->flags >> UAVOBJ_GCS_TELEMETRY_ACKED_SHIFT) & 1;
 }
@@ -1429,7 +1433,8 @@ uint8_t UAVObjGetGcsTelemetryAcked(const UAVObjMetadata* metadata) {
  * \param[in] metadata The metadata object
  * \param[in] val The GCS telemetry acked boolean
  */
-void UAVObjSetGcsTelemetryAcked(UAVObjMetadata* metadata, uint8_t val) {
+void UAVObjSetGcsTelemetryAcked(UAVObjMetadata* metadata, uint8_t val)
+{
 	PIOS_Assert(metadata);
 	SET_BITS(metadata->flags, UAVOBJ_GCS_TELEMETRY_ACKED_SHIFT, val, 1);
 }
@@ -1439,7 +1444,8 @@ void UAVObjSetGcsTelemetryAcked(UAVObjMetadata* metadata, uint8_t val) {
  * \param[in] metadata The metadata object
  * \return the telemetry update mode
  */
-UAVObjUpdateMode UAVObjGetTelemetryUpdateMode(const UAVObjMetadata* metadata) {
+UAVObjUpdateMode UAVObjGetTelemetryUpdateMode(const UAVObjMetadata* metadata)
+{
 	PIOS_Assert(metadata);
 	return (metadata->flags >> UAVOBJ_TELEMETRY_UPDATE_MODE_SHIFT) & UAVOBJ_UPDATE_MODE_MASK;
 }
@@ -1449,7 +1455,8 @@ UAVObjUpdateMode UAVObjGetTelemetryUpdateMode(const UAVObjMetadata* metadata) {
  * \param[in] metadata The metadata object
  * \param[in] val The telemetry update mode
  */
-void UAVObjSetTelemetryUpdateMode(UAVObjMetadata* metadata, UAVObjUpdateMode val) {
+void UAVObjSetTelemetryUpdateMode(UAVObjMetadata* metadata, UAVObjUpdateMode val)
+{
 	PIOS_Assert(metadata);
 	SET_BITS(metadata->flags, UAVOBJ_TELEMETRY_UPDATE_MODE_SHIFT, val, UAVOBJ_UPDATE_MODE_MASK);
 }
@@ -1459,7 +1466,8 @@ void UAVObjSetTelemetryUpdateMode(UAVObjMetadata* metadata, UAVObjUpdateMode val
  * \param[in] metadata The metadata object
  * \return the GCS telemetry update mode
  */
-UAVObjUpdateMode UAVObjGetGcsTelemetryUpdateMode(const UAVObjMetadata* metadata) {
+UAVObjUpdateMode UAVObjGetGcsTelemetryUpdateMode(const UAVObjMetadata* metadata)
+{
 	PIOS_Assert(metadata);
 	return (metadata->flags >> UAVOBJ_GCS_TELEMETRY_UPDATE_MODE_SHIFT) & UAVOBJ_UPDATE_MODE_MASK;
 }
@@ -1469,7 +1477,8 @@ UAVObjUpdateMode UAVObjGetGcsTelemetryUpdateMode(const UAVObjMetadata* metadata)
  * \param[in] metadata The metadata object
  * \param[in] val The GCS telemetry update mode
  */
-void UAVObjSetGcsTelemetryUpdateMode(UAVObjMetadata* metadata, UAVObjUpdateMode val) {
+void UAVObjSetGcsTelemetryUpdateMode(UAVObjMetadata* metadata, UAVObjUpdateMode val)
+{
 	PIOS_Assert(metadata);
 	SET_BITS(metadata->flags, UAVOBJ_GCS_TELEMETRY_UPDATE_MODE_SHIFT, val, UAVOBJ_UPDATE_MODE_MASK);
 }
@@ -1478,8 +1487,8 @@ void UAVObjSetGcsTelemetryUpdateMode(UAVObjMetadata* metadata, UAVObjUpdateMode 
 /**
  * Check if an object is read only
  * \param[in] obj The object handle
- * \return 
- *   \arg 0 if not read only 
+ * \return
+ *   \arg 0 if not read only
  *   \arg 1 if read only
  *   \arg -1 if unable to get meta data
  */
@@ -1501,7 +1510,7 @@ int8_t UAVObjReadOnly(UAVObjHandle obj_handle)
  * \return 0 if success or -1 if failure
  */
 int32_t UAVObjConnectQueue(UAVObjHandle obj_handle, struct pios_queue *queue,
-			uint8_t eventMask)
+                           uint8_t eventMask)
 {
 	PIOS_Assert(obj_handle);
 	PIOS_Assert(queue);
@@ -1538,7 +1547,7 @@ int32_t UAVObjDisconnectQueue(UAVObjHandle obj_handle, struct pios_queue *queue)
  * \return 0 if success or -1 if failure
  */
 int32_t UAVObjConnectCallback(UAVObjHandle obj_handle, UAVObjEventCallback cb,
-			uint8_t eventMask)
+                              uint8_t eventMask)
 {
 	PIOS_Assert(obj_handle);
 	int32_t res;
@@ -1637,7 +1646,7 @@ void UAVObjIterate(void (*iterator) (UAVObjHandle obj))
  * Send a triggered event to all event queues registered on the object.
  */
 static int32_t sendEvent(struct UAVOBase * obj, uint16_t instId,
-			UAVObjEventType triggered_event)
+                         UAVObjEventType triggered_event)
 {
 	/* Set up the message that will be sent to all registered listeners */
 	UAVObjEvent msg = {
@@ -1650,7 +1659,7 @@ static int32_t sendEvent(struct UAVOBase * obj, uint16_t instId,
 	struct ObjectEventEntry *event;
 	LL_FOREACH(obj->next_event, event) {
 		if (event->eventMask == 0
-			|| (event->eventMask & triggered_event) != 0) {
+		    || (event->eventMask & triggered_event) != 0) {
 			// Send to queue if a valid queue is registered
 			if (event->queue) {
 				// will not block
@@ -1777,7 +1786,7 @@ static InstanceHandle getInstance(struct UAVOData * obj, uint16_t instId)
  * \return 0 if success or -1 if failure
  */
 static int32_t connectObj(UAVObjHandle obj_handle, struct pios_queue *queue,
-			UAVObjEventCallback cb, uint8_t eventMask)
+                          UAVObjEventCallback cb, uint8_t eventMask)
 {
 	struct ObjectEventEntry *event;
 	struct UAVOBase *obj;
@@ -1814,7 +1823,7 @@ static int32_t connectObj(UAVObjHandle obj_handle, struct pios_queue *queue,
  * \return 0 if success or -1 if failure
  */
 static int32_t disconnectObj(UAVObjHandle obj_handle, struct pios_queue *queue,
-			UAVObjEventCallback cb)
+                             UAVObjEventCallback cb)
 {
 	struct ObjectEventEntry *event;
 	struct UAVOBase *obj;
@@ -1823,7 +1832,7 @@ static int32_t disconnectObj(UAVObjHandle obj_handle, struct pios_queue *queue,
 	obj = (struct UAVOBase *) obj_handle;
 	LL_FOREACH(obj->next_event, event) {
 		if ((event->queue == queue
-				&& event->cb == cb)) {
+		     && event->cb == cb)) {
 			LL_DELETE(obj->next_event, event);
 			PIOS_free(event);
 			return 0;
@@ -1895,8 +1904,7 @@ uint32_t UAVObjIDByIndex(uint8_t index)
 	// Look for object
 	struct UAVOData * tmp_obj;
 	LL_FOREACH(uavo_list, tmp_obj) {
-		if (count == index)
-		{
+		if (count == index) {
 			// Release lock
 			PIOS_Recursive_Mutex_Unlock(mutex);
 			return tmp_obj->id;

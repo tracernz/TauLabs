@@ -65,35 +65,35 @@ typedef uint8_t uavtalk_checksum;
 
 //! State information for the UAVTalk parser
 typedef struct {
-    UAVObjHandle obj;
-    uint8_t type;
-    uint16_t packet_size;
-    uint32_t objId;
-    uint16_t instId;
-    uint32_t length;
-    uint8_t instanceLength;
-    uint8_t timestampLength;
-    uint8_t cs;
+	UAVObjHandle obj;
+	uint8_t type;
+	uint16_t packet_size;
+	uint32_t objId;
+	uint16_t instId;
+	uint32_t length;
+	uint8_t instanceLength;
+	uint8_t timestampLength;
+	uint8_t cs;
 	uint16_t timestamp;
-    int32_t rxCount;
-    UAVTalkRxState state;
-    uint16_t rxPacketLength;
+	int32_t rxCount;
+	UAVTalkRxState state;
+	uint16_t rxPacketLength;
 } UAVTalkInputProcessor;
 
 //! Information for the physical link
 typedef struct {
-    uint8_t canari;
-    UAVTalkOutputStream outStream;
-    struct pios_recursive_mutex *lock;
-    struct pios_recursive_mutex *transLock;
-    struct pios_semaphore *respSema;
-    UAVObjHandle respObj;
-    uint16_t respInstId;
-    UAVTalkStats stats;
-    UAVTalkInputProcessor iproc;
-    uint8_t *rxBuffer;
-    uint32_t txSize;
-    uint8_t *txBuffer;
+	uint8_t canari;
+	UAVTalkOutputStream outStream;
+	struct pios_recursive_mutex *lock;
+	struct pios_recursive_mutex *transLock;
+	struct pios_semaphore *respSema;
+	UAVObjHandle respObj;
+	uint16_t respInstId;
+	UAVTalkStats stats;
+	UAVTalkInputProcessor iproc;
+	uint8_t *rxBuffer;
+	uint32_t txSize;
+	uint8_t *txBuffer;
 } UAVTalkConnectionData;
 
 #define UAVTALK_CANARI         0xCA

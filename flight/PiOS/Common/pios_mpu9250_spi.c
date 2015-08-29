@@ -13,19 +13,19 @@
  *
  ******************************************************************************
  */
-/* 
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 3 of the License, or 
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
  * for more details.
- * 
- * You should have received a copy of the GNU General Public License along 
- * with this program; if not, write to the Free Software Foundation, Inc., 
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
@@ -413,12 +413,12 @@ int32_t PIOS_MPU9250_SPI_Init(uint32_t spi_id, uint32_t slave_num, const struct 
 	// Wait 20 ms for data ready interrupt and make sure it happens
 	// twice
 	if ((PIOS_Semaphore_Take(dev->data_ready_sema, 20) != true) ||
-		(PIOS_Semaphore_Take(dev->data_ready_sema, 20) != true)) {
+	    (PIOS_Semaphore_Take(dev->data_ready_sema, 20) != true)) {
 		return -10;
 	}
 
 	dev->TaskHandle = PIOS_Thread_Create(
-			PIOS_MPU9250_Task, "pios_mpu9250", MPU9250_TASK_STACK_BYTES, NULL, MPU9250_TASK_PRIORITY);
+	                      PIOS_MPU9250_Task, "pios_mpu9250", MPU9250_TASK_STACK_BYTES, NULL, MPU9250_TASK_PRIORITY);
 	PIOS_Assert(dev->TaskHandle != NULL);
 
 	PIOS_SENSORS_Register(PIOS_SENSOR_ACCEL, dev->accel_queue);
@@ -635,7 +635,8 @@ static void PIOS_MPU9250_Task(void *parameters)
 
 		uint8_t mpu9250_rec_buf[BUFFER_SIZE];
 		uint8_t mpu9250_tx_buf[BUFFER_SIZE] = {PIOS_MPU60X0_ACCEL_X_OUT_MSB | 0x80, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		                                       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+		                                      };
 
 		uint8_t transfer_size = (dev->cfg->use_magnetometer) ? BUFFER_SIZE : BUFFER_SIZE - 8;
 		// claim bus in high speed mode

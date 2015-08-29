@@ -85,12 +85,12 @@ int32_t PIOS_FrSkyRssi_Init(const struct pios_frsky_rssi_cfg * cfg_in)
 	TIM_SelectSlaveMode(cfg->channels[0].timer, TIM_SlaveMode_Reset);
 
 	switch(cfg->channels[0].timer_chan) {
-		case TIM_Channel_1:
-			TIM_SelectInputTrigger(cfg->channels[0].timer, TIM_TS_TI1FP1);
-			break;
-		case TIM_Channel_2:
-			TIM_SelectInputTrigger(cfg->channels[0].timer, TIM_TS_TI2FP2);
-			break;
+	case TIM_Channel_1:
+		TIM_SelectInputTrigger(cfg->channels[0].timer, TIM_TS_TI1FP1);
+		break;
+	case TIM_Channel_2:
+		TIM_SelectInputTrigger(cfg->channels[0].timer, TIM_TS_TI2FP2);
+		break;
 	}
 
 	// Enable CC channels

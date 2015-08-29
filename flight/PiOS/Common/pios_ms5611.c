@@ -170,7 +170,7 @@ int32_t PIOS_MS5611_Init(const struct pios_ms5611_cfg *cfg, int32_t i2c_device)
 	PIOS_SENSORS_Register(PIOS_SENSOR_BARO, dev->queue);
 
 	dev->task = PIOS_Thread_Create(
-			PIOS_MS5611_Task, "pios_ms5611", MS5611_TASK_STACK_BYTES, NULL, MS5611_TASK_PRIORITY);
+	                PIOS_MS5611_Task, "pios_ms5611", MS5611_TASK_STACK_BYTES, NULL, MS5611_TASK_PRIORITY);
 	PIOS_Assert(dev->task != NULL);
 
 	return 0;
@@ -343,7 +343,7 @@ static int32_t PIOS_MS5611_Read(uint8_t address, uint8_t *buffer, uint8_t len)
 			.rw = PIOS_I2C_TXN_READ,
 			.len = len,
 			.buf = buffer,
-		 }
+		}
 	};
 
 	return PIOS_I2C_Transfer(dev->i2c_id, txn_list, NELEMENTS(txn_list));
@@ -369,7 +369,7 @@ static int32_t PIOS_MS5611_WriteCommand(uint8_t command)
 			.rw = PIOS_I2C_TXN_WRITE,
 			.len = 1,
 			.buf = &command,
-		 },
+		},
 	};
 
 	return PIOS_I2C_Transfer(dev->i2c_id, txn_list, NELEMENTS(txn_list));
@@ -398,9 +398,9 @@ int32_t PIOS_MS5611_Test()
 
 	// check range for sanity according to datasheet
 	if (dev->temperature_unscaled < -4000 ||
-		dev->temperature_unscaled > 8500 ||
-		dev->pressure_unscaled < 1000 ||
-		dev->pressure_unscaled > 120000)
+	    dev->temperature_unscaled > 8500 ||
+	    dev->pressure_unscaled < 1000 ||
+	    dev->pressure_unscaled > 120000)
 		return -1;
 
 	return 0;
@@ -417,8 +417,7 @@ static void PIOS_MS5611_Task(void *parameters)
 		--temp_press_interleave_count;
 		read_adc_result = 0;
 
-		if (temp_press_interleave_count == 0)
-		{
+		if (temp_press_interleave_count == 0) {
 			// Update the temperature data
 			PIOS_MS5611_ClaimDevice();
 			PIOS_MS5611_StartADC(TEMPERATURE_CONV);

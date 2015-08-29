@@ -172,9 +172,8 @@ static void groundPathFollowerTask(void *parameters)
 
 		SystemSettingsGet(&systemSettings);
 		if ( (systemSettings.AirframeType != SYSTEMSETTINGS_AIRFRAMETYPE_GROUNDVEHICLECAR) &&
-			(systemSettings.AirframeType != SYSTEMSETTINGS_AIRFRAMETYPE_GROUNDVEHICLEDIFFERENTIAL) &&
-			(systemSettings.AirframeType != SYSTEMSETTINGS_AIRFRAMETYPE_GROUNDVEHICLEMOTORCYCLE) )
-		{
+		     (systemSettings.AirframeType != SYSTEMSETTINGS_AIRFRAMETYPE_GROUNDVEHICLEDIFFERENTIAL) &&
+		     (systemSettings.AirframeType != SYSTEMSETTINGS_AIRFRAMETYPE_GROUNDVEHICLEMOTORCYCLE) ) {
 			AlarmsSet(SYSTEMALARMS_ALARM_PATHFOLLOWER,SYSTEMALARMS_ALARM_WARNING);
 			PIOS_Thread_Sleep(1000);
 			continue;
@@ -190,52 +189,52 @@ static void groundPathFollowerTask(void *parameters)
 
 		// Check the combinations of flightmode and pathdesired mode
 		switch(flightStatus.FlightMode) {
-			/* This combination of RETURNTOHOME and HOLDPOSITION looks strange but
-			 * is correct.  RETURNTOHOME mode uses HOLDPOSITION with the position
-			 * set to home */
-			case FLIGHTSTATUS_FLIGHTMODE_RETURNTOHOME:
-				if (pathDesired.Mode == PATHDESIRED_MODE_HOLDPOSITION) {
-					updateEndpointVelocity();
-					updateGroundDesiredAttitude();
-				} else {
-					AlarmsSet(SYSTEMALARMS_ALARM_PATHFOLLOWER,SYSTEMALARMS_ALARM_ERROR);
-				}
-				break;
-			case FLIGHTSTATUS_FLIGHTMODE_POSITIONHOLD:
-				if (pathDesired.Mode == PATHDESIRED_MODE_HOLDPOSITION) {
-					updateEndpointVelocity();
-					updateGroundDesiredAttitude();
-				} else {
-					AlarmsSet(SYSTEMALARMS_ALARM_PATHFOLLOWER,SYSTEMALARMS_ALARM_ERROR);
-				}
-				break;
-			case FLIGHTSTATUS_FLIGHTMODE_PATHPLANNER:
-				if (pathDesired.Mode == PATHDESIRED_MODE_ENDPOINT ||
-					pathDesired.Mode == PATHDESIRED_MODE_HOLDPOSITION) {
-					updateEndpointVelocity();
-					updateGroundDesiredAttitude();
-				} else if (pathDesired.Mode == PATHDESIRED_MODE_VECTOR ||
-					pathDesired.Mode == PATHDESIRED_MODE_CIRCLELEFT ||
-					pathDesired.Mode == PATHDESIRED_MODE_CIRCLERIGHT) {
-					updatePathVelocity();
-					updateGroundDesiredAttitude();
-				} else {
-					AlarmsSet(SYSTEMALARMS_ALARM_PATHFOLLOWER,SYSTEMALARMS_ALARM_ERROR);
-				}
-				break;
-			default:
-				// Be cleaner and get rid of global variables
-				northVelIntegral = 0;
-				eastVelIntegral = 0;
-				northPosIntegral = 0;
-				eastPosIntegral = 0;
+		/* This combination of RETURNTOHOME and HOLDPOSITION looks strange but
+		 * is correct.  RETURNTOHOME mode uses HOLDPOSITION with the position
+		 * set to home */
+		case FLIGHTSTATUS_FLIGHTMODE_RETURNTOHOME:
+			if (pathDesired.Mode == PATHDESIRED_MODE_HOLDPOSITION) {
+				updateEndpointVelocity();
+				updateGroundDesiredAttitude();
+			} else {
+				AlarmsSet(SYSTEMALARMS_ALARM_PATHFOLLOWER,SYSTEMALARMS_ALARM_ERROR);
+			}
+			break;
+		case FLIGHTSTATUS_FLIGHTMODE_POSITIONHOLD:
+			if (pathDesired.Mode == PATHDESIRED_MODE_HOLDPOSITION) {
+				updateEndpointVelocity();
+				updateGroundDesiredAttitude();
+			} else {
+				AlarmsSet(SYSTEMALARMS_ALARM_PATHFOLLOWER,SYSTEMALARMS_ALARM_ERROR);
+			}
+			break;
+		case FLIGHTSTATUS_FLIGHTMODE_PATHPLANNER:
+			if (pathDesired.Mode == PATHDESIRED_MODE_ENDPOINT ||
+			    pathDesired.Mode == PATHDESIRED_MODE_HOLDPOSITION) {
+				updateEndpointVelocity();
+				updateGroundDesiredAttitude();
+			} else if (pathDesired.Mode == PATHDESIRED_MODE_VECTOR ||
+			           pathDesired.Mode == PATHDESIRED_MODE_CIRCLELEFT ||
+			           pathDesired.Mode == PATHDESIRED_MODE_CIRCLERIGHT) {
+				updatePathVelocity();
+				updateGroundDesiredAttitude();
+			} else {
+				AlarmsSet(SYSTEMALARMS_ALARM_PATHFOLLOWER,SYSTEMALARMS_ALARM_ERROR);
+			}
+			break;
+		default:
+			// Be cleaner and get rid of global variables
+			northVelIntegral = 0;
+			eastVelIntegral = 0;
+			northPosIntegral = 0;
+			eastPosIntegral = 0;
 
-				// Track throttle before engaging this mode.  Cheap system ident
-				StabilizationDesiredData stabDesired;
-				StabilizationDesiredGet(&stabDesired);
-				throttleOffset = stabDesired.Throttle;
+			// Track throttle before engaging this mode.  Cheap system ident
+			StabilizationDesiredData stabDesired;
+			StabilizationDesiredGet(&stabDesired);
+			throttleOffset = stabDesired.Throttle;
 
-				break;
+			break;
 		}
 
 		AlarmsClear(SYSTEMALARMS_ALARM_PATHFOLLOWER);
@@ -273,7 +272,7 @@ static void updatePathVelocity()
 	PathStatusSet(&pathStatus);
 
 	float groundspeed = pathDesired.StartingVelocity +
-	    (pathDesired.EndingVelocity - pathDesired.StartingVelocity) * progress.fractional_progress;
+	                    (pathDesired.EndingVelocity - pathDesired.StartingVelocity) * progress.fractional_progress;
 	if(progress.fractional_progress > 1)
 		groundspeed = 0;
 
@@ -283,7 +282,8 @@ static void updatePathVelocity()
 
 	float error_speed = progress.error * guidanceSettings.HorizontalPosPI[GROUNDPATHFOLLOWERSETTINGS_HORIZONTALPOSPI_KP];
 	float correction_velocity[2] = {progress.correction_direction[0] * error_speed,
-	    progress.correction_direction[1] * error_speed};
+	                                progress.correction_direction[1] * error_speed
+	                               };
 
 	float total_vel = sqrtf(powf(correction_velocity[0],2) + powf(correction_velocity[1],2));
 	float scale = 1;
@@ -397,34 +397,30 @@ static void updateGroundDesiredAttitude()
 	ManualControlCommandData manualControlData;
 	ManualControlCommandGet(&manualControlData);
 	switch (guidanceSettings.ThrottleControl) {
-		case GROUNDPATHFOLLOWERSETTINGS_THROTTLECONTROL_MANUAL:
-		{
-			stabDesired.Throttle = manualControlData.Throttle;
-			break;
+	case GROUNDPATHFOLLOWERSETTINGS_THROTTLECONTROL_MANUAL: {
+		stabDesired.Throttle = manualControlData.Throttle;
+		break;
+	}
+	case GROUNDPATHFOLLOWERSETTINGS_THROTTLECONTROL_PROPORTIONAL: {
+		float velRatio = velDesired / guidanceSettings.HorizontalVelMax;
+		stabDesired.Throttle = guidanceSettings.MaxThrottle * velRatio;
+		if (guidanceSettings.ManualOverride == GROUNDPATHFOLLOWERSETTINGS_MANUALOVERRIDE_TRUE) {
+			stabDesired.Throttle = stabDesired.Throttle * manualControlData.Throttle;
 		}
-		case GROUNDPATHFOLLOWERSETTINGS_THROTTLECONTROL_PROPORTIONAL:
-		{
-			float velRatio = velDesired / guidanceSettings.HorizontalVelMax;
-			stabDesired.Throttle = guidanceSettings.MaxThrottle * velRatio;
-			if (guidanceSettings.ManualOverride == GROUNDPATHFOLLOWERSETTINGS_MANUALOVERRIDE_TRUE) {
-				stabDesired.Throttle = stabDesired.Throttle * manualControlData.Throttle;
-			}
-			break;
+		break;
+	}
+	case GROUNDPATHFOLLOWERSETTINGS_THROTTLECONTROL_AUTO: {
+		float velError = velDesired - velActual;
+		stabDesired.Throttle = pid_apply(&ground_pids[VELOCITY], velError, dT) + velDesired * guidanceSettings.VelocityFeedforward;
+		if (guidanceSettings.ManualOverride == GROUNDPATHFOLLOWERSETTINGS_MANUALOVERRIDE_TRUE) {
+			stabDesired.Throttle = stabDesired.Throttle * manualControlData.Throttle;
 		}
-		case GROUNDPATHFOLLOWERSETTINGS_THROTTLECONTROL_AUTO:
-		{
-			float velError = velDesired - velActual;
-			stabDesired.Throttle = pid_apply(&ground_pids[VELOCITY], velError, dT) + velDesired * guidanceSettings.VelocityFeedforward;
-			if (guidanceSettings.ManualOverride == GROUNDPATHFOLLOWERSETTINGS_MANUALOVERRIDE_TRUE) {
-				stabDesired.Throttle = stabDesired.Throttle * manualControlData.Throttle;
-			}
-			break;
-		}
-		default:
-		{
-			PIOS_Assert(0);
-			break;
-		}
+		break;
+	}
+	default: {
+		PIOS_Assert(0);
+		break;
+	}
 	}
 
 	// Limit throttle as per settings
@@ -462,7 +458,7 @@ static void updateNedAccel()
 	q[2]=attitudeActual.q3;
 	q[3]=attitudeActual.q4;
 	Quaternion2R(q, Rbe);
-	for (uint8_t i=0; i<3; i++){
+	for (uint8_t i=0; i<3; i++) {
 		accel_ned[i]=0;
 		for (uint8_t j=0; j<3; j++)
 			accel_ned[i] += Rbe[j][i]*accel[j];
@@ -483,22 +479,22 @@ static void SettingsUpdatedCb(UAVObjEvent * ev)
 
 	// Configure the velocity control PID loops
 	pid_configure(&ground_pids[VELOCITY],
-		guidanceSettings.HorizontalVelPID[GROUNDPATHFOLLOWERSETTINGS_HORIZONTALVELPID_KP], // Kp
-		guidanceSettings.HorizontalVelPID[GROUNDPATHFOLLOWERSETTINGS_HORIZONTALVELPID_KI], // Ki
-		0, // Kd
-		guidanceSettings.HorizontalVelPID[GROUNDPATHFOLLOWERSETTINGS_HORIZONTALVELPID_ILIMIT]);
+	              guidanceSettings.HorizontalVelPID[GROUNDPATHFOLLOWERSETTINGS_HORIZONTALVELPID_KP], // Kp
+	              guidanceSettings.HorizontalVelPID[GROUNDPATHFOLLOWERSETTINGS_HORIZONTALVELPID_KI], // Ki
+	              0, // Kd
+	              guidanceSettings.HorizontalVelPID[GROUNDPATHFOLLOWERSETTINGS_HORIZONTALVELPID_ILIMIT]);
 
 	// Configure the position control (velocity output) PID loops
 	pid_configure(&ground_pids[NORTH_POSITION],
-		guidanceSettings.HorizontalPosPI[GROUNDPATHFOLLOWERSETTINGS_HORIZONTALPOSPI_KP],
-		guidanceSettings.HorizontalPosPI[GROUNDPATHFOLLOWERSETTINGS_HORIZONTALPOSPI_KI],
-		0,
-		guidanceSettings.HorizontalPosPI[GROUNDPATHFOLLOWERSETTINGS_HORIZONTALPOSPI_ILIMIT]);
+	              guidanceSettings.HorizontalPosPI[GROUNDPATHFOLLOWERSETTINGS_HORIZONTALPOSPI_KP],
+	              guidanceSettings.HorizontalPosPI[GROUNDPATHFOLLOWERSETTINGS_HORIZONTALPOSPI_KI],
+	              0,
+	              guidanceSettings.HorizontalPosPI[GROUNDPATHFOLLOWERSETTINGS_HORIZONTALPOSPI_ILIMIT]);
 	pid_configure(&ground_pids[EAST_POSITION],
-		guidanceSettings.HorizontalPosPI[GROUNDPATHFOLLOWERSETTINGS_HORIZONTALPOSPI_KP],
-		guidanceSettings.HorizontalPosPI[GROUNDPATHFOLLOWERSETTINGS_HORIZONTALPOSPI_KI],
-		0,
-		guidanceSettings.HorizontalPosPI[GROUNDPATHFOLLOWERSETTINGS_HORIZONTALPOSPI_ILIMIT]);
+	              guidanceSettings.HorizontalPosPI[GROUNDPATHFOLLOWERSETTINGS_HORIZONTALPOSPI_KP],
+	              guidanceSettings.HorizontalPosPI[GROUNDPATHFOLLOWERSETTINGS_HORIZONTALPOSPI_KI],
+	              0,
+	              guidanceSettings.HorizontalPosPI[GROUNDPATHFOLLOWERSETTINGS_HORIZONTALPOSPI_ILIMIT]);
 
 	PathDesiredGet(&pathDesired);
 }

@@ -133,7 +133,7 @@ static int32_t PIOS_GCSRCVR_Get(uintptr_t rcvr_id, uint8_t channel)
 
 #ifdef VALID_WHEN_MISSING
 	return (gcsreceiverdata.Channel[channel] != 0) ? (gcsreceiverdata.Channel[channel]) : 1500;
-#else 
+#else
 	return (gcsreceiverdata.Channel[channel]);
 #endif
 
@@ -141,7 +141,7 @@ static int32_t PIOS_GCSRCVR_Get(uintptr_t rcvr_id, uint8_t channel)
 
 #endif	/* PIOS_INCLUDE_GCSRCVR */
 
-/** 
+/**
   * @}
   * @}
   */

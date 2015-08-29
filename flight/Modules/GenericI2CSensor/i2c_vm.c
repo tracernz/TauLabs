@@ -222,16 +222,15 @@ static bool i2c_vm_aluop_imm (struct i2c_vm_regs * vm_state, enum aluop operatio
 	case ALUOP_OR:
 		rd_val |= (uint16_t)simm_val;
 		break;
-	case ALUOP_ASR:
-		{
-			/* NOTE this must be a signed integer to force the >> to be an arithmetic shift */
-			int32_t rd_signed;
+	case ALUOP_ASR: {
+		/* NOTE this must be a signed integer to force the >> to be an arithmetic shift */
+		int32_t rd_signed;
 
-			rd_signed = rd_val;
-			rd_signed >>= (uint8_t)(simm_val & 0x1F);
-			rd_val = rd_signed;
-		}
-		break;
+		rd_signed = rd_val;
+		rd_signed >>= (uint8_t)(simm_val & 0x1F);
+		rd_val = rd_signed;
+	}
+	break;
 	case ALUOP_LSR:
 		rd_val >>= (uint8_t)(simm_val & 0x1F);
 		break;
@@ -331,9 +330,9 @@ static bool i2c_vm_load_be (struct i2c_vm_regs * vm_state, uint8_t addr, uint8_t
 
 	/* Handle byte swapping */
 	val = (((val & 0xFF000000) >> 24) |
-		((val & 0x00FF0000) >> 8) |
-		((val & 0x0000FF00) << 8) |
-		((val & 0x000000FF) << 24));
+	       ((val & 0x00FF0000) >> 8) |
+	       ((val & 0x0000FF00) << 8) |
+	       ((val & 0x000000FF) << 24));
 
 	if (!i2c_vm_set_reg (vm_state, rd, val))
 		return false;

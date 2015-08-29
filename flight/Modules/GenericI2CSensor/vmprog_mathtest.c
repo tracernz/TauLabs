@@ -36,12 +36,12 @@ const uint32_t vmprog_mathtest[] = {
 	I2C_VM_ASM_SET_IMM(VM_R0, 1),  /* initialize r0 to 1 */
 
 	I2C_VM_ASM_SET_IMM(VM_R6, 32), /* set counter to 32 */
-/* Start loop */
+	/* Start loop */
 	I2C_VM_ASM_SEND_UAVO(),	       /* Set the UAVO */
 	I2C_VM_ASM_DELAY(500),	       /* Pause */
 	I2C_VM_ASM_SL_IMM(VM_R0, 1),   /* shift the bit left by 1 */
 	I2C_VM_ASM_ADD_IMM(VM_R6, -1), /* decrement the counter */
-/* End loop */
+	/* End loop */
 	I2C_VM_ASM_BNZ(VM_R6, -4),     /* loop until counter is zero */
 
 	/*
@@ -52,12 +52,12 @@ const uint32_t vmprog_mathtest[] = {
 	I2C_VM_ASM_SL_IMM(VM_R1, 16),
 
 	I2C_VM_ASM_SET_IMM(VM_R6, 32), /* set counter to 32 */
-/* Start loop */
+	/* Start loop */
 	I2C_VM_ASM_SEND_UAVO(),	       /* Set the UAVO */
 	I2C_VM_ASM_DELAY(500),	       /* Pause */
 	I2C_VM_ASM_ASR_IMM(VM_R1, 1),
 	I2C_VM_ASM_ADD_IMM(VM_R6, -1), /* decrement the counter */
-/* End loop */
+	/* End loop */
 	I2C_VM_ASM_BNZ(VM_R6, -4),     /* loop until counter is zero */
 
 	/*
@@ -65,12 +65,12 @@ const uint32_t vmprog_mathtest[] = {
 	 */
 	I2C_VM_ASM_SET_IMM(VM_R1, 1000),
 	I2C_VM_ASM_SET_IMM(VM_R6, 100), /* set counter to 100 */
-/* Start loop */
+	/* Start loop */
 	I2C_VM_ASM_SEND_UAVO(),	       /* Set the UAVO */
 	I2C_VM_ASM_DELAY(500),	       /* Pause */
 	I2C_VM_ASM_ADD_IMM(VM_R1, -10),
 	I2C_VM_ASM_ADD_IMM(VM_R6, -1), /* decrement the counter */
-/* End loop */
+	/* End loop */
 	I2C_VM_ASM_BNZ(VM_R6, -4),     /* loop until counter is zero */
 
 	/*
@@ -79,12 +79,12 @@ const uint32_t vmprog_mathtest[] = {
 	I2C_VM_ASM_SET_IMM(VM_R1, 50000),
 	I2C_VM_ASM_SET_IMM(VM_R2, 100),
 	I2C_VM_ASM_SET_IMM(VM_R6, 19), /* set counter to 19 */
-/* Start loop */
+	/* Start loop */
 	I2C_VM_ASM_SEND_UAVO(),	       /* Set the UAVO */
 	I2C_VM_ASM_DELAY(500),	       /* Pause */
 	I2C_VM_ASM_ADD(VM_R1, VM_R1, VM_R1),
 	I2C_VM_ASM_ADD_IMM(VM_R6, -1), /* decrement the counter */
-/* End loop */
+	/* End loop */
 	I2C_VM_ASM_BNZ(VM_R6, -4),     /* loop until counter is zero */
 };
 

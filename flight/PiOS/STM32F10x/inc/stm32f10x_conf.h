@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    Project/Template/stm32f10x_conf.h 
+  * @file    Project/Template/stm32f10x_conf.h
   * @author  MCD Application Team
   * @version V3.1.2
   * @date    09/28/2009
@@ -49,7 +49,7 @@
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
-/* Uncomment the line below to expanse the "assert_param" macro in the 
+/* Uncomment the line below to expanse the "assert_param" macro in the
    Standard Peripheral Library drivers code */
 //#define USE_FULL_ASSERT    1
 
@@ -60,7 +60,7 @@
 * The assert_param macro is used for function's parameters check.
 * \param[in]  expr: If expr is false, it calls assert_failed function
 *   which reports the name of the source file and the source
-*   line number of the call that failed. 
+*   line number of the call that failed.
 *   If expr is true, it returns no value.
 * \retval None
 */

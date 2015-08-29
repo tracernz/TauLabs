@@ -238,8 +238,7 @@ void USB_OTG_BSP_uDelay (const uint32_t usec)
 		if (++count > utime) {
 			return ;
 		}
-	}
-	while (1); 
+	} while (1);
 }
 
 void USB_OTG_BSP_mDelay (const uint32_t msec)

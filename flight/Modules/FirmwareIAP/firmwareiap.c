@@ -93,9 +93,9 @@ static void resetTask(UAVObjEvent *);
 MODULE_INITCALL(FirmwareIAPInitialize, 0)
 int32_t FirmwareIAPInitialize()
 {
-	
+
 	FirmwareIAPObjInitialize();
-	
+
 	const struct pios_board_info * bdinfo = &pios_board_info_blob;
 
 	FirmwareIAPObjData data;
@@ -125,13 +125,13 @@ static void FirmwareIAPCallback(UAVObjEvent* ev)
 	static uint32_t   last_time = 0;
 	uint32_t          this_time;
 	uint32_t          delta;
-	
+
 	if(iap_state == IAP_STATE_RESETTING)
 		return;
 
 	FirmwareIAPObjData data;
 	FirmwareIAPObjGet(&data);
-	
+
 	if ( ev->obj == FirmwareIAPObjHandle() )	{
 		// Get the input object data
 		FirmwareIAPObjGet(&data);
@@ -140,66 +140,66 @@ static void FirmwareIAPCallback(UAVObjEvent* ev)
 		last_time = this_time;
 
 		switch(iap_state) {
-			case IAP_STATE_READY:
-				if( data.Command == IAP_CMD_STEP_1 ) {
-					iap_state = IAP_STATE_STEP_1;
-				}            break;
-			case IAP_STATE_STEP_1:
-				if( data.Command == IAP_CMD_STEP_2 ) {
-					if( delta > iap_time_2_low_end && delta < iap_time_2_high_end ) {
-						iap_state = IAP_STATE_STEP_2;
-					} else {
-						iap_state = IAP_STATE_READY;
-					}
+		case IAP_STATE_READY:
+			if( data.Command == IAP_CMD_STEP_1 ) {
+				iap_state = IAP_STATE_STEP_1;
+			}
+			break;
+		case IAP_STATE_STEP_1:
+			if( data.Command == IAP_CMD_STEP_2 ) {
+				if( delta > iap_time_2_low_end && delta < iap_time_2_high_end ) {
+					iap_state = IAP_STATE_STEP_2;
 				} else {
 					iap_state = IAP_STATE_READY;
 				}
-				break;
-			case IAP_STATE_STEP_2:
-				if( (data.Command == IAP_CMD_STEP_3) || (data.Command == IAP_CMD_STEP_3NB) ) {
-					if( delta > iap_time_3_low_end && delta < iap_time_3_high_end ) {
-						
-						FlightStatusData flightStatus;
-						FlightStatusGet(&flightStatus);
-						
-						if(flightStatus.Armed != FLIGHTSTATUS_ARMED_DISARMED) {
-							// Abort any attempts if not disarmed
-							iap_state = IAP_STATE_READY;
-							break;
-						}
-							
-						// we've met the three sequence of command numbers
-						// we've met the time requirements.
-						if(data.Command == IAP_CMD_STEP_3) {
-							PIOS_IAP_SetRequest1();
-							PIOS_IAP_SetRequest2();
-						}
-						else if(data.Command == IAP_CMD_STEP_3NB) {
-							PIOS_IAP_SetRequest1();
-							PIOS_IAP_SetRequest3();
-						}
-						
-						/* Note: Cant just wait timeout value, because first time is randomized */
-						reset_count = 0;
-						lastResetSysTime = PIOS_Thread_Systime();
-						UAVObjEvent * ev = PIOS_malloc(sizeof(UAVObjEvent));
-						memset(ev,0,sizeof(UAVObjEvent));
-						EventPeriodicCallbackCreate(ev, resetTask, 100);
-						iap_state = IAP_STATE_RESETTING;
-					} else {
-						iap_state = IAP_STATE_READY;
-					}
-				} else {
-					iap_state = IAP_STATE_READY;
-				}
-				break;
-			case IAP_STATE_RESETTING:
-				// stay here permanentally, should reboot
-				break;
-			default:
+			} else {
 				iap_state = IAP_STATE_READY;
-				last_time = 0; // Reset the time counter, as we are not doing a IAP reset
-				break;
+			}
+			break;
+		case IAP_STATE_STEP_2:
+			if( (data.Command == IAP_CMD_STEP_3) || (data.Command == IAP_CMD_STEP_3NB) ) {
+				if( delta > iap_time_3_low_end && delta < iap_time_3_high_end ) {
+
+					FlightStatusData flightStatus;
+					FlightStatusGet(&flightStatus);
+
+					if(flightStatus.Armed != FLIGHTSTATUS_ARMED_DISARMED) {
+						// Abort any attempts if not disarmed
+						iap_state = IAP_STATE_READY;
+						break;
+					}
+
+					// we've met the three sequence of command numbers
+					// we've met the time requirements.
+					if(data.Command == IAP_CMD_STEP_3) {
+						PIOS_IAP_SetRequest1();
+						PIOS_IAP_SetRequest2();
+					} else if(data.Command == IAP_CMD_STEP_3NB) {
+						PIOS_IAP_SetRequest1();
+						PIOS_IAP_SetRequest3();
+					}
+
+					/* Note: Cant just wait timeout value, because first time is randomized */
+					reset_count = 0;
+					lastResetSysTime = PIOS_Thread_Systime();
+					UAVObjEvent * ev = PIOS_malloc(sizeof(UAVObjEvent));
+					memset(ev,0,sizeof(UAVObjEvent));
+					EventPeriodicCallbackCreate(ev, resetTask, 100);
+					iap_state = IAP_STATE_RESETTING;
+				} else {
+					iap_state = IAP_STATE_READY;
+				}
+			} else {
+				iap_state = IAP_STATE_READY;
+			}
+			break;
+		case IAP_STATE_RESETTING:
+			// stay here permanentally, should reboot
+			break;
+		default:
+			iap_state = IAP_STATE_READY;
+			last_time = 0; // Reset the time counter, as we are not doing a IAP reset
+			break;
 		}
 	}
 }
@@ -223,7 +223,7 @@ static uint32_t get_time(void)
 }
 
 /**
- * Executed by event dispatcher callback to reset INS before resetting OP 
+ * Executed by event dispatcher callback to reset INS before resetting OP
  */
 static void resetTask(UAVObjEvent * ev)
 {
@@ -240,7 +240,7 @@ static void resetTask(UAVObjEvent * ev)
 
 	if((uint32_t) (PIOS_Thread_Systime() - lastResetSysTime) > RESET_DELAY_MS) {
 		lastResetSysTime = PIOS_Thread_Systime();
-			PIOS_SYS_Reset();
+		PIOS_SYS_Reset();
 	}
 }
 

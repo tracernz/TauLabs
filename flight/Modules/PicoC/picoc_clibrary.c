@@ -1,9 +1,9 @@
 /**
  ******************************************************************************
  * @addtogroup TauLabsModules TauLabs Modules
- * @{ 
+ * @{
  * @addtogroup PicoC Interpreter Module
- * @{ 
+ * @{
  *
  * @file       picoc_clibrary.c
  * @author     Tau Labs, http://taulabs.org, Copyright (C) 2014
@@ -36,7 +36,7 @@
 #include "openpilot.h"
 #include "picoc_port.h"
 
-/* picoc mini standard C library - provides an optional tiny C standard library 
+/* picoc mini standard C library - provides an optional tiny C standard library
  * if BUILTIN_MINI_STDLIB is defined */
 
 #include "picoc.h"
@@ -62,8 +62,7 @@ void LibraryAdd(Picoc *pc, struct Table *GlobalTable, const char *LibraryName, s
 	char *IntrinsicName = TableStrRegister(pc, "c library");
 
 	/* read all the library definitions */
-	for (Count = 0; FuncList[Count].Prototype != NULL; Count++)
-	{
+	for (Count = 0; FuncList[Count].Prototype != NULL; Count++) {
 		Tokens = LexAnalyse(pc, IntrinsicName, FuncList[Count].Prototype, strlen((char *)FuncList[Count].Prototype), NULL);
 		LexInitParser(&Parser, pc, FuncList[Count].Prototype, Tokens, IntrinsicName, TRUE, FALSE);
 		TypeParse(&Parser, &ReturnType, &Identifier, NULL);
@@ -76,36 +75,80 @@ void LibraryAdd(Picoc *pc, struct Table *GlobalTable, const char *LibraryName, s
 /* print a type to a stream without using printf/sprintf */
 void PrintType(struct ValueType *Typ, IOFILE *Stream)
 {
-	switch (Typ->Base)
-	{
-		case TypeVoid:			PrintStr("void", Stream); break;
-		case TypeInt:			PrintStr("int", Stream); break;
-		case TypeShort:			PrintStr("short", Stream); break;
-		case TypeChar:			PrintStr("char", Stream); break;
-		case TypeLong:			PrintStr("long", Stream); break;
-		case TypeUnsignedInt:	PrintStr("unsigned int", Stream); break;
-		case TypeUnsignedShort:	PrintStr("unsigned short", Stream); break;
-		case TypeUnsignedLong:	PrintStr("unsigned long", Stream); break;
-		case TypeUnsignedChar:	PrintStr("unsigned char", Stream); break;
+	switch (Typ->Base) {
+	case TypeVoid:
+		PrintStr("void", Stream);
+		break;
+	case TypeInt:
+		PrintStr("int", Stream);
+		break;
+	case TypeShort:
+		PrintStr("short", Stream);
+		break;
+	case TypeChar:
+		PrintStr("char", Stream);
+		break;
+	case TypeLong:
+		PrintStr("long", Stream);
+		break;
+	case TypeUnsignedInt:
+		PrintStr("unsigned int", Stream);
+		break;
+	case TypeUnsignedShort:
+		PrintStr("unsigned short", Stream);
+		break;
+	case TypeUnsignedLong:
+		PrintStr("unsigned long", Stream);
+		break;
+	case TypeUnsignedChar:
+		PrintStr("unsigned char", Stream);
+		break;
 #ifndef NO_FP
-		case TypeFP:			PrintStr("double", Stream); break;
+	case TypeFP:
+		PrintStr("double", Stream);
+		break;
 #endif
-		case TypeFunction:		PrintStr("function", Stream); break;
-		case TypeMacro:			PrintStr("macro", Stream); break;
-		case TypePointer:		if (Typ->FromType) PrintType(Typ->FromType, Stream); PrintCh('*', Stream); break;
-		case TypeArray:			PrintType(Typ->FromType, Stream); PrintCh('[', Stream); if (Typ->ArraySize != 0) PrintSimpleInt(Typ->ArraySize, Stream); PrintCh(']', Stream); break;
-		case TypeStruct:		PrintStr("struct ", Stream); PrintStr( Typ->Identifier, Stream); break;
-		case TypeUnion:			PrintStr("union ", Stream); PrintStr(Typ->Identifier, Stream); break;
-		case TypeEnum:			PrintStr("enum ", Stream); PrintStr(Typ->Identifier, Stream); break;
-		case TypeGotoLabel:		PrintStr("goto label ", Stream); break;
-		case Type_Type:			PrintStr("type ", Stream); break;
+	case TypeFunction:
+		PrintStr("function", Stream);
+		break;
+	case TypeMacro:
+		PrintStr("macro", Stream);
+		break;
+	case TypePointer:
+		if (Typ->FromType) PrintType(Typ->FromType, Stream);
+		PrintCh('*', Stream);
+		break;
+	case TypeArray:
+		PrintType(Typ->FromType, Stream);
+		PrintCh('[', Stream);
+		if (Typ->ArraySize != 0) PrintSimpleInt(Typ->ArraySize, Stream);
+		PrintCh(']', Stream);
+		break;
+	case TypeStruct:
+		PrintStr("struct ", Stream);
+		PrintStr( Typ->Identifier, Stream);
+		break;
+	case TypeUnion:
+		PrintStr("union ", Stream);
+		PrintStr(Typ->Identifier, Stream);
+		break;
+	case TypeEnum:
+		PrintStr("enum ", Stream);
+		PrintStr(Typ->Identifier, Stream);
+		break;
+	case TypeGotoLabel:
+		PrintStr("goto label ", Stream);
+		break;
+	case Type_Type:
+		PrintStr("type ", Stream);
+		break;
 	}
 }
 
 
 #ifdef BUILTIN_MINI_STDLIB
 
-/* 
+/*
  * This is a simplified standard library for small embedded systems. It doesn't require
  * a system stdio library to operate.
  *
@@ -165,8 +208,7 @@ void PrintUnsigned(unsigned long Num, unsigned int Base, int FieldWidth, int Zer
 		*FPos++ = '0';
 	if ((FieldWidth > 0) && (FieldWidth < 20))
 		FPos += snprintf(FPos, 2, "%d", FieldWidth);
-	switch (Base)
-	{
+	switch (Base) {
 	case 16:
 		*FPos++ = 'x';
 		break;
@@ -188,12 +230,11 @@ void PrintSimpleInt(long Num, struct OutputStream *Stream)
 /* print an integer to a stream without using printf/sprintf */
 void PrintInt(long Num, int FieldWidth, int ZeroPad, int LeftJustify, struct OutputStream *Stream)
 {
-	if (Num < 0)
-	{
+	if (Num < 0) {
 		PrintCh('-', Stream);
 		Num = -Num;
-	if (FieldWidth != 0)
-		FieldWidth--;
+		if (FieldWidth != 0)
+			FieldWidth--;
 	}
 	PrintUnsigned((unsigned long)Num, 10, FieldWidth, ZeroPad, LeftJustify, Stream);
 }
@@ -205,8 +246,7 @@ void PrintFP(double Num, struct OutputStream *Stream)
 	int Exponent = 0;
 	int MaxDecimal;
 
-	if (Num < 0)
-	{
+	if (Num < 0) {
 		PrintCh('-', Stream);
 		Num = -Num;
 	}
@@ -220,16 +260,13 @@ void PrintFP(double Num, struct OutputStream *Stream)
 	PrintInt((long)Num, 0, FALSE, FALSE, Stream);
 	PrintCh('.', Stream);
 	Num = (Num - (long)Num) * 10;
-	if (abs(Num) >= 1e-7)
-	{
+	if (abs(Num) >= 1e-7) {
 		for (MaxDecimal = 6; MaxDecimal > 0 && abs(Num) >= 1e-7; Num = (Num - (long)(Num + 1e-7)) * 10, MaxDecimal--)
 			PrintCh('0' + (long)(Num + 1e-7), Stream);
-	}
-	else
+	} else
 		PrintCh('0', Stream);
 
-	if (Exponent != 0)
-	{
+	if (Exponent != 0) {
 		PrintCh('e', Stream);
 		PrintInt(Exponent, 0, FALSE, FALSE, Stream);
 	}
@@ -249,20 +286,18 @@ void GenericPrintf(struct ParseState *Parser, struct Value *ReturnValue, struct 
 	char *Format = Param[0]->Val->Pointer;
 	Picoc *pc = Parser->pc;
 
-	for (FPos = Format; *FPos != '\0'; FPos++)
-	{
-		if (*FPos == '%')
-		{
+	for (FPos = Format; *FPos != '\0'; FPos++) {
+		if (*FPos == '%') {
 			FPos++;
 			FieldWidth = 0;
-			if (*FPos == '-')
-			{	/* a leading '-' means left justify */
+			if (*FPos == '-') {
+				/* a leading '-' means left justify */
 				LeftJustify = TRUE;
 				FPos++;
 			}
 
-			if (*FPos == '0')
-			{	/* a leading zero means zero pad a decimal number */
+			if (*FPos == '0') {
+				/* a leading zero means zero pad a decimal number */
 				ZeroPad = TRUE;
 				FPos++;
 			}
@@ -272,8 +307,7 @@ void GenericPrintf(struct ParseState *Parser, struct Value *ReturnValue, struct 
 				FieldWidth = FieldWidth * 10 + (*FPos++ - '0');
 
 			/* now check the format type */
-			switch (*FPos)
-			{
+			switch (*FPos) {
 			case 's':
 				FormatType = pc->CharPtrType;
 				break;
@@ -301,38 +335,32 @@ void GenericPrintf(struct ParseState *Parser, struct Value *ReturnValue, struct 
 				FormatType = NULL;
 			}
 
-			if (FormatType != NULL)
-			{	/* we have to format something */
-				if (ArgCount >= NumArgs)
-				{	/* not enough parameters for format */
+			if (FormatType != NULL) {
+				/* we have to format something */
+				if (ArgCount >= NumArgs) {
+					/* not enough parameters for format */
 					PrintStr("XXX", Stream);
-				}
-				else
-				{
+				} else {
 					NextArg = (struct Value *)((char *)NextArg + MEM_ALIGN(sizeof(struct Value) + TypeStackSizeValue(NextArg)));
-					if (NextArg->Typ != FormatType && 
-						!((FormatType == &pc->IntType || *FPos == 'f') && IS_NUMERIC_COERCIBLE(NextArg)) &&
-						!(FormatType == pc->CharPtrType && (NextArg->Typ->Base == TypePointer || (NextArg->Typ->Base == TypeArray && NextArg->Typ->FromType->Base == TypeChar) ) ) )
-					{	/* bad type for format */
+					if (NextArg->Typ != FormatType &&
+					    !((FormatType == &pc->IntType || *FPos == 'f') && IS_NUMERIC_COERCIBLE(NextArg)) &&
+					    !(FormatType == pc->CharPtrType && (NextArg->Typ->Base == TypePointer || (NextArg->Typ->Base == TypeArray && NextArg->Typ->FromType->Base == TypeChar) ) ) ) {
+						/* bad type for format */
 						PrintStr("XXX", Stream);
-					}
-					else
-					{
-						switch (*FPos)
-						{
-						case 's':
-							{
-								char *Str;
-								if (NextArg->Typ->Base == TypePointer)
-									Str = NextArg->Val->Pointer;
-								else
-									Str = &NextArg->Val->ArrayMem[0];
-								if (Str == NULL)
-									PrintStr("NULL", Stream);
-								else
-									PrintStr(Str, Stream); 
-							}
-							break;
+					} else {
+						switch (*FPos) {
+						case 's': {
+							char *Str;
+							if (NextArg->Typ->Base == TypePointer)
+								Str = NextArg->Val->Pointer;
+							else
+								Str = &NextArg->Val->ArrayMem[0];
+							if (Str == NULL)
+								PrintStr("NULL", Stream);
+							else
+								PrintStr(Str, Stream);
+						}
+						break;
 						case 'd':
 							PrintInt(ExpressionCoerceInteger(NextArg), FieldWidth, ZeroPad, LeftJustify, Stream);
 							break;
@@ -355,8 +383,7 @@ void GenericPrintf(struct ParseState *Parser, struct Value *ReturnValue, struct 
 				}
 				ArgCount++;
 			}
-		}
-		else
+		} else
 			PrintCh(*FPos, Stream);
 	}
 }
@@ -388,8 +415,7 @@ void LibSPrintf(struct ParseState *Parser, struct Value *ReturnValue, struct Val
 void LibGets(struct ParseState *Parser, struct Value *ReturnValue, struct Value **Param, int NumArgs)
 {
 	ReturnValue->Val->Pointer = PlatformGetLine(Param[0]->Val->Pointer, GETS_BUF_MAX, NULL);
-	if (ReturnValue->Val->Pointer != NULL)
-	{
+	if (ReturnValue->Val->Pointer != NULL) {
 		char *EOLPos = strchr(Param[0]->Val->Pointer, '\n');
 		if (EOLPos != NULL)
 			*EOLPos = '\0';
@@ -413,8 +439,7 @@ void LibExit(struct ParseState *Parser, struct Value *ReturnValue, struct Value 
 }
 
 /* list of all library functions and their prototypes */
-struct LibraryFunction CLibrary[] =
-{
+struct LibraryFunction CLibrary[] = {
 	{ LibPrintf,	"void printf(char *, ...);" },
 	{ LibSPrintf,	"char *sprintf(char *, char *, ...);" },
 	{ LibGets,		"char *gets(char *);" },

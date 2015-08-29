@@ -1,9 +1,9 @@
 /**
  ******************************************************************************
  * @addtogroup TauLabsModules Tau Labs Modules
- * @{ 
+ * @{
  * @addtogroup SystemModule System Module
- * @{ 
+ * @{
  *
  * @file       systemmod.c
  * @author     The OpenPilot Team, http://www.openpilot.org Copyright (C) 2010.
@@ -60,8 +60,8 @@
 
 #ifndef IDLE_COUNTS_PER_SEC_AT_NO_LOAD
 #define IDLE_COUNTS_PER_SEC_AT_NO_LOAD 995998	// calibrated by running tests/test_cpuload.c
-											  // must be updated if the FreeRTOS or compiler
-											  // optimisation options are changed.
+// must be updated if the FreeRTOS or compiler
+// optimisation options are changed.
 #endif
 
 #if defined(PIOS_SYSTEM_STACK_SIZE)
@@ -229,8 +229,8 @@ static void systemTask(void *parameters)
 
 		UAVObjEvent ev;
 		int delayTime = flightStatus.Armed == FLIGHTSTATUS_ARMED_ARMED ?
-			SYSTEM_UPDATE_PERIOD_MS / (LED_BLINK_RATE_HZ * 2) :
-			SYSTEM_UPDATE_PERIOD_MS;
+		                SYSTEM_UPDATE_PERIOD_MS / (LED_BLINK_RATE_HZ * 2) :
+		                SYSTEM_UPDATE_PERIOD_MS;
 
 		if (PIOS_Queue_Receive(objectPersistenceQueue, &ev, delayTime) == true) {
 			// If object persistence is updated call the callback
@@ -253,10 +253,10 @@ static void objectUpdatedCb(UAVObjEvent * ev)
 		ObjectPersistenceGet(&objper);
 
 		int retval = 1;
-		
+
 		// When this is called because of this method don't do anything
 		if (objper.Operation == OBJECTPERSISTENCE_OPERATION_ERROR ||
-			objper.Operation == OBJECTPERSISTENCE_OPERATION_COMPLETED) {
+		    objper.Operation == OBJECTPERSISTENCE_OPERATION_COMPLETED) {
 			return;
 		}
 
@@ -270,10 +270,10 @@ static void objectUpdatedCb(UAVObjEvent * ev)
 				// Load selected instance
 				retval = UAVObjLoad(obj, objper.InstanceID);
 			} else if (objper.Selection == OBJECTPERSISTENCE_SELECTION_ALLSETTINGS
-				   || objper.Selection == OBJECTPERSISTENCE_SELECTION_ALLOBJECTS) {
+			           || objper.Selection == OBJECTPERSISTENCE_SELECTION_ALLOBJECTS) {
 				retval = UAVObjLoadSettings();
 			} else if (objper.Selection == OBJECTPERSISTENCE_SELECTION_ALLMETAOBJECTS
-				   || objper.Selection == OBJECTPERSISTENCE_SELECTION_ALLOBJECTS) {
+			           || objper.Selection == OBJECTPERSISTENCE_SELECTION_ALLOBJECTS) {
 				retval = UAVObjLoadMetaobjects();
 			}
 		} else if (objper.Operation == OBJECTPERSISTENCE_OPERATION_SAVE) {
@@ -293,10 +293,10 @@ static void objectUpdatedCb(UAVObjEvent * ev)
 				if (retval == 0)
 					retval = UAVObjLoad(obj, objper.InstanceID);
 			} else if (objper.Selection == OBJECTPERSISTENCE_SELECTION_ALLSETTINGS
-				   || objper.Selection == OBJECTPERSISTENCE_SELECTION_ALLOBJECTS) {
+			           || objper.Selection == OBJECTPERSISTENCE_SELECTION_ALLOBJECTS) {
 				retval = UAVObjSaveSettings();
 			} else if (objper.Selection == OBJECTPERSISTENCE_SELECTION_ALLMETAOBJECTS
-				   || objper.Selection == OBJECTPERSISTENCE_SELECTION_ALLOBJECTS) {
+			           || objper.Selection == OBJECTPERSISTENCE_SELECTION_ALLOBJECTS) {
 				retval = UAVObjSaveMetaobjects();
 			}
 		} else if (objper.Operation == OBJECTPERSISTENCE_OPERATION_DELETE) {
@@ -304,10 +304,10 @@ static void objectUpdatedCb(UAVObjEvent * ev)
 				// Delete selected instance
 				retval = UAVObjDeleteById(objper.ObjectID, objper.InstanceID);
 			} else if (objper.Selection == OBJECTPERSISTENCE_SELECTION_ALLSETTINGS
-				   || objper.Selection == OBJECTPERSISTENCE_SELECTION_ALLOBJECTS) {
+			           || objper.Selection == OBJECTPERSISTENCE_SELECTION_ALLOBJECTS) {
 				retval = UAVObjDeleteSettings();
 			} else if (objper.Selection == OBJECTPERSISTENCE_SELECTION_ALLMETAOBJECTS
-				   || objper.Selection == OBJECTPERSISTENCE_SELECTION_ALLOBJECTS) {
+			           || objper.Selection == OBJECTPERSISTENCE_SELECTION_ALLOBJECTS) {
 				retval = UAVObjDeleteMetaobjects();
 			}
 		} else if (objper.Operation == OBJECTPERSISTENCE_OPERATION_FULLERASE) {
@@ -318,16 +318,16 @@ static void objectUpdatedCb(UAVObjEvent * ev)
 #endif
 		}
 		switch(retval) {
-			case 0:
-				objper.Operation = OBJECTPERSISTENCE_OPERATION_COMPLETED;
-				ObjectPersistenceSet(&objper);
-				break;
-			case -1:
-				objper.Operation = OBJECTPERSISTENCE_OPERATION_ERROR;
-				ObjectPersistenceSet(&objper);
-				break;
-			default:
-				break;
+		case 0:
+			objper.Operation = OBJECTPERSISTENCE_OPERATION_COMPLETED;
+			ObjectPersistenceSet(&objper);
+			break;
+		case -1:
+			objper.Operation = OBJECTPERSISTENCE_OPERATION_ERROR;
+			ObjectPersistenceSet(&objper);
+			break;
+		default:
+			break;
 		}
 	}
 }
@@ -347,7 +347,7 @@ static void configurationUpdatedCb(UAVObjEvent * ev)
  * Called periodically to update the WDG statistics
  */
 #if defined(WDG_STATS_DIAGNOSTICS)
-static void updateWDGstats() 
+static void updateWDGstats()
 {
 	WatchdogStatusData watchdogStatus;
 	watchdogStatus.BootupFlags = PIOS_WDG_GetBootupFlags();
@@ -356,51 +356,52 @@ static void updateWDGstats()
 }
 #endif
 
-static void updateRfm22bStats() {
-	#if defined(PIOS_INCLUDE_RFM22B)
+static void updateRfm22bStats()
+{
+#if defined(PIOS_INCLUDE_RFM22B)
 
-        // Update the RFM22BStatus UAVO
-        RFM22BStatusData rfm22bStatus;
-        RFM22BStatusInstGet(1,&rfm22bStatus);
+	// Update the RFM22BStatus UAVO
+	RFM22BStatusData rfm22bStatus;
+	RFM22BStatusInstGet(1,&rfm22bStatus);
 
-        if (pios_rfm22b_id) {
-            // Get the stats from the radio device
-            struct rfm22b_stats radio_stats;
-            PIOS_RFM22B_GetStats(pios_rfm22b_id, &radio_stats);
+	if (pios_rfm22b_id) {
+		// Get the stats from the radio device
+		struct rfm22b_stats radio_stats;
+		PIOS_RFM22B_GetStats(pios_rfm22b_id, &radio_stats);
 
-            // Update the LInk status
-            static bool first_time = true;
-            static uint16_t prev_tx_count = 0;
-            static uint16_t prev_rx_count = 0;
-            rfm22bStatus.HeapRemaining = PIOS_heap_get_free_size();
-            rfm22bStatus.RxGood = radio_stats.rx_good;
-            rfm22bStatus.RxCorrected   = radio_stats.rx_corrected;
-            rfm22bStatus.RxErrors = radio_stats.rx_error;
-            rfm22bStatus.RxSyncMissed = radio_stats.rx_sync_missed;
-            rfm22bStatus.TxMissed = radio_stats.tx_missed;
-            rfm22bStatus.RxFailure     = radio_stats.rx_failure;
-            rfm22bStatus.Resets      = radio_stats.resets;
-            rfm22bStatus.Timeouts    = radio_stats.timeouts;
-            rfm22bStatus.RSSI        = radio_stats.rssi;
-            rfm22bStatus.LinkQuality = radio_stats.link_quality;
-            if (first_time) {
-                first_time = false;
-            } else {
-                uint16_t tx_count = radio_stats.tx_byte_count;
-                uint16_t rx_count = radio_stats.rx_byte_count;
-                uint16_t tx_bytes = (tx_count < prev_tx_count) ? (0xffff - prev_tx_count + tx_count) : (tx_count - prev_tx_count);
-                uint16_t rx_bytes = (rx_count < prev_rx_count) ? (0xffff - prev_rx_count + rx_count) : (rx_count - prev_rx_count);
-                rfm22bStatus.TXRate = (uint16_t)((float)(tx_bytes * 1000) / SYSTEM_UPDATE_PERIOD_MS);
-                rfm22bStatus.RXRate = (uint16_t)((float)(rx_bytes * 1000) / SYSTEM_UPDATE_PERIOD_MS);
-                prev_tx_count = tx_count;
-                prev_rx_count = rx_count;
-            }
+		// Update the LInk status
+		static bool first_time = true;
+		static uint16_t prev_tx_count = 0;
+		static uint16_t prev_rx_count = 0;
+		rfm22bStatus.HeapRemaining = PIOS_heap_get_free_size();
+		rfm22bStatus.RxGood = radio_stats.rx_good;
+		rfm22bStatus.RxCorrected   = radio_stats.rx_corrected;
+		rfm22bStatus.RxErrors = radio_stats.rx_error;
+		rfm22bStatus.RxSyncMissed = radio_stats.rx_sync_missed;
+		rfm22bStatus.TxMissed = radio_stats.tx_missed;
+		rfm22bStatus.RxFailure     = radio_stats.rx_failure;
+		rfm22bStatus.Resets      = radio_stats.resets;
+		rfm22bStatus.Timeouts    = radio_stats.timeouts;
+		rfm22bStatus.RSSI        = radio_stats.rssi;
+		rfm22bStatus.LinkQuality = radio_stats.link_quality;
+		if (first_time) {
+			first_time = false;
+		} else {
+			uint16_t tx_count = radio_stats.tx_byte_count;
+			uint16_t rx_count = radio_stats.rx_byte_count;
+			uint16_t tx_bytes = (tx_count < prev_tx_count) ? (0xffff - prev_tx_count + tx_count) : (tx_count - prev_tx_count);
+			uint16_t rx_bytes = (rx_count < prev_rx_count) ? (0xffff - prev_rx_count + rx_count) : (rx_count - prev_rx_count);
+			rfm22bStatus.TXRate = (uint16_t)((float)(tx_bytes * 1000) / SYSTEM_UPDATE_PERIOD_MS);
+			rfm22bStatus.RXRate = (uint16_t)((float)(rx_bytes * 1000) / SYSTEM_UPDATE_PERIOD_MS);
+			prev_tx_count = tx_count;
+			prev_rx_count = rx_count;
+		}
 
-            rfm22bStatus.LinkState = radio_stats.link_state;
-        } else {
-            rfm22bStatus.LinkState = RFM22BSTATUS_LINKSTATE_DISABLED;
-        }
-        RFM22BStatusInstSet(1,&rfm22bStatus);
+		rfm22bStatus.LinkState = radio_stats.link_state;
+	} else {
+		rfm22bStatus.LinkState = RFM22BSTATUS_LINKSTATE_DISABLED;
+	}
+	RFM22BStatusInstSet(1,&rfm22bStatus);
 
 #endif /* if defined(PIOS_INCLUDE_RFM22B) */
 }
@@ -413,33 +414,26 @@ static uint16_t GetFreeIrqStackSize(void)
 	uint32_t i = 0x200;
 
 #if !defined(ARCH_POSIX) && !defined(ARCH_WIN32) && defined(CHECK_IRQ_STACK)
-extern uint32_t _irq_stack_top;
-extern uint32_t _irq_stack_end;
-uint32_t pattern = 0x0000A5A5;
-uint32_t *ptr = &_irq_stack_end;
+	extern uint32_t _irq_stack_top;
+	extern uint32_t _irq_stack_end;
+	uint32_t pattern = 0x0000A5A5;
+	uint32_t *ptr = &_irq_stack_end;
 
 #if 1 /* the ugly way accurate but takes more time, useful for debugging */
 	uint32_t stack_size = (((uint32_t)&_irq_stack_top - (uint32_t)&_irq_stack_end) & ~3 ) / 4;
 
-	for (i=0; i< stack_size; i++)
-	{
-		if (ptr[i] != pattern)
-		{
+	for (i=0; i< stack_size; i++) {
+		if (ptr[i] != pattern) {
 			i=i*4;
 			break;
 		}
 	}
 #else /* faster way but not accurate */
-	if (*(volatile uint32_t *)((uint32_t)ptr + IRQSTACK_LIMIT_CRITICAL) != pattern)
-	{
+	if (*(volatile uint32_t *)((uint32_t)ptr + IRQSTACK_LIMIT_CRITICAL) != pattern) {
 		i = IRQSTACK_LIMIT_CRITICAL - 1;
-	}
-	else if (*(volatile uint32_t *)((uint32_t)ptr + IRQSTACK_LIMIT_WARNING) != pattern)
-	{
+	} else if (*(volatile uint32_t *)((uint32_t)ptr + IRQSTACK_LIMIT_WARNING) != pattern) {
 		i = IRQSTACK_LIMIT_WARNING - 1;
-	}
-	else
-	{
+	} else {
 		i = IRQSTACK_LIMIT_WARNING;
 	}
 #endif
@@ -482,7 +476,7 @@ static void updateStats()
 	} //else: TickCount has wrapped, do not calc now
 	lastTickCount = now;
 	idleCounterClear = 1;
-	
+
 #if defined(PIOS_INCLUDE_ADC) && defined(PIOS_ADC_USE_TEMP_SENSOR)
 	float temp_voltage = 3.3 * PIOS_ADC_DevicePinGet(PIOS_INTERNAL_ADC, 0) / ((1 << 12) - 1);
 	const float STM32_TEMP_V25 = 1.43; /* V */
@@ -504,18 +498,18 @@ static void updateSystemAlarms()
 
 	// Check heap, IRQ stack and malloc failures
 	if (PIOS_heap_malloc_failed_p()
-	     || (stats.HeapRemaining < HEAP_LIMIT_CRITICAL)
+	    || (stats.HeapRemaining < HEAP_LIMIT_CRITICAL)
 #if !defined(ARCH_POSIX) && !defined(ARCH_WIN32) && defined(CHECK_IRQ_STACK)
-	     || (stats.IRQStackRemaining < IRQSTACK_LIMIT_CRITICAL)
+	    || (stats.IRQStackRemaining < IRQSTACK_LIMIT_CRITICAL)
 #endif
-	    ) {
+	   ) {
 		AlarmsSet(SYSTEMALARMS_ALARM_OUTOFMEMORY, SYSTEMALARMS_ALARM_CRITICAL);
 	} else if (
-		(stats.HeapRemaining < HEAP_LIMIT_WARNING)
+	    (stats.HeapRemaining < HEAP_LIMIT_WARNING)
 #if !defined(ARCH_POSIX) && !defined(ARCH_WIN32) && defined(CHECK_IRQ_STACK)
-	     || (stats.IRQStackRemaining < IRQSTACK_LIMIT_WARNING)
+	    || (stats.IRQStackRemaining < IRQSTACK_LIMIT_WARNING)
 #endif
-	    ) {
+	) {
 		AlarmsSet(SYSTEMALARMS_ALARM_OUTOFMEMORY, SYSTEMALARMS_ALARM_WARNING);
 	} else {
 		AlarmsClear(SYSTEMALARMS_ALARM_OUTOFMEMORY);
@@ -547,7 +541,7 @@ static void updateSystemAlarms()
 	} else {
 		AlarmsClear(SYSTEMALARMS_ALARM_EVENTSYSTEM);
 	}
-	
+
 	if (objStats.lastCallbackErrorID || objStats.lastQueueErrorID || evStats.lastErrorID) {
 		SystemStatsData sysStats;
 		SystemStatsGet(&sysStats);
@@ -556,7 +550,7 @@ static void updateSystemAlarms()
 		sysStats.ObjectManagerQueueID = objStats.lastQueueErrorID;
 		SystemStatsSet(&sysStats);
 	}
-		
+
 }
 
 /**

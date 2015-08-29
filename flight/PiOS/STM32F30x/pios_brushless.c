@@ -67,22 +67,22 @@ int32_t PIOS_Brushless_Init(const struct pios_brushless_cfg * cfg)
 
 		/* Set up for output compare function */
 		switch(chan->timer_chan) {
-			case TIM_Channel_1:
-				TIM_OC1Init(chan->timer, (TIM_OCInitTypeDef*)&cfg->tim_oc_init);
-				TIM_OC1PreloadConfig(chan->timer, TIM_OCPreload_Enable);
-				break;
-			case TIM_Channel_2:
-				TIM_OC2Init(chan->timer, (TIM_OCInitTypeDef*)&cfg->tim_oc_init);
-				TIM_OC2PreloadConfig(chan->timer, TIM_OCPreload_Enable);
-				break;
-			case TIM_Channel_3:
-				TIM_OC3Init(chan->timer, (TIM_OCInitTypeDef*)&cfg->tim_oc_init);
-				TIM_OC3PreloadConfig(chan->timer, TIM_OCPreload_Enable);
-				break;
-			case TIM_Channel_4:
-				TIM_OC4Init(chan->timer, (TIM_OCInitTypeDef*)&cfg->tim_oc_init);
-				TIM_OC4PreloadConfig(chan->timer, TIM_OCPreload_Enable);
-				break;
+		case TIM_Channel_1:
+			TIM_OC1Init(chan->timer, (TIM_OCInitTypeDef*)&cfg->tim_oc_init);
+			TIM_OC1PreloadConfig(chan->timer, TIM_OCPreload_Enable);
+			break;
+		case TIM_Channel_2:
+			TIM_OC2Init(chan->timer, (TIM_OCInitTypeDef*)&cfg->tim_oc_init);
+			TIM_OC2PreloadConfig(chan->timer, TIM_OCPreload_Enable);
+			break;
+		case TIM_Channel_3:
+			TIM_OC3Init(chan->timer, (TIM_OCInitTypeDef*)&cfg->tim_oc_init);
+			TIM_OC3PreloadConfig(chan->timer, TIM_OCPreload_Enable);
+			break;
+		case TIM_Channel_4:
+			TIM_OC4Init(chan->timer, (TIM_OCInitTypeDef*)&cfg->tim_oc_init);
+			TIM_OC4PreloadConfig(chan->timer, TIM_OCPreload_Enable);
+			break;
 		}
 
 		TIM_ARRPreloadConfig(chan->timer, ENABLE);
@@ -100,7 +100,7 @@ int32_t PIOS_Brushless_Init(const struct pios_brushless_cfg * cfg)
 
 	// Start main task
 	taskHandle = PIOS_Thread_Create(
-			PIOS_BRUSHLESS_Task, "pios_brushless", STACK_SIZE_BYTES, NULL, TASK_PRIORITY);
+	                 PIOS_BRUSHLESS_Task, "pios_brushless", STACK_SIZE_BYTES, NULL, TASK_PRIORITY);
 
 	return 0;
 }
@@ -143,7 +143,7 @@ int32_t PIOS_Brushless_SetSpeed(uint32_t channel, float speed, float dT)
 		return -1;
 
 	float diff;
-	// Limit the slew rate 
+	// Limit the slew rate
 	if (accel_limit[channel])
 		diff = bound_sym(speed - speeds[channel], accel_limit[channel] * dT);
 	else
@@ -225,18 +225,18 @@ static int32_t PIOS_Brushless_SetPhase(uint32_t channel, float phase_deg)
 		/* Update the position */
 		const struct pios_tim_channel * chan = &brushless_cfg->channels[idx];
 		switch(chan->timer_chan) {
-			case TIM_Channel_1:
-				TIM_SetCompare1(chan->timer, position);
-				break;
-			case TIM_Channel_2:
-				TIM_SetCompare2(chan->timer, position);
-				break;
-			case TIM_Channel_3:
-				TIM_SetCompare3(chan->timer, position);
-				break;
-			case TIM_Channel_4:
-				TIM_SetCompare4(chan->timer, position);
-				break;
+		case TIM_Channel_1:
+			TIM_SetCompare1(chan->timer, position);
+			break;
+		case TIM_Channel_2:
+			TIM_SetCompare2(chan->timer, position);
+			break;
+		case TIM_Channel_3:
+			TIM_SetCompare3(chan->timer, position);
+			break;
+		case TIM_Channel_4:
+			TIM_SetCompare4(chan->timer, position);
+			break;
 		}
 
 		phase_deg += 120;
@@ -275,7 +275,7 @@ static void PIOS_BRUSHLESS_Task(void* parameters)
 			}
 		} else {
 			for (int channel = 0; channel < NUM_BGC_CHANNELS; channel++) {
-				
+
 				// Update phase and keep within [0 360)
 				if (phases[channel] < 0)
 					phases[channel] += 360;

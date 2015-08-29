@@ -1,9 +1,9 @@
 /**
  ******************************************************************************
  * @addtogroup TauLabsModules Tau Labs Modules
- * @{ 
+ * @{
  * @addtogroup RadioComBridgeModule Com Port to Radio Bridge Module
- * @{ 
+ * @{
  *
  * @file       RadioComBridge.c
  * @author     The OpenPilot Team, http://www.openpilot.org Copyright (C) 2012.
@@ -113,11 +113,11 @@ static void PPMInputTask(void *parameters);
 static int32_t UAVTalkSendHandler(uint8_t * buf, int32_t length);
 static int32_t RadioSendHandler(uint8_t * buf, int32_t length);
 static void ProcessTelemetryStream(UAVTalkConnection inConnectionHandle,
-				   UAVTalkConnection outConnectionHandle,
-				   uint8_t rxbyte);
+                                   UAVTalkConnection outConnectionHandle,
+                                   uint8_t rxbyte);
 static void ProcessRadioStream(UAVTalkConnection inConnectionHandle,
-			       UAVTalkConnection outConnectionHandle,
-			       uint8_t rxbyte);
+                               UAVTalkConnection outConnectionHandle,
+                               uint8_t rxbyte);
 static void objectPersistenceUpdatedCb(UAVObjEvent * objEv);
 static void registerObject(UAVObjHandle obj);
 
@@ -142,15 +142,15 @@ static int32_t RadioComBridgeStart(void)
 
 		// Configure our UAVObjects for updates.
 		UAVObjConnectQueue(UAVObjGetByID(RFM22BSTATUS_OBJID), data->uavtalkEventQueue,
-				   EV_UPDATED | EV_UPDATED_MANUAL | EV_UPDATE_REQ);
+		                   EV_UPDATED | EV_UPDATED_MANUAL | EV_UPDATE_REQ);
 		UAVObjConnectQueue(UAVObjGetByID(OBJECTPERSISTENCE_OBJID), data->uavtalkEventQueue,
-				   EV_UPDATED | EV_UPDATED_MANUAL);
+		                   EV_UPDATED | EV_UPDATED_MANUAL);
 		if (data->isCoordinator) {
 			UAVObjConnectQueue(UAVObjGetByID(RFM22BRECEIVER_OBJID), data->radioEventQueue,
-					   EV_UPDATED | EV_UPDATED_MANUAL | EV_UPDATE_REQ);
+			                   EV_UPDATED | EV_UPDATED_MANUAL | EV_UPDATE_REQ);
 		} else {
 			UAVObjConnectQueue(UAVObjGetByID(RFM22BRECEIVER_OBJID), data->uavtalkEventQueue,
-					   EV_UPDATED | EV_UPDATED_MANUAL | EV_UPDATE_REQ);
+			                   EV_UPDATED | EV_UPDATED_MANUAL | EV_UPDATE_REQ);
 		}
 
 		if (data->isCoordinator) {
@@ -162,7 +162,7 @@ static int32_t RadioComBridgeStart(void)
 		// Start the primary tasks for receiving/sending UAVTalk packets from the GCS.
 		data->telemetryTxTaskHandle = PIOS_Thread_Create(telemetryTxTask, "telemetryTxTask", STACK_SIZE_BYTES, NULL, TASK_PRIORITY);
 		data->telemetryRxTaskHandle = PIOS_Thread_Create(telemetryRxTask, "telemetryRxTask", STACK_SIZE_BYTES, NULL, TASK_PRIORITY);
-			    
+
 		if (PIOS_PPM_RECEIVER != 0) {
 			data->PPMInputTaskHandle = PIOS_Thread_Create(PPMInputTask, "PPMInputTask",STACK_SIZE_BYTES, NULL, TASK_PRIORITY);
 #ifdef PIOS_INCLUDE_WDG
@@ -300,7 +300,7 @@ static void updateRadioComBridgeStats()
  * @param[in] parameters  The task parameters
  */
 static void telemetryTxTask( __attribute__ ((unused))
-			    void *parameters)
+                             void *parameters)
 {
 	UAVObjEvent ev;
 
@@ -335,7 +335,7 @@ static void telemetryTxTask( __attribute__ ((unused))
  * @param[in] parameters  The task parameters
  */
 static void radioTxTask( __attribute__ ((unused))
-			void *parameters)
+                         void *parameters)
 {
 
 	// Task loop
@@ -357,10 +357,10 @@ static void radioTxTask( __attribute__ ((unused))
 				while (retries <= MAX_RETRIES && ret == -1) {
 					ret =
 					    UAVTalkSendObject(data->
-							      radioUAVTalkCon,
-							      ev.obj,
-							      ev.instId, 0,
-							      RETRY_TIMEOUT_MS);
+					                      radioUAVTalkCon,
+					                      ev.obj,
+					                      ev.instId, 0,
+					                      RETRY_TIMEOUT_MS);
 					if (ret == -1) {
 						++retries;
 					}
@@ -378,7 +378,7 @@ static void radioTxTask( __attribute__ ((unused))
  * @param[in] parameters  The task parameters
  */
 static void radioRxTask( __attribute__ ((unused))
-			void *parameters)
+                         void *parameters)
 {
 	// Task loop
 	while (1) {
@@ -389,20 +389,20 @@ static void radioRxTask( __attribute__ ((unused))
 			uint8_t serial_data[1];
 			uint16_t bytes_to_process =
 			    PIOS_COM_ReceiveBuffer(PIOS_COM_RFM22B,
-						   serial_data,
-						   sizeof(serial_data),
-						   MAX_PORT_DELAY);
+			                           serial_data,
+			                           sizeof(serial_data),
+			                           MAX_PORT_DELAY);
 			if (bytes_to_process > 0) {
 				if (data->parseUAVTalk) {
 					// Pass the data through the UAVTalk parser.
 					for (uint8_t i = 0;
 					     i < bytes_to_process; i++) {
 						ProcessRadioStream(data->
-								   radioUAVTalkCon,
-								   data->
-								   telemUAVTalkCon,
-								   serial_data
-								   [i]);
+						                   radioUAVTalkCon,
+						                   data->
+						                   telemUAVTalkCon,
+						                   serial_data
+						                   [i]);
 					}
 				} else if (PIOS_COM_TELEMETRY) {
 					// Send the data straight to the telemetry port.
@@ -431,7 +431,7 @@ static void radioRxTask( __attribute__ ((unused))
  * @param[in] parameters  The task parameters
  */
 static void telemetryRxTask( __attribute__ ((unused))
-			    void *parameters)
+                             void *parameters)
 {
 	// Task loop
 	while (1) {
@@ -450,18 +450,18 @@ static void telemetryRxTask( __attribute__ ((unused))
 			uint8_t serial_data[1];
 			uint16_t bytes_to_process =
 			    PIOS_COM_ReceiveBuffer(inputPort, serial_data,
-						   sizeof(serial_data),
-						   MAX_PORT_DELAY);
+			                           sizeof(serial_data),
+			                           MAX_PORT_DELAY);
 			if (bytes_to_process > 0) {
 				PIOS_LED_Toggle(PIOS_LED_RX);
 				for (uint8_t i = 0; i < bytes_to_process;
 				     i++) {
 					ProcessTelemetryStream(data->
-							       telemUAVTalkCon,
-							       data->
-							       radioUAVTalkCon,
-							       serial_data
-							       [i]);
+					                       telemUAVTalkCon,
+					                       data->
+					                       radioUAVTalkCon,
+					                       serial_data
+					                       [i]);
 				}
 			}
 		} else {
@@ -476,7 +476,7 @@ static void telemetryRxTask( __attribute__ ((unused))
  * @param[in] parameters  The task parameters (unused)
  */
 static void PPMInputTask( __attribute__ ((unused))
-			 void *parameters)
+                          void *parameters)
 {
 	int16_t channels[RFM22B_PPM_NUM_CHANNELS];
 
@@ -503,7 +503,7 @@ static void PPMInputTask( __attribute__ ((unused))
  * @param[in] parameters  The task parameters
  */
 static void serialRxTask( __attribute__ ((unused))
-			 void *parameters)
+                          void *parameters)
 {
 	// Task loop
 	while (1) {
@@ -515,10 +515,10 @@ static void serialRxTask( __attribute__ ((unused))
 			// Receive some data.
 			uint16_t bytes_to_process =
 			    PIOS_COM_ReceiveBuffer(inputPort,
-						   data->serialRxBuf,
-						   sizeof(data->
-							  serialRxBuf),
-						   MAX_PORT_DELAY);
+			                           data->serialRxBuf,
+			                           sizeof(data->
+			                                  serialRxBuf),
+			                           MAX_PORT_DELAY);
 
 			if (bytes_to_process > 0) {
 				// Send the data over the radio link.
@@ -567,7 +567,7 @@ static int32_t UAVTalkSendHandler(uint8_t * buf, int32_t length)
 		while (count-- > 0 && ret < -1) {
 			ret =
 			    PIOS_COM_SendBufferNonBlocking(outputPort, buf,
-							   length);
+			                                   length);
 		}
 	} else {
 		ret = -1;
@@ -599,7 +599,7 @@ static int32_t RadioSendHandler(uint8_t * buf, int32_t length)
 		while (count-- > 0 && ret < -1) {
 			ret =
 			    PIOS_COM_SendBufferNonBlocking(outputPort, buf,
-							   length);
+			                                   length);
 		}
 		return ret;
 	} else {
@@ -616,8 +616,8 @@ static int32_t RadioSendHandler(uint8_t * buf, int32_t length)
  * @param[in] rxbyte  The received byte.
  */
 static void ProcessTelemetryStream(UAVTalkConnection inConnectionHandle,
-				   UAVTalkConnection outConnectionHandle,
-				   uint8_t rxbyte)
+                                   UAVTalkConnection outConnectionHandle,
+                                   uint8_t rxbyte)
 {
 	// Keep reading until we receive a completed packet.
 	UAVTalkRxState state =
@@ -645,7 +645,7 @@ static void ProcessTelemetryStream(UAVTalkConnection inConnectionHandle,
 			ObjectPersistenceData objectPersistence;
 			ObjectPersistenceGet(&objectPersistence);
 			if (objectPersistence.ObjectID != HWTAULINK_OBJID &&
-				objectPersistence.ObjectID != MetaObjectId(HWTAULINK_OBJID)) {
+			    objectPersistence.ObjectID != MetaObjectId(HWTAULINK_OBJID)) {
 				// relay packet to remote modem except for requests to save
 				// the settings which happens locally
 				UAVTalkRelayPacket(inConnectionHandle, outConnectionHandle);
@@ -653,8 +653,7 @@ static void ProcessTelemetryStream(UAVTalkConnection inConnectionHandle,
 
 			break;
 
-		case RFM22BSTATUS_OBJID:
-		{
+		case RFM22BSTATUS_OBJID: {
 			uint32_t inst_id = UAVTalkGetPacketInstId(inConnectionHandle);
 			if (inst_id == 0) {
 				// dealing with local modem
@@ -664,7 +663,7 @@ static void ProcessTelemetryStream(UAVTalkConnection inConnectionHandle,
 				UAVTalkRelayPacket(inConnectionHandle, outConnectionHandle);
 			}
 		}
-			break;
+		break;
 		default:
 			// all other packets are transparently relayed to the remote modem
 			UAVTalkRelayPacket(inConnectionHandle, outConnectionHandle);
@@ -681,8 +680,8 @@ static void ProcessTelemetryStream(UAVTalkConnection inConnectionHandle,
  * @param[in] rxbyte  The received byte.
  */
 static void ProcessRadioStream(UAVTalkConnection inConnectionHandle,
-			       UAVTalkConnection outConnectionHandle,
-			       uint8_t rxbyte)
+                               UAVTalkConnection outConnectionHandle,
+                               uint8_t rxbyte)
 {
 	// Keep reading until we receive a completed packet.
 	UAVTalkRxState state =
@@ -719,8 +718,7 @@ static void ProcessRadioStream(UAVTalkConnection inConnectionHandle,
 			UAVTalkReceiveObject(inConnectionHandle);
 			UAVTalkRelayPacket(inConnectionHandle, outConnectionHandle);
 			break;
-		case RFM22BSTATUS_OBJID:
-		{
+		case RFM22BSTATUS_OBJID: {
 			uint32_t inst_id = UAVTalkGetPacketInstId(inConnectionHandle);
 			if (inst_id == 0) {
 				// instance 0 is from modem. do not pass this version
@@ -733,12 +731,12 @@ static void ProcessRadioStream(UAVTalkConnection inConnectionHandle,
 			}
 
 		}
-			break;
+		break;
 
 		default:
 			// all other packets are relayed to the telemetry port
 			UAVTalkRelayPacket(inConnectionHandle,
-					   outConnectionHandle);
+			                   outConnectionHandle);
 			break;
 		}
 	}
@@ -760,58 +758,55 @@ static void objectPersistenceUpdatedCb(UAVObjEvent * objEv)
 		// Is this a save, load, or delete?
 		bool success = false;
 		switch (obj_per.Operation) {
-		case OBJECTPERSISTENCE_OPERATION_LOAD:
-			{
+		case OBJECTPERSISTENCE_OPERATION_LOAD: {
 #if defined(PIOS_INCLUDE_LOGFS_SETTINGS)
-				// Load the settings.
-				void *obj =
-				    UAVObjGetByID(obj_per.ObjectID);
-				if (obj == 0) {
-					success = false;
-				} else {
-					// Load selected instance
-					success =
-					    (UAVObjLoad
-					     (obj,
-					      obj_per.InstanceID) == 0);
-				}
-#endif
-				break;
+			// Load the settings.
+			void *obj =
+			    UAVObjGetByID(obj_per.ObjectID);
+			if (obj == 0) {
+				success = false;
+			} else {
+				// Load selected instance
+				success =
+				    (UAVObjLoad
+				     (obj,
+				      obj_per.InstanceID) == 0);
 			}
-		case OBJECTPERSISTENCE_OPERATION_SAVE:
-			{
+#endif
+			break;
+		}
+		case OBJECTPERSISTENCE_OPERATION_SAVE: {
 #if defined(PIOS_INCLUDE_LOGFS_SETTINGS)
-				void *obj =
-				    UAVObjGetByID(obj_per.ObjectID);
-				if (obj == 0) {
-					success = false;
-				} else {
-					// Save selected instance
-					success =
-					    UAVObjSave(obj,
-						       obj_per.
-						       InstanceID) == 0;
-				}
-#endif
-				break;
+			void *obj =
+			    UAVObjGetByID(obj_per.ObjectID);
+			if (obj == 0) {
+				success = false;
+			} else {
+				// Save selected instance
+				success =
+				    UAVObjSave(obj,
+				               obj_per.
+				               InstanceID) == 0;
 			}
-		case OBJECTPERSISTENCE_OPERATION_DELETE:
-			{
+#endif
+			break;
+		}
+		case OBJECTPERSISTENCE_OPERATION_DELETE: {
 #if 0 && defined(PIOS_INCLUDE_LOGFS_SETTINGS)
-				void *obj =
-				    UAVObjGetByID(obj_per.ObjectID);
-				if (obj == 0) {
-					success = false;
-				} else {
-					// Save selected instance
-					success =
-					    UAVObjDelete(obj,
-							 obj_per.
-							 InstanceID) == 0;
-				}
-#endif
-				break;
+			void *obj =
+			    UAVObjGetByID(obj_per.ObjectID);
+			if (obj == 0) {
+				success = false;
+			} else {
+				// Save selected instance
+				success =
+				    UAVObjDelete(obj,
+				                 obj_per.
+				                 InstanceID) == 0;
 			}
+#endif
+			break;
+		}
 		default:
 			break;
 		}

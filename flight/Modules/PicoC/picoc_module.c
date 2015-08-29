@@ -1,9 +1,9 @@
 /**
  ******************************************************************************
  * @addtogroup TauLabsModules TauLabs Modules
- * @{ 
+ * @{
  * @addtogroup PicoC Interpreter Module
- * @{ 
+ * @{
  *
  * @file       picoc_module.c
  * @author     Tau Labs, http://taulabs.org, Copyright (C) 2014
@@ -35,8 +35,8 @@
 
 #include "openpilot.h"
 #include "picoc_port.h"
-#include "picocsettings.h" 
-#include "picocstatus.h" 
+#include "picocsettings.h"
+#include "picocstatus.h"
 #include "flightstatus.h"
 #include "modulesettings.h"
 #include "pios_thread.h"
@@ -89,9 +89,9 @@ static int32_t picocStart(void)
 	if (module_enabled) {
 		// Start task
 		picocTaskHandle = PIOS_Thread_Create(picocTask,
-				"PicoC", picocsettings.TaskStackSize, NULL, TASK_PRIORITY);
+		                                     "PicoC", picocsettings.TaskStackSize, NULL, TASK_PRIORITY);
 		TaskMonitorAdd(TASKINFO_RUNNING_PICOC,
-				picocTaskHandle);
+		               picocTaskHandle);
 		return 0;
 	}
 	return -1;
@@ -118,7 +118,7 @@ static int32_t picocInitialize(void)
 
 		// check stacksizes for module task and picoC
 		if ((picocsettings.TaskStackSize < TASK_STACKSIZE_MIN) || (picocsettings.TaskStackSize > TASK_STACKSIZE_MAX) ||
-			(picocsettings.PicoCStackSize < PICOC_STACKSIZE_MIN) || (picocsettings.PicoCStackSize > PICOC_STACKSIZE_MAX)) {
+		    (picocsettings.PicoCStackSize < PICOC_STACKSIZE_MIN) || (picocsettings.PicoCStackSize > PICOC_STACKSIZE_MAX)) {
 			return -1;
 		}
 
@@ -146,7 +146,8 @@ MODULE_INITCALL( picocInitialize, picocStart)
 /**
  * Main task. It does not return.
  */
-static void picocTask(void *parameters) {
+static void picocTask(void *parameters)
+{
 
 	FlightStatusData flightstatus;
 	bool startup;

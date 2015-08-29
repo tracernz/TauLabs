@@ -27,7 +27,8 @@
 #include "pios.h"		/* PIOS_LED_* -- FIXME: include is too coarse */
 #include "led_pwm.h"		/* API definition */
 
-static uint32_t led_pwm_on_p(uint32_t pwm_period, uint32_t pwm_sweep_steps, uint32_t uptime) {
+static uint32_t led_pwm_on_p(uint32_t pwm_period, uint32_t pwm_sweep_steps, uint32_t uptime)
+{
 	/* 0 - pwm_sweep_steps */
 	uint32_t curr_step = (uptime / pwm_period) % pwm_sweep_steps;
 
@@ -46,10 +47,10 @@ static uint32_t led_pwm_on_p(uint32_t pwm_period, uint32_t pwm_sweep_steps, uint
 }
 
 void led_pwm_config(struct led_pwm_state *leds,
-			uint32_t pwm_1_period_us,
-			uint32_t pwm_1_sweep_steps,
-			uint32_t pwm_2_period_us,
-			uint32_t pwm_2_sweep_steps)
+                    uint32_t pwm_1_period_us,
+                    uint32_t pwm_1_sweep_steps,
+                    uint32_t pwm_2_period_us,
+                    uint32_t pwm_2_sweep_steps)
 {
 	/* PWM #1 */
 	if (pwm_1_period_us > 0) {
@@ -84,15 +85,15 @@ bool led_pwm_update_leds(const struct led_pwm_state *leds)
 	bool pwm_1_led_state = true; /* forces LED on when pwm1 is disabled */
 	if (leds->pwm_1_enabled) {
 		pwm_1_led_state = led_pwm_on_p(leds->pwm_1_period_us,
-					leds->pwm_1_sweep_steps,
-					leds->uptime_us);
+		                               leds->pwm_1_sweep_steps,
+		                               leds->uptime_us);
 	}
 
 	bool pwm_2_led_state = false; /* forces LED off when pwm2 is disabled */
 	if (leds->pwm_2_enabled) {
 		pwm_2_led_state = led_pwm_on_p(leds->pwm_2_period_us,
-					leds->pwm_2_sweep_steps,
-					leds->uptime_us);
+		                               leds->pwm_2_sweep_steps,
+		                               leds->uptime_us);
 	}
 
 	/*

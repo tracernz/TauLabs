@@ -31,7 +31,7 @@
 /* Pull in the board-specific static HW definitions.
  * Including .c files is a bit ugly but this allows all of
  * the HW definitions to be const and static to limit their
- * scope.  
+ * scope.
  *
  * NOTE: THIS IS THE ONLY PLACE THAT SHOULD EVER INCLUDE THIS FILE
  */
@@ -61,7 +61,7 @@ void PIOS_Board_Init(void)
 	PIOS_GPIO_Init();
 
 	const struct pios_board_info * bdinfo = &pios_board_info_blob;
-	
+
 #if defined(PIOS_INCLUDE_LED)
 	const struct pios_led_cfg * led_cfg = PIOS_BOARD_HW_DEFS_GetLedCfg(bdinfo->board_rev);
 	PIOS_Assert(led_cfg);
@@ -77,14 +77,14 @@ void PIOS_Board_Init(void)
 
 	uintptr_t pios_usb_id;
 	switch(bdinfo->board_rev) {
-		case BOARD_REVISION_CC:
-			PIOS_USB_Init(&pios_usb_id, &pios_usb_main_cfg_cc);
-			break;
-		case BOARD_REVISION_CC3D:
-			PIOS_USB_Init(&pios_usb_id, &pios_usb_main_cfg_cc3d);
-			break;
-		default:
-			PIOS_Assert(0);
+	case BOARD_REVISION_CC:
+		PIOS_USB_Init(&pios_usb_id, &pios_usb_main_cfg_cc);
+		break;
+	case BOARD_REVISION_CC3D:
+		PIOS_USB_Init(&pios_usb_id, &pios_usb_main_cfg_cc3d);
+		break;
+	default:
+		PIOS_Assert(0);
 	}
 #if defined(PIOS_INCLUDE_USB_HID) && defined(PIOS_INCLUDE_COM_MSG)
 	uintptr_t pios_usb_hid_id;

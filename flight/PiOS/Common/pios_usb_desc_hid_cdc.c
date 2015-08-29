@@ -95,7 +95,7 @@ static const uint8_t hid_report_desc[89] = {
 
 	HID_MAIN_ITEM_0 (HID_TAG_MAIN_ENDCOLLECTION),
 
-/* 36 bytes to here */
+	/* 36 bytes to here */
 
 	/* Emulate a Joystick */
 	HID_GLOBAL_ITEM_1 (HID_TAG_GLOBAL_USAGE_PAGE),
@@ -162,7 +162,7 @@ static const uint8_t hid_report_desc[89] = {
 
 	HID_MAIN_ITEM_0 (HID_TAG_MAIN_ENDCOLLECTION),
 
-/* 89 bytes to here */
+	/* 89 bytes to here */
 };
 
 struct usb_config_hid_cdc {

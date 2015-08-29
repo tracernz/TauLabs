@@ -5,11 +5,11 @@
  * @addtogroup SparkyBGC Tau Labs Sparky BGC support files
  * @{
  *
- * @file       pios_config.h 
+ * @file       pios_config.h
  * @author     Tau Labs, http://taulabs.org, Copyright (C) 2012-2014
  * @brief      Board specific options that modify PiOS capabilities
  * @see        The GNU Public License (GPL) Version 3
- * 
+ *
  *****************************************************************************/
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -34,7 +34,7 @@
 #define PIOS_INCLUDE_FREERTOS
 #define PIOS_INCLUDE_BL_HELPER
 
-/* Enable/Disable PiOS Modules */ 
+/* Enable/Disable PiOS Modules */
 #define PIOS_INCLUDE_DELAY
 #define PIOS_INCLUDE_I2C
 #define PIOS_INCLUDE_CAN

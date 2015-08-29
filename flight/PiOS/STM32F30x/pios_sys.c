@@ -6,7 +6,7 @@
  * @brief PIOS System Initialization code
  * @{
  *
- * @file       pios_sys.c  
+ * @file       pios_sys.c
  * @author     Michael Smith Copyright (C) 2011
  * @author     The OpenPilot Team, http://www.openpilot.org Copyright (C) 2012.
  * @author     Tau Labs, http://taulabs.org, Copyright (C) 2012-2014
@@ -14,19 +14,19 @@
  * @see        The GNU Public License (GPL) Version 3
  *
  *****************************************************************************/
-/* 
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 3 of the License, or 
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
  * for more details.
- * 
- * You should have received a copy of the GNU General Public License along 
- * with this program; if not, write to the Free Software Foundation, Inc., 
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
@@ -69,53 +69,53 @@ void PIOS_SYS_Init(void)
 	 * light up everything we might reasonably use here and just leave it on.
 	 */
 	RCC_AHBPeriphClockCmd(
-			       RCC_AHBPeriph_GPIOA |
-			       RCC_AHBPeriph_GPIOB |
-			       RCC_AHBPeriph_GPIOC |
-			       RCC_AHBPeriph_GPIOD |
-			       RCC_AHBPeriph_GPIOE |
-			       RCC_AHBPeriph_GPIOF |
-			       RCC_AHBPeriph_TS |
-			       RCC_AHBPeriph_CRC |
-			       RCC_AHBPeriph_FLITF |
-			       RCC_AHBPeriph_SRAM |
-			       RCC_AHBPeriph_DMA2 |
-			       RCC_AHBPeriph_DMA1 |
-			       RCC_AHBPeriph_ADC34 |
-			       RCC_AHBPeriph_ADC12 |
-			0, ENABLE);
+	    RCC_AHBPeriph_GPIOA |
+	    RCC_AHBPeriph_GPIOB |
+	    RCC_AHBPeriph_GPIOC |
+	    RCC_AHBPeriph_GPIOD |
+	    RCC_AHBPeriph_GPIOE |
+	    RCC_AHBPeriph_GPIOF |
+	    RCC_AHBPeriph_TS |
+	    RCC_AHBPeriph_CRC |
+	    RCC_AHBPeriph_FLITF |
+	    RCC_AHBPeriph_SRAM |
+	    RCC_AHBPeriph_DMA2 |
+	    RCC_AHBPeriph_DMA1 |
+	    RCC_AHBPeriph_ADC34 |
+	    RCC_AHBPeriph_ADC12 |
+	    0, ENABLE);
 
 	RCC_APB1PeriphClockCmd(
-			       RCC_APB1Periph_TIM2 |
-			       RCC_APB1Periph_TIM3 |
-			       RCC_APB1Periph_TIM4 |
-			       RCC_APB1Periph_TIM6 |
-			       RCC_APB1Periph_TIM7 |
-			       RCC_APB1Periph_WWDG |
-			       RCC_APB1Periph_SPI2 |
-			       RCC_APB1Periph_SPI3 |
-			       RCC_APB1Periph_USART2 |
-			       RCC_APB1Periph_USART3 |
-			       RCC_APB1Periph_UART4 |
-			       RCC_APB1Periph_UART5 |
-			       RCC_APB1Periph_I2C1 |
-			       RCC_APB1Periph_I2C2 |
-			       RCC_APB1Periph_USB |
-			       RCC_APB1Periph_CAN1 |
-			       RCC_APB1Periph_PWR |
-			       RCC_APB1Periph_DAC |
-			0, ENABLE);
+	    RCC_APB1Periph_TIM2 |
+	    RCC_APB1Periph_TIM3 |
+	    RCC_APB1Periph_TIM4 |
+	    RCC_APB1Periph_TIM6 |
+	    RCC_APB1Periph_TIM7 |
+	    RCC_APB1Periph_WWDG |
+	    RCC_APB1Periph_SPI2 |
+	    RCC_APB1Periph_SPI3 |
+	    RCC_APB1Periph_USART2 |
+	    RCC_APB1Periph_USART3 |
+	    RCC_APB1Periph_UART4 |
+	    RCC_APB1Periph_UART5 |
+	    RCC_APB1Periph_I2C1 |
+	    RCC_APB1Periph_I2C2 |
+	    RCC_APB1Periph_USB |
+	    RCC_APB1Periph_CAN1 |
+	    RCC_APB1Periph_PWR |
+	    RCC_APB1Periph_DAC |
+	    0, ENABLE);
 
 	RCC_APB2PeriphClockCmd(
-			       RCC_APB2Periph_TIM1 |
-			       RCC_APB2Periph_TIM8 |
-			       RCC_APB2Periph_TIM15 |
-			       RCC_APB2Periph_TIM16 |
-			       RCC_APB2Periph_TIM17 |
-			       RCC_APB2Periph_USART1 |
-			       RCC_APB2Periph_SPI1 |
-			       RCC_APB2Periph_SYSCFG |
-			0, ENABLE);
+	    RCC_APB2Periph_TIM1 |
+	    RCC_APB2Periph_TIM8 |
+	    RCC_APB2Periph_TIM15 |
+	    RCC_APB2Periph_TIM16 |
+	    RCC_APB2Periph_TIM17 |
+	    RCC_APB2Periph_USART1 |
+	    RCC_APB2Periph_SPI1 |
+	    RCC_APB2Periph_SYSCFG |
+	    0, ENABLE);
 
 	/*
 	 * Configure all pins as input / pullup to avoid issues with
@@ -192,14 +192,14 @@ uint32_t PIOS_SYS_getCPUFlashSize(void)
 int32_t PIOS_SYS_SerialNumberGetBinary(uint8_t *array)
 {
 	int i;
-	
+
 	/* Stored in the so called "electronic signature" */
 	for (i = 0; i < PIOS_SYS_SERIAL_NUM_BINARY_LEN; ++i) {
 		uint8_t b = MEM8(0x1ffff7ac + i);
-		
+
 		array[i] = b;
 	}
-	
+
 	/* No error */
 	return 0;
 }

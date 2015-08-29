@@ -54,7 +54,7 @@
 /* Global Variables */
 
 enum pios_mpu6000_dev_magic {
-    PIOS_MPU6000_DEV_MAGIC = 0x9da9b3ed,
+	PIOS_MPU6000_DEV_MAGIC = 0x9da9b3ed,
 };
 
 #define PIOS_MPU6000_MAX_QUEUESIZE 2
@@ -169,7 +169,7 @@ int32_t PIOS_MPU6000_Init(uint32_t spi_id, uint32_t slave_num, const struct pios
 	PIOS_SPI_SetClockSpeed(pios_mpu6000_dev->spi_id, MPU6000_SPI_HIGH_SPEED);
 
 	pios_mpu6000_dev->threadp = PIOS_Thread_Create(
-			PIOS_MPU6000_Task, "pios_mpu6000", MPU6000_TASK_STACK, NULL, MPU6000_TASK_PRIORITY);
+	                                PIOS_MPU6000_Task, "pios_mpu6000", MPU6000_TASK_STACK, NULL, MPU6000_TASK_PRIORITY);
 	PIOS_Assert(pios_mpu6000_dev->threadp != NULL);
 
 	/* Set up EXTI line */
@@ -388,7 +388,7 @@ static int32_t PIOS_MPU6000_ClaimBus(bool lowspeed)
 		return -2;
 
 	if (lowspeed)
-			PIOS_SPI_SetClockSpeed(pios_mpu6000_dev->spi_id, MPU6000_SPI_LOW_SPEED);
+		PIOS_SPI_SetClockSpeed(pios_mpu6000_dev->spi_id, MPU6000_SPI_LOW_SPEED);
 
 	PIOS_SPI_RC_PinSet(pios_mpu6000_dev->spi_id, pios_mpu6000_dev->slave_num, 0);
 	return 0;
@@ -557,22 +557,22 @@ static void PIOS_MPU6000_Task(void *parameters)
 			continue;
 
 		enum {
-		    IDX_SPI_DUMMY_BYTE = 0,
-		    IDX_ACCEL_XOUT_H,
-		    IDX_ACCEL_XOUT_L,
-		    IDX_ACCEL_YOUT_H,
-		    IDX_ACCEL_YOUT_L,
-		    IDX_ACCEL_ZOUT_H,
-		    IDX_ACCEL_ZOUT_L,
-		    IDX_TEMP_OUT_H,
-		    IDX_TEMP_OUT_L,
-		    IDX_GYRO_XOUT_H,
-		    IDX_GYRO_XOUT_L,
-		    IDX_GYRO_YOUT_H,
-		    IDX_GYRO_YOUT_L,
-		    IDX_GYRO_ZOUT_H,
-		    IDX_GYRO_ZOUT_L,
-		    BUFFER_SIZE,
+			IDX_SPI_DUMMY_BYTE = 0,
+			IDX_ACCEL_XOUT_H,
+			IDX_ACCEL_XOUT_L,
+			IDX_ACCEL_YOUT_H,
+			IDX_ACCEL_YOUT_L,
+			IDX_ACCEL_ZOUT_H,
+			IDX_ACCEL_ZOUT_L,
+			IDX_TEMP_OUT_H,
+			IDX_TEMP_OUT_L,
+			IDX_GYRO_XOUT_H,
+			IDX_GYRO_XOUT_L,
+			IDX_GYRO_YOUT_H,
+			IDX_GYRO_YOUT_L,
+			IDX_GYRO_ZOUT_H,
+			IDX_GYRO_ZOUT_L,
+			BUFFER_SIZE,
 		};
 
 		uint8_t mpu6000_send_buf[BUFFER_SIZE] = { PIOS_MPU60X0_ACCEL_X_OUT_MSB | 0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };

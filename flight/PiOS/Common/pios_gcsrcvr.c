@@ -133,7 +133,8 @@ static int32_t PIOS_GCSRCVR_Get(uintptr_t rcvr_id, uint8_t channel)
 	return (gcsreceiverdata.Channel[channel]);
 }
 
-static void PIOS_gcsrcvr_Supervisor(uintptr_t gcsrcvr_id) {
+static void PIOS_gcsrcvr_Supervisor(uintptr_t gcsrcvr_id)
+{
 	/* Recover our device context */
 	struct pios_gcsrcvr_dev * gcsrcvr_dev = (struct pios_gcsrcvr_dev *)gcsrcvr_id;
 
@@ -142,7 +143,7 @@ static void PIOS_gcsrcvr_Supervisor(uintptr_t gcsrcvr_id) {
 		return;
 	}
 
-	/* 
+	/*
 	 * RTC runs at 625Hz.
 	 */
 	if(++(gcsrcvr_dev->supv_timer) < (PIOS_GCSRCVR_TIMEOUT_MS * 1000 / 625)) {
@@ -159,7 +160,7 @@ static void PIOS_gcsrcvr_Supervisor(uintptr_t gcsrcvr_id) {
 
 #endif	/* PIOS_INCLUDE_GCSRCVR */
 
-/** 
+/**
   * @}
   * @}
   */

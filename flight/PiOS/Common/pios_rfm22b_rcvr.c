@@ -67,7 +67,7 @@ struct pios_rfm22b_rcvr_dev {
 static void rfm22b_rcvr_update_uavo(struct pios_rfm22b_rcvr_dev *pios_rfm22b_rcvr_dev);
 
 static bool PIOS_RFM22B_Rcvr_Validate(struct pios_rfm22b_rcvr_dev
-				      *rfm22b_rcvr_dev)
+                                      *rfm22b_rcvr_dev)
 {
 	return rfm22b_rcvr_dev->magic == PIOS_RFM22B_RCVR_DEV_MAGIC;
 }
@@ -102,9 +102,9 @@ extern int32_t PIOS_RFM22B_Rcvr_Init(uintptr_t * rfm22b_rcvr_id, uint32_t rfm22b
 	}
 
 	/* Register uavobj callback */
-    RFM22BReceiverInitialize();
+	RFM22BReceiverInitialize();
 
-    *rfm22b_rcvr_id = (uintptr_t) rfm22b_rcvr_dev;
+	*rfm22b_rcvr_id = (uintptr_t) rfm22b_rcvr_dev;
 	PIOS_RFM22B_RegisterRcvr(rfm22b_id, *rfm22b_rcvr_id);
 
 	/* Register the failsafe timer callback. */
@@ -206,7 +206,7 @@ static void rfm22b_rcvr_update_uavo(struct pios_rfm22b_rcvr_dev *rcvr_dev)
 	// Also store the received data in a UAVO for easy
 	// debugging. However this is not what is used in
 	// ManualControl (it fetches directly from this driver)
-    RFM22BReceiverData rcvr;
+	RFM22BReceiverData rcvr;
 	for (uint8_t i = 0; i < RFM22B_PPM_NUM_CHANNELS; i++) {
 		if (i < RFM22BRECEIVER_CHANNEL_NUMELEM)
 			rcvr.Channel[i] = rcvr_dev->channels[i];

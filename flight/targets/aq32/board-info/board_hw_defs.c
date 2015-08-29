@@ -187,15 +187,16 @@ static const struct pios_spi_cfg pios_spi_sdCard_cfg = {
 	},
 	.slave_count = 1,
 	.ssel = { {
-		.gpio = GPIOE,
-		.init = {
-			.GPIO_Pin   = GPIO_Pin_10,
-			.GPIO_Speed = GPIO_Speed_100MHz,
-			.GPIO_Mode  = GPIO_Mode_OUT,
-			.GPIO_OType = GPIO_OType_PP,
-			.GPIO_PuPd  = GPIO_PuPd_NOPULL
-		},
-	} },
+			.gpio = GPIOE,
+			.init = {
+				.GPIO_Pin   = GPIO_Pin_10,
+				.GPIO_Speed = GPIO_Speed_100MHz,
+				.GPIO_Mode  = GPIO_Mode_OUT,
+				.GPIO_OType = GPIO_OType_PP,
+				.GPIO_PuPd  = GPIO_PuPd_NOPULL
+			},
+		}
+	},
 };
 
 uint32_t pios_spi_sdCard_id;
@@ -271,9 +272,9 @@ static const struct pios_spi_cfg pios_spi_external_cfg = {
 				.DMA_Mode               = DMA_Mode_Normal,
 				.DMA_Priority           = DMA_Priority_Medium,
 				.DMA_FIFOMode           = DMA_FIFOMode_Disable,
-                .DMA_FIFOThreshold      = DMA_FIFOThreshold_Full,
-                .DMA_MemoryBurst        = DMA_MemoryBurst_Single,
-                .DMA_PeripheralBurst    = DMA_PeripheralBurst_Single,
+				.DMA_FIFOThreshold      = DMA_FIFOThreshold_Full,
+				.DMA_MemoryBurst        = DMA_MemoryBurst_Single,
+				.DMA_PeripheralBurst    = DMA_PeripheralBurst_Single,
 			},
 		},
 	},
@@ -312,15 +313,16 @@ static const struct pios_spi_cfg pios_spi_external_cfg = {
 	},
 	.slave_count = 1,
 	.ssel = { {
-		.gpio = GPIOA,
-		.init = {
-			.GPIO_Pin   = GPIO_Pin_3,
-			.GPIO_Speed = GPIO_Speed_100MHz,
-			.GPIO_Mode  = GPIO_Mode_OUT,
-			.GPIO_OType = GPIO_OType_PP,
-			.GPIO_PuPd  = GPIO_PuPd_NOPULL
-		},
-	} },
+			.gpio = GPIOA,
+			.init = {
+				.GPIO_Pin   = GPIO_Pin_3,
+				.GPIO_Speed = GPIO_Speed_100MHz,
+				.GPIO_Mode  = GPIO_Mode_OUT,
+				.GPIO_OType = GPIO_OType_PP,
+				.GPIO_PuPd  = GPIO_PuPd_NOPULL
+			},
+		}
+	},
 };
 
 uint32_t pios_spi_external_id;
@@ -437,15 +439,16 @@ static const struct pios_spi_cfg pios_spi_internal_cfg = {
 	},
 	.slave_count = 1,
 	.ssel = { {
-		.gpio = GPIOB,
-		.init = {
-			.GPIO_Pin   = GPIO_Pin_8,
-			.GPIO_Speed = GPIO_Speed_100MHz,
-			.GPIO_Mode  = GPIO_Mode_OUT,
-			.GPIO_OType = GPIO_OType_PP,
-			.GPIO_PuPd  = GPIO_PuPd_NOPULL
-		},
-	} },
+			.gpio = GPIOB,
+			.init = {
+				.GPIO_Pin   = GPIO_Pin_8,
+				.GPIO_Speed = GPIO_Speed_100MHz,
+				.GPIO_Mode  = GPIO_Mode_OUT,
+				.GPIO_OType = GPIO_OType_PP,
+				.GPIO_PuPd  = GPIO_PuPd_NOPULL
+			},
+		}
+	},
 };
 
 uint32_t pios_spi_internal_id;
@@ -488,7 +491,7 @@ static const struct pios_i2c_adapter_cfg pios_i2c_internal_cfg = {
 			.GPIO_OType = GPIO_OType_OD,
 			.GPIO_PuPd  = GPIO_PuPd_UP,
 		},
-	.pin_source = GPIO_PinSource6,
+		.pin_source = GPIO_PinSource6,
 	},
 	.sda = {
 		.gpio = GPIOB,
@@ -499,7 +502,7 @@ static const struct pios_i2c_adapter_cfg pios_i2c_internal_cfg = {
 			.GPIO_OType = GPIO_OType_OD,
 			.GPIO_PuPd  = GPIO_PuPd_UP,
 		},
-	.pin_source = GPIO_PinSource7,
+		.pin_source = GPIO_PinSource7,
 	},
 	.event = {
 		.flags = 0,		/* FIXME: check this */
@@ -511,8 +514,8 @@ static const struct pios_i2c_adapter_cfg pios_i2c_internal_cfg = {
 		},
 	},
 	.error = {
-    .flags   = 0,		/* FIXME: check this */
-    .init = {
+		.flags   = 0,		/* FIXME: check this */
+		.init = {
 			.NVIC_IRQChannel                   = I2C1_ER_IRQn,
 			.NVIC_IRQChannelPreemptionPriority = PIOS_IRQ_PRIO_HIGHEST,
 			.NVIC_IRQChannelSubPriority        = 0,
@@ -524,8 +527,8 @@ static const struct pios_i2c_adapter_cfg pios_i2c_internal_cfg = {
 uint32_t pios_i2c_internal_id;
 void PIOS_I2C_internal_ev_irq_handler(void)
 {
-  /* Call into the generic code to handle the IRQ for this specific device */
-  PIOS_I2C_EV_IRQ_Handler(pios_i2c_internal_id);
+	/* Call into the generic code to handle the IRQ for this specific device */
+	PIOS_I2C_EV_IRQ_Handler(pios_i2c_internal_id);
 }
 
 void PIOS_I2C_internal_er_irq_handler(void)
@@ -561,7 +564,7 @@ static const struct pios_i2c_adapter_cfg pios_i2c_external_cfg = {
 			.GPIO_OType = GPIO_OType_OD,
 			.GPIO_PuPd  = GPIO_PuPd_UP,
 		},
-	.pin_source = GPIO_PinSource10,
+		.pin_source = GPIO_PinSource10,
 	},
 	.sda = {
 		.gpio = GPIOB,
@@ -571,12 +574,12 @@ static const struct pios_i2c_adapter_cfg pios_i2c_external_cfg = {
 			.GPIO_Speed = GPIO_Speed_50MHz,
 			.GPIO_OType = GPIO_OType_OD,
 			.GPIO_PuPd  = GPIO_PuPd_UP,
-	},
-	.pin_source = GPIO_PinSource11,
+		},
+		.pin_source = GPIO_PinSource11,
 	},
 	.event = {
 		.flags = 0,		/* FIXME: check this */
-	.	init = {
+		.	init = {
 			.NVIC_IRQChannel                   = I2C2_EV_IRQn,
 			.NVIC_IRQChannelPreemptionPriority = PIOS_IRQ_PRIO_HIGHEST,
 			.NVIC_IRQChannelSubPriority        = 0,
@@ -597,8 +600,8 @@ static const struct pios_i2c_adapter_cfg pios_i2c_external_cfg = {
 uint32_t pios_i2c_external_id;
 void PIOS_I2C_external_ev_irq_handler(void)
 {
-/* Call into the generic code to handle the IRQ for this specific device */
-PIOS_I2C_EV_IRQ_Handler(pios_i2c_external_id);
+	/* Call into the generic code to handle the IRQ for this specific device */
+	PIOS_I2C_EV_IRQ_Handler(pios_i2c_external_id);
 }
 
 void PIOS_I2C_external_er_irq_handler(void)
@@ -678,7 +681,7 @@ static const struct pios_flash_partition pios_flash_partition_table[] = {
 		.size         = (3 - 2 + 1) * FLASH_SECTOR_16KB, // 32KB
 	},
 
-    /* NOTE: sector 4 of internal flash is currently unallocated */
+	/* NOTE: sector 4 of internal flash is currently unallocated */
 
 	{
 		.label        = FLASH_PARTITION_LABEL_FW,
@@ -690,7 +693,7 @@ static const struct pios_flash_partition pios_flash_partition_table[] = {
 	},
 
 	/* NOTE: sectors 8-9 of the internal flash are currently unallocated */
-    
+
 	{
 		.label        = FLASH_PARTITION_LABEL_WAYPOINTS,
 		.chip_desc    = &pios_flash_chip_internal,
@@ -698,7 +701,7 @@ static const struct pios_flash_partition pios_flash_partition_table[] = {
 		.last_sector  = 11,
 		.chip_offset  = (4 * FLASH_SECTOR_16KB) + (1 * FLASH_SECTOR_64KB) + (5 * FLASH_SECTOR_128KB), // 0x080C 0000
 		.size         = (11 - 10 + 1) * FLASH_SECTOR_128KB,                                           // 256KB
-	}, 
+	},
 };
 
 const struct pios_flash_partition * PIOS_BOARD_HW_DEFS_GetPartitionTable (uint32_t board_revision, uint32_t * num_partitions)
@@ -883,7 +886,7 @@ static const struct pios_usart_cfg pios_usart3_sbus_cfg = {
 			.NVIC_IRQChannelPreemptionPriority = PIOS_IRQ_PRIO_MID,
 			.NVIC_IRQChannelSubPriority        = 0,
 			.NVIC_IRQChannelCmd                = ENABLE,
-		  },
+		},
 	},
 	.rx = {
 		.gpio = GPIOD,

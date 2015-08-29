@@ -1,9 +1,9 @@
 /**
  ******************************************************************************
  * @addtogroup TauLabsModules Tau Labs Modules
- * @{ 
+ * @{
  * @addtogroup StabilizationModule Stabilization Module
- * @{ 
+ * @{
  *
  * @file       stabilization.h
  * @author     The OpenPilot Team, http://www.openpilot.org Copyright (C) 2010.

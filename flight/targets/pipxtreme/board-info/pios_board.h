@@ -5,12 +5,12 @@
  * @addtogroup PipXtreme OpenPilot PipXtreme support files
  * @{
  *
- * @file       STM32103CB_PIPXTREME_Rev1.h 
+ * @file       STM32103CB_PIPXTREME_Rev1.h
  * @author     The OpenPilot Team, http://www.openpilot.org Copyright (C) 2011.
  * @author     Tau Labs, http://taulabs.org, Copyright (C) 2012-2013
  * @brief      Board header file for PipXtreme
  * @see        The GNU Public License (GPL) Version 3
- * 
+ *
  *****************************************************************************/
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -168,13 +168,13 @@ extern uint32_t pios_i2c_flexi_adapter_id;
 //
 // See also pios_board.c
 //-------------------------
-extern uintptr_t pios_com_telem_usb_id; 
-extern uintptr_t pios_com_vcp_id; 
-extern uintptr_t pios_com_radio_id; 
+extern uintptr_t pios_com_telem_usb_id;
+extern uintptr_t pios_com_vcp_id;
+extern uintptr_t pios_com_radio_id;
 extern uintptr_t pios_com_telem_serial_id;
 extern uintptr_t pios_com_bridge_id;
 extern uintptr_t pios_com_rf_id;
-extern uintptr_t pios_com_telem_uart_telem_id; 
+extern uintptr_t pios_com_telem_uart_telem_id;
 extern uintptr_t pios_ppm_rcvr_id;
 extern uintptr_t pios_com_debug_id;
 extern uintptr_t pios_com_frsky_sport_id;

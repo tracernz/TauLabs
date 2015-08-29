@@ -72,10 +72,10 @@ static int32_t PIOS_BMA180_EnableIrq();
 static struct bma180_dev * PIOS_BMA180_alloc(void)
 {
 	struct bma180_dev * bma180_dev;
-	
+
 	bma180_dev = (struct bma180_dev *)PIOS_malloc(sizeof(*bma180_dev));
 	if (!bma180_dev) return (NULL);
-	
+
 	fifoBuf_init(&bma180_dev->fifo, (uint8_t *) bma180_dev->buffer, sizeof(bma180_dev->buffer));
 
 	bma180_dev->magic = PIOS_BMA180_DEV_MAGIC;
@@ -88,7 +88,7 @@ static struct bma180_dev * PIOS_BMA180_alloc(void)
  */
 static int32_t PIOS_BMA180_Validate(struct bma180_dev * dev)
 {
-	if (dev == NULL) 
+	if (dev == NULL)
 		return -1;
 	if (dev->magic != PIOS_BMA180_DEV_MAGIC)
 		return -2;
@@ -102,23 +102,23 @@ static int32_t PIOS_BMA180_Validate(struct bma180_dev * dev)
  * @returns 0 for success, -1 for failure
  */
 int32_t PIOS_BMA180_Init(uint32_t spi_id, uint32_t slave_num, const struct pios_bma180_cfg * cfg)
-{	
+{
 	dev = PIOS_BMA180_alloc();
 	if(dev == NULL)
 		return -1;
-		
+
 	dev->spi_id = spi_id;
 	dev->slave_num = slave_num;
 	dev->cfg = cfg;
-	
+
 	if(PIOS_BMA180_Config() < 0)
 		return -1;
 	PIOS_DELAY_WaituS(50);
-	
+
 	PIOS_EXTI_Init(dev->cfg->exti_cfg);
 
 	while(PIOS_BMA180_EnableIrq() != 0);
-	
+
 	return 0;
 }
 
@@ -198,13 +198,13 @@ int32_t PIOS_BMA180_GetReg(uint8_t reg)
 		return -1;
 
 	uint8_t data;
-	
+
 	if(PIOS_BMA180_ClaimBus() != 0)
-		return -1;	
+		return -1;
 
 	PIOS_SPI_TransferByte(dev->spi_id,(0x80 | reg) ); // request byte
 	data = PIOS_SPI_TransferByte(dev->spi_id,0 );     // receive response
-	
+
 	PIOS_BMA180_ReleaseBus();
 	return data;
 }
@@ -219,34 +219,36 @@ int32_t PIOS_BMA180_SetReg(uint8_t reg, uint8_t data)
 {
 	if(PIOS_BMA180_ClaimBus() != 0)
 		return -1;
-	
+
 	PIOS_SPI_TransferByte(dev->spi_id, 0x7f & reg);
 	PIOS_SPI_TransferByte(dev->spi_id, data);
 
 	PIOS_BMA180_ReleaseBus();
-	
+
 	return 0;
 }
 
 
-static int32_t PIOS_BMA180_EnableEeprom() {
+static int32_t PIOS_BMA180_EnableEeprom()
+{
 	// Enable EEPROM writing
 	int32_t byte = PIOS_BMA180_GetReg(BMA_CTRREG0);
 	if(byte < 0)
 		return -1;
 	byte |= 0x10;                                      // Set bit 4
-	if(PIOS_BMA180_SetReg(BMA_CTRREG0,(uint8_t) byte) < 0)    // Have to set ee_w to		
+	if(PIOS_BMA180_SetReg(BMA_CTRREG0,(uint8_t) byte) < 0)    // Have to set ee_w to
 		return -1;
 	return 0;
 }
 
-static int32_t PIOS_BMA180_DisableEeprom() {
+static int32_t PIOS_BMA180_DisableEeprom()
+{
 	// Enable EEPROM writing
 	int32_t byte = PIOS_BMA180_GetReg(BMA_CTRREG0);
 	if(byte < 0)
 		return -1;
 	byte |= 0x10;                                      // Set bit 4
-	if(PIOS_BMA180_SetReg(BMA_CTRREG0,(uint8_t) byte) < 0)    // Have to set ee_w to		
+	if(PIOS_BMA180_SetReg(BMA_CTRREG0,(uint8_t) byte) < 0)    // Have to set ee_w to
 		return -1;
 	return 0;
 }
@@ -255,7 +257,7 @@ static int32_t PIOS_BMA180_DisableEeprom() {
  * @brief Set the default register settings
  * @return 0 if successful, -1 if not
  */
-static int32_t PIOS_BMA180_Config() 
+static int32_t PIOS_BMA180_Config()
 {
 	/*
 	0x35 = 0x81  //smp-skip = 1 for less interrupts
@@ -263,10 +265,10 @@ static int32_t PIOS_BMA180_Config()
 	0x27 = 0x01  //dis-i2c
 	0x21 = 0x02  //new_data_int = 1
 	 */
-		
+
 	PIOS_DELAY_WaituS(20);
 
-	if(PIOS_BMA180_Validate(dev) != 0) 
+	if(PIOS_BMA180_Validate(dev) != 0)
 		return -1;
 
 	while(PIOS_BMA180_EnableEeprom() != 0);
@@ -285,7 +287,7 @@ static int32_t PIOS_BMA180_Config()
  * @brief Select the bandwidth the digital filter pass allows.
  * @return 0 if successful, -1 if not
  * @param rate[in] Bandwidth setting to be used
- * 
+ *
  * EEPROM must be write-enabled before calling this function.
  */
 static int32_t PIOS_BMA180_SelectBW(enum bma180_bandwidth bw)
@@ -294,7 +296,7 @@ static int32_t PIOS_BMA180_SelectBW(enum bma180_bandwidth bw)
 		return -1;
 
 	dev->bandwidth = bw;
-	
+
 	uint8_t reg;
 	reg = PIOS_BMA180_GetReg(BMA_BW_ADDR);
 	reg = (reg & ~BMA_BW_MASK) | ((bw << BMA_BW_SHIFT) & BMA_BW_MASK);
@@ -307,20 +309,20 @@ static int32_t PIOS_BMA180_SelectBW(enum bma180_bandwidth bw)
  * @param rate[in] Range setting to be used
  *
  */
-static int32_t PIOS_BMA180_SetRange(enum bma180_range new_range) 
-{	
+static int32_t PIOS_BMA180_SetRange(enum bma180_range new_range)
+{
 	if(PIOS_BMA180_Validate(dev) != 0)
 		return -1;
 
 	uint8_t reg;
-		
+
 	dev->range = new_range;
 	reg = PIOS_BMA180_GetReg(BMA_RANGE_ADDR);
 	reg = (reg & ~BMA_RANGE_MASK) | ((dev->range << BMA_RANGE_SHIFT) & BMA_RANGE_MASK);
 	return PIOS_BMA180_SetReg(BMA_RANGE_ADDR, reg);
 }
 
-static int32_t PIOS_BMA180_EnableIrq() 
+static int32_t PIOS_BMA180_EnableIrq()
 {
 
 	if(PIOS_BMA180_EnableEeprom() < 0)
@@ -348,13 +350,13 @@ int32_t PIOS_BMA180_ReadAccels(struct pios_bma180_data * data)
 	// a byte
 	uint8_t buf[7] = {BMA_X_LSB_ADDR | 0x80,0,0,0,0,0};
 	uint8_t rec[7] = {0,0,0,0,0,0};
-	
+
 	if(PIOS_BMA180_ClaimBus() != 0)
 		return -1;
 	if(PIOS_SPI_TransferBlock(dev->spi_id,&buf[0],&rec[0],7,NULL) != 0)
 		return -2;
-	PIOS_BMA180_ReleaseBus();	
-	
+	PIOS_BMA180_ReleaseBus();
+
 	//        |    MSB        |   LSB       | 0 | new_data |
 	data->x = ((rec[2] << 8) | rec[1]);
 	data->y = ((rec[4] << 8) | rec[3]);
@@ -362,7 +364,7 @@ int32_t PIOS_BMA180_ReadAccels(struct pios_bma180_data * data)
 	data->x /= 4;
 	data->y /= 4;
 	data->z /= 4;
-	
+
 	return 0; // return number of remaining entries
 }
 
@@ -376,20 +378,20 @@ float PIOS_BMA180_GetScale()
 		return -1;
 
 	switch (dev->cfg->range) {
-		case BMA_RANGE_1G:
-			return GRAVITY / 8192.0f;
-		case BMA_RANGE_1_5G:
-			return GRAVITY / 5460.0f;
-		case BMA_RANGE_2G:
-			return GRAVITY / 4096.0f;
-		case BMA_RANGE_3G:
-			return GRAVITY / 2730.0f;
-		case BMA_RANGE_4G:
-			return GRAVITY / 2048.0f;
-		case BMA_RANGE_8G:
-			return GRAVITY / 1024.0f;
-		case BMA_RANGE_16G:
-			return GRAVITY / 512.0f;
+	case BMA_RANGE_1G:
+		return GRAVITY / 8192.0f;
+	case BMA_RANGE_1_5G:
+		return GRAVITY / 5460.0f;
+	case BMA_RANGE_2G:
+		return GRAVITY / 4096.0f;
+	case BMA_RANGE_3G:
+		return GRAVITY / 2730.0f;
+	case BMA_RANGE_4G:
+		return GRAVITY / 2048.0f;
+	case BMA_RANGE_8G:
+		return GRAVITY / 1024.0f;
+	case BMA_RANGE_16G:
+		return GRAVITY / 512.0f;
 	}
 	return 0;
 }
@@ -406,9 +408,9 @@ int32_t PIOS_BMA180_ReadFifo(struct pios_bma180_data * buffer)
 
 	if(fifoBuf_getUsed(&dev->fifo) < sizeof(*buffer))
 		return -1;
-	
+
 	fifoBuf_getData(&dev->fifo, (uint8_t *) buffer, sizeof(*buffer));
-	
+
 	return 0;
 }
 
@@ -429,17 +431,17 @@ int32_t PIOS_BMA180_Test()
 		return -1;
 	retval = PIOS_SPI_TransferBlock(dev->spi_id,&buf[0],&rec[0],sizeof(buf),NULL);
 	PIOS_BMA180_ReleaseBus();
-	
+
 	if(retval != 0)
 		return -2;
-	
+
 	struct pios_bma180_data data;
 	if(PIOS_BMA180_ReadAccels(&data) != 0)
 		return -3;
-	
+
 	if(rec[1] != 0x3)
 		return -4;
-	
+
 	if(rec[2] < 0x12)
 		return -5;
 
@@ -453,7 +455,7 @@ int32_t bma180_irqs = 0;
 bool PIOS_BMA180_IRQHandler(void)
 {
 	bma180_irqs++;
-	
+
 	const static uint8_t pios_bma180_req_buf[7] = {BMA_X_LSB_ADDR | 0x80,0,0,0,0,0};
 	uint8_t pios_bma180_dmabuf[8];
 
@@ -462,21 +464,21 @@ bool PIOS_BMA180_IRQHandler(void)
 	if(PIOS_BMA180_ClaimBusISR(&woken) != 0) {
 		return woken; // Something else is using bus, miss this data
 	}
-		
-	PIOS_SPI_TransferBlock(dev->spi_id,pios_bma180_req_buf,(uint8_t *) pios_bma180_dmabuf, 
-							   sizeof(pios_bma180_dmabuf), NULL);
+
+	PIOS_SPI_TransferBlock(dev->spi_id,pios_bma180_req_buf,(uint8_t *) pios_bma180_dmabuf,
+	                       sizeof(pios_bma180_dmabuf), NULL);
 
 	// TODO: Make this conversion depend on configuration scale
 	struct pios_bma180_data data;
-	
+
 	// Don't release bus till data has copied
 	PIOS_BMA180_ReleaseBus(&woken);
-	
+
 	// Must not return before releasing bus
 	if(fifoBuf_getFree(&dev->fifo) < sizeof(data))
 		return woken;
-	
-	// Bottom two bits indicate new data and are constant zeros.  Don't right 
+
+	// Bottom two bits indicate new data and are constant zeros.  Don't right
 	// shift because it drops sign bit
 	data.x = ((pios_bma180_dmabuf[2] << 8) | pios_bma180_dmabuf[1]);
 	data.y = ((pios_bma180_dmabuf[4] << 8) | pios_bma180_dmabuf[3]);
@@ -485,9 +487,9 @@ bool PIOS_BMA180_IRQHandler(void)
 	data.y /= 4;
 	data.z /= 4;
 	data.temperature = pios_bma180_dmabuf[7];
-	
+
 	fifoBuf_putData(&dev->fifo, (uint8_t *) &data, sizeof(data));
-	
+
 	return woken;
 }
 

@@ -124,12 +124,12 @@ int32_t PIOS_CAN_Init(uintptr_t *can_id, const struct pios_can_cfg *cfg)
 	if (can_dev->cfg->remap) {
 		if (can_dev->cfg->rx.gpio != 0)
 			GPIO_PinAFConfig(can_dev->cfg->rx.gpio,
-				can_dev->cfg->rx.pin_source,
-				can_dev->cfg->remap);
+			                 can_dev->cfg->rx.pin_source,
+			                 can_dev->cfg->remap);
 		if (can_dev->cfg->tx.gpio != 0)
 			GPIO_PinAFConfig(can_dev->cfg->tx.gpio,
-				can_dev->cfg->tx.pin_source,
-				can_dev->cfg->remap);
+			                 can_dev->cfg->tx.pin_source,
+			                 can_dev->cfg->remap);
 	}
 
 	/* Initialize the CAN Rx and Tx pins */
@@ -151,15 +151,15 @@ int32_t PIOS_CAN_Init(uintptr_t *can_id, const struct pios_can_cfg *cfg)
 	CAN_FilterInitStructure.CAN_FilterIdHigh = 0x0000;
 	CAN_FilterInitStructure.CAN_FilterIdLow = 0x0000;
 	CAN_FilterInitStructure.CAN_FilterMaskIdHigh = 0x0000;
-	CAN_FilterInitStructure.CAN_FilterMaskIdLow = 0x0000;  
+	CAN_FilterInitStructure.CAN_FilterMaskIdLow = 0x0000;
 	CAN_FilterInitStructure.CAN_FilterFIFOAssignment = 1;
 
 	CAN_FilterInitStructure.CAN_FilterActivation = ENABLE;
 	CAN_FilterInit(&CAN_FilterInitStructure);
 
 	// Enable the receiver IRQ
- 	NVIC_Init((NVIC_InitTypeDef*) &can_dev->cfg->rx_irq.init);
- 	NVIC_Init((NVIC_InitTypeDef*) &can_dev->cfg->tx_irq.init);
+	NVIC_Init((NVIC_InitTypeDef*) &can_dev->cfg->rx_irq.init);
+	NVIC_Init((NVIC_InitTypeDef*) &can_dev->cfg->tx_irq.init);
 
 	return(0);
 
@@ -170,22 +170,22 @@ out_fail:
 static void PIOS_CAN_RxStart(uintptr_t can_id, uint16_t rx_bytes_avail)
 {
 	struct pios_can_dev *can_dev = (struct pios_can_dev *)can_id;
-	
+
 	bool valid = PIOS_CAN_validate(can_dev);
 	PIOS_Assert(valid);
-	
+
 	CAN_ITConfig(can_dev->cfg->regs, CAN_IT_FMP1, ENABLE);
 }
 
 static void PIOS_CAN_TxStart(uintptr_t can_id, uint16_t tx_bytes_avail)
 {
 	struct pios_can_dev *can_dev = (struct pios_can_dev *)can_id;
-	
+
 	bool valid = PIOS_CAN_validate(can_dev);
 	PIOS_Assert(valid);
 
- 	CAN_ITConfig(can_dev->cfg->regs, CAN_IT_TME, ENABLE);
-	
+	CAN_ITConfig(can_dev->cfg->regs, CAN_IT_TME, ENABLE);
+
 	PIOS_CAN_TxGeneric();
 }
 
@@ -195,8 +195,8 @@ static void PIOS_CAN_RegisterRxCallback(uintptr_t can_id, pios_com_callback rx_i
 
 	bool valid = PIOS_CAN_validate(can_dev);
 	PIOS_Assert(valid);
-	
-	/* 
+
+	/*
 	 * Order is important in these assignments since ISR uses _cb
 	 * field to determine if it's ok to dereference _cb and _context
 	 */
@@ -210,8 +210,8 @@ static void PIOS_CAN_RegisterTxCallback(uintptr_t can_id, pios_com_callback tx_o
 
 	bool valid = PIOS_CAN_validate(can_dev);
 	PIOS_Assert(valid);
-	
-	/* 
+
+	/*
 	 * Order is important in these assignments since ISR uses _cb
 	 * field to determine if it's ok to dereference _cb and _context
 	 */
@@ -402,7 +402,7 @@ static void PIOS_CAN_TxGeneric(void)
 	PIOS_Assert(valid);
 
 	bool tx_need_yield = false;
-	
+
 	if (can_dev->tx_out_cb) {
 
 		// Prepare CAN message structure
@@ -422,7 +422,7 @@ static void PIOS_CAN_TxGeneric(void)
 
 		// TODO: deal with failure to send and keep the message to retransmit
 	}
-	
+
 #if defined(PIOS_INCLUDE_FREERTOS)
 	portEND_SWITCHING_ISR(tx_need_yield ? pdTRUE : pdFALSE);
 #endif /* defined(PIOS_INCLUDE_FREERTOS) */

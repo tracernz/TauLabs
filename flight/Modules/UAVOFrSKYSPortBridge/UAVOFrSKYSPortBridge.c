@@ -119,7 +119,7 @@ static void frsky_schedule_next_item(void)
 	for (i = 0; i < NELEMENTS(frsky_value_items); i++) {
 		if (frsky_value_items[i].encode_value(&frsky->frsky_settings, 0, true, frsky_value_items[i].fn_arg)) {
 			int32_t exp_time = PIOS_DELAY_GetuSSince(frsky->item_last_triggered[i]) -
-					(frsky_value_items[i].period_ms * 1000);
+			                   (frsky_value_items[i].period_ms * 1000);
 			if (exp_time > max_exp_time) {
 				max_exp_time = exp_time;
 				most_exp_item = i;
@@ -139,7 +139,7 @@ static bool frsky_send_scheduled_item(void)
 		frsky->item_last_triggered[item] = PIOS_DELAY_GetuS();
 		uint32_t value = 0;
 		if (frsky_value_items[item].encode_value(&frsky->frsky_settings, &value, false,
-				frsky_value_items[item].fn_arg)) {
+		        frsky_value_items[item].fn_arg)) {
 			frsky->ignore_rx_chars += frsky_send_frame(frsky->com, (uint16_t)(frsky_value_items[item].id), value);
 			return true;
 		}
@@ -203,7 +203,7 @@ static int32_t uavoFrSKYSPortBridgeStart(void)
 		return -1;
 
 	if (FlightBatterySettingsHandle() != NULL
-			&& FlightBatteryStateHandle() != NULL) {
+	    && FlightBatteryStateHandle() != NULL) {
 		uint8_t currentPin;
 		FlightBatterySettingsCurrentPinGet(&currentPin);
 		if (currentPin != FLIGHTBATTERYSETTINGS_CURRENTPIN_NONE)
@@ -212,15 +212,15 @@ static int32_t uavoFrSKYSPortBridgeStart(void)
 		frsky->frsky_settings.batt_cell_count = frsky->frsky_settings.battery_settings.NbCells;
 	}
 	if (BaroAltitudeHandle() != NULL
-			&& PIOS_SENSORS_GetQueue(PIOS_SENSOR_BARO) != NULL)
+	    && PIOS_SENSORS_GetQueue(PIOS_SENSOR_BARO) != NULL)
 		frsky->frsky_settings.use_baro_sensor = true;
 
 	struct pios_thread *task;
 	task = PIOS_Thread_Create(
-			uavoFrSKYSPortBridgeTask, "uavoFrSKYSPortBridge",
-			STACK_SIZE_BYTES, NULL, TASK_PRIORITY);
+	           uavoFrSKYSPortBridgeTask, "uavoFrSKYSPortBridge",
+	           STACK_SIZE_BYTES, NULL, TASK_PRIORITY);
 	TaskMonitorAdd(TASKINFO_RUNNING_UAVOFRSKYSPORTBRIDGE,
-			task);
+	               task);
 
 	return 0;
 }
@@ -237,7 +237,7 @@ static int32_t uavoFrSKYSPortBridgeInitialize(void)
 	ModuleSettingsAdminStateGet(module_state);
 
 	if (sport_com && (module_state[MODULESETTINGS_ADMINSTATE_UAVOFRSKYSPORTBRIDGE]
-						== MODULESETTINGS_ADMINSTATE_ENABLED)) {
+	                  == MODULESETTINGS_ADMINSTATE_ENABLED)) {
 		frsky = PIOS_malloc(sizeof(struct frsky_sport_telemetry));
 		if (frsky != NULL) {
 			memset(frsky, 0x00, sizeof(struct frsky_sport_telemetry));

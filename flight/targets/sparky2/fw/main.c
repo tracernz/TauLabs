@@ -5,25 +5,25 @@
  * @addtogroup Sparky2 Tau Labs Sparky2 support files
  * @{
  *
- * @file       main.c 
+ * @file       main.c
  * @author     Tau Labs, http://taulabs.org, Copyright (C) 2012-2015
  * @brief      Start up file for Sparky2
  * @see        The GNU Public License (GPL) Version 3
- * 
+ *
  *****************************************************************************/
-/* 
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 3 of the License, or 
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
  * for more details.
- * 
- * You should have received a copy of the GNU General Public License along 
- * with this program; if not, write to the Free Software Foundation, Inc., 
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
@@ -64,7 +64,7 @@ int main()
 {
 	/* NOTE: Do NOT modify the following start-up sequence */
 	/* Any new initialization functions should be added in OpenPilotInit() */
-	PIOS_heap_initialize_blocks();  
+	PIOS_heap_initialize_blocks();
 
 #if defined(PIOS_INCLUDE_CHIBIOS)
 	halInit();
@@ -75,22 +75,26 @@ int main()
 
 	/* Brings up System using CMSIS functions, enables the LEDs. */
 	PIOS_SYS_Init();
-	
+
 	/* For Sparky2 we use a FreeRTOS task to bring up the system so we can */
-	/* always rely on FreeRTOS primitive */	
+	/* always rely on FreeRTOS primitive */
 	initTaskHandle = PIOS_Thread_Create(initTask, "init", INIT_TASK_STACK, NULL, INIT_TASK_PRIORITY);
 	PIOS_Assert(initTaskHandle != NULL);
-	
+
 #if defined(PIOS_INCLUDE_FREERTOS)
 	/* Start the FreeRTOS scheduler */
 	vTaskStartScheduler();
 
 	/* If all is well we will never reach here as the scheduler will now be running. */
 	/* Do some PIOS_LED_HEARTBEAT to user that something bad just happened */
-	PIOS_LED_Off(PIOS_LED_HEARTBEAT); \
-	for(;;) { \
-		PIOS_LED_Toggle(PIOS_LED_HEARTBEAT); \
-		PIOS_DELAY_WaitmS(100); \
+	PIOS_LED_Off(PIOS_LED_HEARTBEAT);
+	\
+	for(;;) {
+		\
+		PIOS_LED_Toggle(PIOS_LED_HEARTBEAT);
+		\
+		PIOS_DELAY_WaitmS(100);
+		\
 	};
 #elif defined(PIOS_INCLUDE_CHIBIOS)
 	while(1)

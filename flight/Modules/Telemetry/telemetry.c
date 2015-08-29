@@ -1,9 +1,9 @@
 /**
  ******************************************************************************
  * @addtogroup TauLabsModules Tau Labs Modules
- * @{ 
+ * @{
  * @addtogroup TelemetryModule Telemetry Module
- * @{ 
+ * @{
  *
  * @file       telemetry.c
  * @author     The OpenPilot Team, http://www.openpilot.org Copyright (C) 2010.
@@ -94,10 +94,10 @@ int32_t TelemetryStart(void)
 {
 	// Process all registered objects and connect queue for updates
 	UAVObjIterate(&registerObject);
-    
+
 	// Listen to objects of interest
 	GCSTelemetryStatsConnectQueue(priorityQueue);
-    
+
 	// Start telemetry tasks
 	telemetryTxTaskHandle = PIOS_Thread_Create(telemetryTxTask, "TelTx", STACK_SIZE_BYTES, NULL, TASK_PRIORITY_TX);
 	telemetryRxTaskHandle = PIOS_Thread_Create(telemetryRxTask, "TelRx", STACK_SIZE_BYTES, NULL, TASK_PRIORITY_RX);
@@ -134,10 +134,10 @@ int32_t TelemetryInitialize(void)
 	// Update telemetry settings
 	telemetryPort = PIOS_COM_TELEM_RF;
 	updateSettings();
-    
+
 	// Initialise UAVTalk
 	uavTalkCon = UAVTalkInitialize(&transmitData);
-    
+
 	// Create periodic event that will be used to update the telemetry stats
 	txErrors = 0;
 	txRetries = 0;
@@ -175,7 +175,7 @@ static void registerObject(UAVObjHandle obj)
 
 		/* Only create a periodic event for objects that are periodic */
 		if ((updateMode == UPDATEMODE_PERIODIC) ||
-			(updateMode == UPDATEMODE_THROTTLED)) {
+		    (updateMode == UPDATEMODE_THROTTLED)) {
 			// Setup object for periodic updates
 			UAVObjEvent ev = {
 				.obj    = obj,
@@ -564,7 +564,7 @@ static void updateTelemetryStats()
  */
 static void updateSettings()
 {
-	
+
 	if (telemetryPort) {
 		// Retrieve settings
 		uint8_t speed;
@@ -598,9 +598,10 @@ static void updateSettings()
 }
 
 /**
- * Determine input/output com port as highest priority available 
+ * Determine input/output com port as highest priority available
  */
-static uintptr_t getComPort() {
+static uintptr_t getComPort()
+{
 #if defined(PIOS_INCLUDE_USB)
 	if ( PIOS_COM_Available(PIOS_COM_TELEM_USB) )
 		return PIOS_COM_TELEM_USB;

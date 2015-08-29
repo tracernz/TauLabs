@@ -504,8 +504,8 @@ int main(void)
 
 		/* check for an incoming packet */
 		bool packet_available = PIOS_COM_MSG_Receive(PIOS_COM_TELEM_USB,
-							(uint8_t *)&bl_fsm_context.msg,
-							sizeof(bl_fsm_context.msg));
+		                        (uint8_t *)&bl_fsm_context.msg,
+		                        sizeof(bl_fsm_context.msg));
 		if (packet_available) {
 			process_packet_rx(&bl_fsm_context, &bl_fsm_context.msg);
 		}

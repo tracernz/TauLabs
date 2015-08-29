@@ -76,9 +76,9 @@ enum i2c_adapter_state {
 	I2C_STATE_W_LAST_TXN_ADDR,
 	I2C_STATE_W_LAST_TXN_MIDDLE,
 	I2C_STATE_W_LAST_TXN_LAST,
-	
+
 	I2C_STATE_NACK,
-	
+
 	I2C_STATE_NUM_STATES	/* Must be last */
 };
 
@@ -142,7 +142,7 @@ struct pios_i2c_adapter {
 	const struct pios_i2c_txn *last_txn;
 
 	void (*callback) ();
-	
+
 	uint8_t *active_byte;
 	uint8_t *last_byte;
 

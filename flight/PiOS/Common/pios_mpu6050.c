@@ -47,7 +47,7 @@
 /* Global Variables */
 
 enum pios_mpu6050_dev_magic {
-    PIOS_MPU6050_DEV_MAGIC = 0xf21d26a2,
+	PIOS_MPU6050_DEV_MAGIC = 0xf21d26a2,
 };
 
 #define PIOS_MPU6050_MAX_QUEUESIZE 2
@@ -156,7 +156,7 @@ int32_t PIOS_MPU6050_Init(uint32_t i2c_id, uint8_t i2c_addr, const struct pios_m
 	PIOS_MPU6050_Config(cfg);
 
 	pios_mpu6050_dev->TaskHandle = PIOS_Thread_Create(
-			PIOS_MPU6050_Task, "pios_mpu6050", MPU6050_TASK_STACK_BYTES, NULL, MPU6050_TASK_PRIORITY);
+	                                   PIOS_MPU6050_Task, "pios_mpu6050", MPU6050_TASK_STACK_BYTES, NULL, MPU6050_TASK_PRIORITY);
 	PIOS_Assert(pios_mpu6050_dev->TaskHandle != NULL);
 
 	/* Set up EXTI line */
@@ -350,14 +350,14 @@ void PIOS_MPU6050_SetSampleRate(uint16_t samplerate_hz)
 void PIOS_MPU6050_SetPassThrough(bool passThrough)
 {
 	int32_t int_cfg_reg = PIOS_MPU6050_GetReg(PIOS_MPU60X0_INT_CFG_REG);
-	
+
 	if(passThrough)
 		PIOS_MPU6050_SetReg(PIOS_MPU60X0_INT_CFG_REG, int_cfg_reg | (1 << 1));	// Set bit1 (I2C_BYPASS_EN)
 	else
 		PIOS_MPU6050_SetReg(PIOS_MPU60X0_INT_CFG_REG, int_cfg_reg & ~(1 << 1));	// Clear bit1 (I2C_BYPASS_EN)
-		
+
 	int32_t user_ctrl_reg = PIOS_MPU6050_GetReg(PIOS_MPU60X0_USER_CTRL_REG);	// USER_CTRL
-	
+
 	if(passThrough)
 		PIOS_MPU6050_SetReg(PIOS_MPU60X0_USER_CTRL_REG, user_ctrl_reg & ~(1 << 5));	// Clear bit1 (I2C_MST_EN)
 	else
@@ -599,21 +599,21 @@ static void PIOS_MPU6050_Task(void *parameters)
 			continue;
 
 		enum {
-		    IDX_ACCEL_XOUT_H = 0,
-		    IDX_ACCEL_XOUT_L,
-		    IDX_ACCEL_YOUT_H,
-		    IDX_ACCEL_YOUT_L,
-		    IDX_ACCEL_ZOUT_H,
-		    IDX_ACCEL_ZOUT_L,
-		    IDX_TEMP_OUT_H,
-		    IDX_TEMP_OUT_L,
-		    IDX_GYRO_XOUT_H,
-		    IDX_GYRO_XOUT_L,
-		    IDX_GYRO_YOUT_H,
-		    IDX_GYRO_YOUT_L,
-		    IDX_GYRO_ZOUT_H,
-		    IDX_GYRO_ZOUT_L,
-		    BUFFER_SIZE,
+			IDX_ACCEL_XOUT_H = 0,
+			IDX_ACCEL_XOUT_L,
+			IDX_ACCEL_YOUT_H,
+			IDX_ACCEL_YOUT_L,
+			IDX_ACCEL_ZOUT_H,
+			IDX_ACCEL_ZOUT_L,
+			IDX_TEMP_OUT_H,
+			IDX_TEMP_OUT_L,
+			IDX_GYRO_XOUT_H,
+			IDX_GYRO_XOUT_L,
+			IDX_GYRO_YOUT_H,
+			IDX_GYRO_YOUT_L,
+			IDX_GYRO_ZOUT_H,
+			IDX_GYRO_ZOUT_L,
+			BUFFER_SIZE,
 		};
 
 		uint8_t mpu6050_rec_buf[BUFFER_SIZE];

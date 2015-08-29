@@ -9,7 +9,7 @@
  * Based on the value of @ref StateEstimation this module will select between
  * the complementary filter and the INSGPS to fuse data from @ref Gyros, @ref
  * Accels, @ref Magnetometer, @ref GPSPosition, @ref GPSVelocity, and @ref
- * BaroAltitude to estimation @ref PositionActual, @ref VelocityActual and 
+ * BaroAltitude to estimation @ref PositionActual, @ref VelocityActual and
  * @ref AttitudeActual.
  *
  * @file       attitude.c
@@ -345,13 +345,13 @@ static void AttitudeTask(void *parameters)
 		if (ins) {
 			ret_val = updateAttitudeINSGPS(first_run, outdoor);
 			if (complementary)
-				 updateAttitudeComplementary(first_run || complementary != last_complementary,
-				                               true,     // the secondary filter
-				                               false);   // no raw gps is used
+				updateAttitudeComplementary(first_run || complementary != last_complementary,
+				                            true,     // the secondary filter
+				                            false);   // no raw gps is used
 		} else {
 			ret_val = updateAttitudeComplementary(first_run,
-			                                       false,
-			                                       stateEstimation.NavigationFilter == STATEESTIMATION_NAVIGATIONFILTER_RAW);
+			                                      false,
+			                                      stateEstimation.NavigationFilter == STATEESTIMATION_NAVIGATIONFILTER_RAW);
 		}
 
 		last_complementary = complementary;
@@ -474,20 +474,20 @@ static int32_t updateAttitudeComplementary(bool first_run, bool secondary, bool 
 	uint32_t ms_since_reset = PIOS_DELAY_DiffuS(complementary_filter_state.reset_timeval) / 1000;
 	if (complementary_filter_state.initialization == CF_POWERON) {
 		// Wait one second before starting to initialize
-		complementary_filter_state.initialization = 
+		complementary_filter_state.initialization =
 		    (ms_since_reset  > 1000) ?
-			CF_INITIALIZING : 
-			CF_POWERON;
+		    CF_INITIALIZING :
+		    CF_POWERON;
 	} else if(complementary_filter_state.initialization == CF_INITIALIZING &&
-		(ms_since_reset < 7000) && 
-		(ms_since_reset > 1000)) {
+	          (ms_since_reset < 7000) &&
+	          (ms_since_reset > 1000)) {
 
 		// For first 7 seconds use accels to get gyro bias
 		attitudeSettings.AccelKp = 0.1f + 0.1f * (PIOS_Thread_Systime() < 4000);
 		attitudeSettings.AccelKi = 0.1f;
 		attitudeSettings.YawBiasRate = 0.1f;
 		attitudeSettings.MagKp = 0.1f;
-	} else if ((attitudeSettings.ZeroDuringArming == ATTITUDESETTINGS_ZERODURINGARMING_TRUE) && 
+	} else if ((attitudeSettings.ZeroDuringArming == ATTITUDESETTINGS_ZERODURINGARMING_TRUE) &&
 	           (flightStatus.Armed == FLIGHTSTATUS_ARMED_ARMING)) {
 
 		// Use a rapidly decrease accelKp to force the attitude to snap back
@@ -592,8 +592,7 @@ static int32_t updateAttitudeComplementary(bool first_run, bool secondary, bool 
 	}
 
 	float mag_err[3];
-	if (secondary || PIOS_Queue_Receive(magQueue, &ev, 0) == true)
-	{
+	if (secondary || PIOS_Queue_Receive(magQueue, &ev, 0) == true) {
 		MagnetometerData mag;
 		MagnetometerGet(&mag);
 
@@ -604,7 +603,7 @@ static int32_t updateAttitudeComplementary(bool first_run, bool secondary, bool 
 			float brot[3];
 			float Rbe[3][3];
 
-			// Get rotation to bring earth magnetic field into body frame		
+			// Get rotation to bring earth magnetic field into body frame
 			Quaternion2R(cf_q, Rbe);
 
 			if (homeLocation.Set == HOMELOCATION_SET_TRUE) {
@@ -872,8 +871,8 @@ static int32_t setAttitudeComplementary()
  */
 static void accumulate_gyro_compute()
 {
-	if (complementary_filter_state.accumulating_gyro && 
-		complementary_filter_state.accumulated_gyro_samples > 100) {
+	if (complementary_filter_state.accumulating_gyro &&
+	    complementary_filter_state.accumulated_gyro_samples > 100) {
 
 		// Accumulate integral of error.  Scale here so that units are (deg/s) but Ki has units of s
 		GyrosBiasData gyrosBias;
@@ -970,7 +969,7 @@ static int32_t updateAttitudeINSGPS(bool first_run, bool outdoor_mode)
 	float dT;
 
 	// When the home location is adjusted the filter should be
-	// reinitialized to correctly offset the baro and make sure it 
+	// reinitialized to correctly offset the baro and make sure it
 	// does not blow up.  This flag should only be set when not armed.
 	if (first_run || home_location_updated) {
 		ins_state = INS_INIT;
@@ -994,8 +993,7 @@ static int32_t updateAttitudeINSGPS(bool first_run, bool outdoor_mode)
 
 	// Wait until the gyro and accel object is updated, if a timeout then go to failsafe
 	if (PIOS_Queue_Receive(gyroQueue, &ev, FAILSAFE_TIMEOUT_MS) != true ||
-		PIOS_Queue_Receive(accelQueue, &ev, 1) != true)
-	{
+	    PIOS_Queue_Receive(accelQueue, &ev, 1) != true) {
 		return -1;
 	}
 
@@ -1009,7 +1007,7 @@ static int32_t updateAttitudeINSGPS(bool first_run, bool outdoor_mode)
 		BaroAltitudeGet(&baroData);
 
 	if (mag_updated)
-       MagnetometerGet(&magData);
+		MagnetometerGet(&magData);
 
 	if (gps_updated)
 		GPSPositionGet(&gpsData);
@@ -1052,8 +1050,8 @@ static int32_t updateAttitudeINSGPS(bool first_run, bool outdoor_mode)
 	}
 
 	if (ins_state == INS_INIT &&
-	      mag_updated && baro_updated &&
-	      (gps_init_usable || !outdoor_mode)) {
+	    mag_updated && baro_updated &&
+	    (gps_init_usable || !outdoor_mode)) {
 
 		INSGPSInit();
 		INSSetMagVar(insSettings.MagVar);
@@ -1087,7 +1085,7 @@ static int32_t updateAttitudeINSGPS(bool first_run, bool outdoor_mode)
 
 			if (homeLocation.Set == HOMELOCATION_SET_TRUE &&
 			    (homeLocation.Be[0] != 0 || homeLocation.Be[1] != 0 || homeLocation.Be[2]))
-			    // Use the configured mag, if one is available
+				// Use the configured mag, if one is available
 				INSSetMagNorth(homeLocation.Be);
 			else {
 				// Reasonable default is safe for indoor
@@ -1112,13 +1110,13 @@ static int32_t updateAttitudeINSGPS(bool first_run, bool outdoor_mode)
 			baro_offset = -baroData.Altitude;
 
 			INSSetState(NED, zeros, q, zeros, zeros);
-		} 
+		}
 
 		// Once all sensors have been updated and initialized then enter warmup
 		// state to make sure filter converges
 		ins_state = INS_WARMUP;
 
-		ins_last_time = PIOS_DELAY_GetRaw();	
+		ins_last_time = PIOS_DELAY_GetRaw();
 		ins_init_time = ins_last_time;
 
 		return 0;
@@ -1133,7 +1131,7 @@ static int32_t updateAttitudeINSGPS(bool first_run, bool outdoor_mode)
 	uint8_t armed;
 	FlightStatusArmedGet(&armed);
 	INSSetArmed (armed == FLIGHTSTATUS_ARMED_ARMED);
-	
+
 
 	// Have a minimum requirement for gps usage a little more liberal than during initialization
 	gps_updated &= (gpsData.Satellites >= 6) && (gpsData.PDOP <= 4.0f) && (homeLocation.Set == HOMELOCATION_SET_TRUE);
@@ -1179,7 +1177,7 @@ static int32_t updateAttitudeINSGPS(bool first_run, bool outdoor_mode)
 		sensors |= MAG_SENSORS;
 		mag_updated = false;
 	}
-	
+
 	if(baro_updated) {
 		sensors |= BARO_SENSOR;
 		baro_updated = false;
@@ -1221,17 +1219,17 @@ static int32_t updateAttitudeINSGPS(bool first_run, bool outdoor_mode)
 		// The values here are fudged.  Basically, when GPS is
 		// "good" we'll have a lower variance than the nominal
 		// setting.  But from there it will increase really quickly.
-		// sqrt(.5) / 3.5 =~ 0.181f 
-		float pos_var = insSettings.GpsVar[INSSETTINGS_GPSVAR_POS] * 
-			(0.6f + powf(gpsData.Accuracy * 0.180f, 2));
+		// sqrt(.5) / 3.5 =~ 0.181f
+		float pos_var = insSettings.GpsVar[INSSETTINGS_GPSVAR_POS] *
+		                (0.6f + powf(gpsData.Accuracy * 0.180f, 2));
 
-		// A good value of speed accuracy in flight is 0.35-0.5. 
+		// A good value of speed accuracy in flight is 0.35-0.5.
 		// sqrt(.5) / .5 =~ 1.414
 		float speed_var = insSettings.GpsVar[INSSETTINGS_GPSVAR_VEL] *
-			(0.5f + powf(gpsVelData.Accuracy * 1.414f, 2));
+		                  (0.5f + powf(gpsVelData.Accuracy * 1.414f, 2));
 
 		float v_pos_var = insSettings.GpsVar[INSSETTINGS_GPSVAR_VERTPOS] +
-			(0.7f + powf(gpsData.Accuracy * 0.167f, 3.0));
+		                  (0.7f + powf(gpsData.Accuracy * 0.167f, 3.0));
 
 		// We trust the vertical much less as accuracy gets worse.
 		// cuberoot(.3)/4.0 =~ .167
@@ -1282,7 +1280,7 @@ static int32_t setAttitudeINSGPS()
 	Quaternion2RPY(&attitude.q1,&attitude.Roll);
 	AttitudeActualSet(&attitude);
 
-	if (insSettings.ComputeGyroBias == INSSETTINGS_COMPUTEGYROBIAS_TRUE && 
+	if (insSettings.ComputeGyroBias == INSSETTINGS_COMPUTEGYROBIAS_TRUE &&
 	    !gyroBiasSettingsUpdated) {
 		// Copy the gyro bias into the UAVO except when it was updated
 		// from the settings during the calculation, then consume it
@@ -1338,8 +1336,9 @@ float T[3];
 static int32_t getNED(GPSPositionData * gpsPosition, float * NED)
 {
 	float dL[3] = {(gpsPosition->Latitude - homeLocation.Latitude) / 10.0e6f * DEG2RAD,
-                   (gpsPosition->Longitude - homeLocation.Longitude) / 10.0e6f * DEG2RAD,
-                   (gpsPosition->Altitude - homeLocation.Altitude)};
+	               (gpsPosition->Longitude - homeLocation.Longitude) / 10.0e6f * DEG2RAD,
+	               (gpsPosition->Altitude - homeLocation.Altitude)
+	              };
 
 	NED[0] = T[0] * dL[0];
 	NED[1] = T[1] * dL[1];
@@ -1361,11 +1360,11 @@ static void updateNedAccel()
 
 	// Collect downsampled attitude data
 	AccelsData accels;
-	AccelsGet(&accels);		
+	AccelsGet(&accels);
 	accel[0] = accels.x;
 	accel[1] = accels.y;
 	accel[2] = accels.z;
-	
+
 	//rotate avg accels into earth frame and store it
 	AttitudeActualData attitudeActual;
 	AttitudeActualGet(&attitudeActual);
@@ -1380,7 +1379,7 @@ static void updateNedAccel()
 			accel_ned[i] += Rbe[j][i] * accel[j];
 	}
 	accel_ned[2] += GRAVITY;
-	
+
 	NedAccelData accelData;
 	NedAccelGet(&accelData);
 	accelData.North = accelData.North * TAU + accel_ned[0] * (1 - TAU);
@@ -1408,14 +1407,13 @@ static void check_home_location()
 	GPSPositionGet(&gps);
 	GPSTimeData gpsTime;
 	GPSTimeGet(&gpsTime);
-	
+
 	// Check for valid data for the calculation
-	if (gps.PDOP < 3.5f && 
-	     gps.Satellites >= 7 &&
-	     (gps.Status == GPSPOSITION_STATUS_FIX3D ||
+	if (gps.PDOP < 3.5f &&
+	    gps.Satellites >= 7 &&
+	    (gps.Status == GPSPOSITION_STATUS_FIX3D ||
 	     gps.Status == GPSPOSITION_STATUS_DIFF3D) &&
-	     gpsTime.Year >= 2000)
-	{
+	    gpsTime.Year >= 2000) {
 		// Store LLA
 		homeLocation.Latitude = gps.Latitude;
 		homeLocation.Longitude = gps.Longitude;
@@ -1425,8 +1423,8 @@ static void check_home_location()
 		double LLA[3] = { ((double)homeLocation.Latitude) / 10e6, ((double)homeLocation.Longitude) / 10e6, ((double)homeLocation.Altitude) };
 
 		// Compute magnetic flux direction at home location
-		if (WMM_GetMagVector(LLA[0], LLA[1], LLA[2], gpsTime.Month, gpsTime.Day, gpsTime.Year, &homeLocation.Be[0]) >= 0)
-		{   // calculations appeared to go OK
+		if (WMM_GetMagVector(LLA[0], LLA[1], LLA[2], gpsTime.Month, gpsTime.Day, gpsTime.Year, &homeLocation.Be[0]) >= 0) {
+			// calculations appeared to go OK
 
 			// Compute local acceleration due to gravity.  Vehicles that span a very large
 			// range of altitude (say, weather balloons) may need to update this during the
@@ -1437,12 +1435,12 @@ static void check_home_location()
 	}
 }
 
-static void settingsUpdatedCb(UAVObjEvent * ev) 
+static void settingsUpdatedCb(UAVObjEvent * ev)
 {
 	if (ev == NULL || ev->obj == SensorSettingsHandle()) {
 		SensorSettingsData sensorSettings;
 		SensorSettingsGet(&sensorSettings);
-		
+
 		/* When the calibration is updated, update the GyroBias object */
 		GyrosBiasData gyrosBias;
 		GyrosBiasGet(&gyrosBias);
@@ -1466,7 +1464,7 @@ static void settingsUpdatedCb(UAVObjEvent * ev)
 		uint8_t armed;
 		FlightStatusArmedGet(&armed);
 
-		// Do not update the home location while armed as this can blow up the 
+		// Do not update the home location while armed as this can blow up the
 		// filter.  This will need to be overhauled to handle long distance
 		// flights
 		if (armed == FLIGHTSTATUS_ARMED_DISARMED) {
@@ -1485,7 +1483,7 @@ static void settingsUpdatedCb(UAVObjEvent * ev)
 	}
 	if (ev == NULL || ev->obj == AttitudeSettingsHandle()) {
 		AttitudeSettingsGet(&attitudeSettings);
-			
+
 		// Calculate accel filter alpha, in the same way as for gyro data in stabilization module.
 		const float fakeDt = 0.0025f;
 		if(attitudeSettings.AccelTau < 0.0001f) {

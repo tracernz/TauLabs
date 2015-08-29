@@ -46,7 +46,7 @@
 
 /* Global Variables */
 enum pios_l3gd20_dev_magic {
-    PIOS_L3GD20_DEV_MAGIC = 0x9d39bced,
+	PIOS_L3GD20_DEV_MAGIC = 0x9d39bced,
 };
 
 #define PIOS_L3GD20_QUEUESIZE 2
@@ -158,7 +158,7 @@ int32_t PIOS_L3GD20_Init(uint32_t spi_id, uint32_t slave_num, const struct pios_
 		return -2;
 
 	pios_l3gd20_dev->threadp = PIOS_Thread_Create(
-			PIOS_L3GD20_Task, "pios_l3gd20", L3GD20_TASK_STACK, NULL, L3GD20_TASK_PRIORITY);
+	                               PIOS_L3GD20_Task, "pios_l3gd20", L3GD20_TASK_STACK, NULL, L3GD20_TASK_PRIORITY);
 	PIOS_Assert(pios_l3gd20_dev->threadp != NULL);
 
 	/* Set up EXTI */

@@ -55,9 +55,9 @@ static bool geofence_armed_when_enabled;
 //! Use geofence control mode
 int32_t geofence_control_select(bool reset_controller)
 {
-	// This behavior is the same as the current failsafe. 
+	// This behavior is the same as the current failsafe.
 	if (reset_controller) {
-		FlightStatusArmedOptions armed; 
+		FlightStatusArmedOptions armed;
 		FlightStatusArmedGet(&armed);
 		geofence_armed_when_enabled = (armed == FLIGHTSTATUS_ARMED_ARMED);
 	}
@@ -82,7 +82,7 @@ int32_t geofence_control_select(bool reset_controller)
 		stabilization_desired.Yaw   = 0;
 		stabilization_desired.StabilizationMode[STABILIZATIONDESIRED_STABILIZATIONMODE_ROLL] = STABILIZATIONDESIRED_STABILIZATIONMODE_NONE;
 		stabilization_desired.StabilizationMode[STABILIZATIONDESIRED_STABILIZATIONMODE_PITCH] = STABILIZATIONDESIRED_STABILIZATIONMODE_NONE;
-		stabilization_desired.StabilizationMode[STABILIZATIONDESIRED_STABILIZATIONMODE_YAW] = STABILIZATIONDESIRED_STABILIZATIONMODE_NONE;		
+		stabilization_desired.StabilizationMode[STABILIZATIONDESIRED_STABILIZATIONMODE_YAW] = STABILIZATIONDESIRED_STABILIZATIONMODE_NONE;
 	} else {
 		/* Pick default values that will roughly cause a plane to circle down and */
 		/* a quad to fall straight down */
@@ -110,7 +110,7 @@ bool geofence_control_activate()
 		SystemAlarmsAlarmGet(alarm_status);
 
 		if (alarm_status[SYSTEMALARMS_ALARM_GEOFENCE] == SYSTEMALARMS_ALARM_ERROR ||
-			alarm_status[SYSTEMALARMS_ALARM_GEOFENCE] == SYSTEMALARMS_ALARM_CRITICAL) {
+		    alarm_status[SYSTEMALARMS_ALARM_GEOFENCE] == SYSTEMALARMS_ALARM_CRITICAL) {
 			return true;
 		}
 	}

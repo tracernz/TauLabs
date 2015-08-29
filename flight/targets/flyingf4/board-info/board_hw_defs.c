@@ -5,12 +5,12 @@
  * @addtogroup FlyingF4 FlyingF4 support files
  * @{
  *
- * @file       board_hw_defs.c 
+ * @file       board_hw_defs.c
  * @author     Tau Labs, http://taulabs.org, Copyright (C) 2012-2013
  * @brief      Defines board specific static initializers for hardware for the
  *             FlyingF4 board.
  * @see        The GNU Public License (GPL) Version 3
- * 
+ *
  *****************************************************************************/
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -27,7 +27,7 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
- 
+
 #include <pios_config.h>
 #include <pios_board_info.h>
 
@@ -141,7 +141,7 @@ static const struct pios_spi_cfg pios_spi_flash_cfg = {
 				.NVIC_IRQChannelCmd = ENABLE,
 			},
 		},
-		
+
 		.rx = {
 			.channel = DMA1_Stream0,
 			.init = {
@@ -156,9 +156,9 @@ static const struct pios_spi_cfg pios_spi_flash_cfg = {
 				.DMA_Priority           = DMA_Priority_Medium,
 				//TODO: Enable FIFO
 				.DMA_FIFOMode           = DMA_FIFOMode_Disable,
-                .DMA_FIFOThreshold      = DMA_FIFOThreshold_Full,
-                .DMA_MemoryBurst        = DMA_MemoryBurst_Single,
-                .DMA_PeripheralBurst    = DMA_PeripheralBurst_Single,
+				.DMA_FIFOThreshold      = DMA_FIFOThreshold_Full,
+				.DMA_MemoryBurst        = DMA_MemoryBurst_Single,
+				.DMA_PeripheralBurst    = DMA_PeripheralBurst_Single,
 			},
 		},
 		.tx = {
@@ -174,9 +174,9 @@ static const struct pios_spi_cfg pios_spi_flash_cfg = {
 				.DMA_Mode               = DMA_Mode_Normal,
 				.DMA_Priority           = DMA_Priority_Medium,
 				.DMA_FIFOMode           = DMA_FIFOMode_Disable,
-                .DMA_FIFOThreshold      = DMA_FIFOThreshold_Full,
-                .DMA_MemoryBurst        = DMA_MemoryBurst_Single,
-                .DMA_PeripheralBurst    = DMA_PeripheralBurst_Single,
+				.DMA_FIFOThreshold      = DMA_FIFOThreshold_Full,
+				.DMA_MemoryBurst        = DMA_MemoryBurst_Single,
+				.DMA_PeripheralBurst    = DMA_PeripheralBurst_Single,
 			},
 		},
 	},
@@ -215,15 +215,16 @@ static const struct pios_spi_cfg pios_spi_flash_cfg = {
 	},
 	.slave_count = 1,
 	.ssel = { {
-		.gpio = GPIOB,
-		.init = {
-			.GPIO_Pin = GPIO_Pin_12,
-			.GPIO_Speed = GPIO_Speed_50MHz,
-			.GPIO_Mode  = GPIO_Mode_OUT,
-			.GPIO_OType = GPIO_OType_PP,
-			.GPIO_PuPd = GPIO_PuPd_UP
-		},
-	} },
+			.gpio = GPIOB,
+			.init = {
+				.GPIO_Pin = GPIO_Pin_12,
+				.GPIO_Speed = GPIO_Speed_50MHz,
+				.GPIO_Mode  = GPIO_Mode_OUT,
+				.GPIO_OType = GPIO_OType_PP,
+				.GPIO_PuPd = GPIO_PuPd_UP
+			},
+		}
+	},
 };
 
 uint32_t pios_spi_flash_id;
@@ -291,10 +292,10 @@ static const struct flashfs_logfs_cfg flashfs_external_waypoints_cfg = {
 #include "pios_flash_jedec_priv.h"
 
 static const struct pios_flash_jedec_cfg flash_m25p_cfg = {
-  .expect_manufacturer = JEDEC_MANUFACTURER_ST,
-  .expect_memorytype   = 0x20,
-  .expect_capacity     = 0x15,
-  .sector_erase        = 0xD8,
+	.expect_manufacturer = JEDEC_MANUFACTURER_ST,
+	.expect_memorytype   = 0x20,
+	.expect_capacity     = 0x15,
+	.sector_erase        = 0xD8,
 };
 
 static const struct pios_flash_sector_range m25p16_sectors[] = {
@@ -381,70 +382,70 @@ void I2C1_EV_IRQHandler() __attribute__ ((alias ("PIOS_I2C_10dof_adapter_ev_irq_
 void I2C1_ER_IRQHandler() __attribute__ ((alias ("PIOS_I2C_10dof_adapter_er_irq_handler")));
 
 static const struct pios_i2c_adapter_cfg pios_i2c_10dof_adapter_cfg = {
-  .regs = I2C1,
-  .remap = GPIO_AF_I2C1,
-  .init = {
-    .I2C_Mode                = I2C_Mode_I2C,
-    .I2C_OwnAddress1         = 0,
-    .I2C_Ack                 = I2C_Ack_Enable,
-    .I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit,
-    .I2C_DutyCycle           = I2C_DutyCycle_2,
-    .I2C_ClockSpeed          = 400000,	/* bits/s */
-  },
-  .transfer_timeout_ms = 50,
-  .scl = {
-    .gpio = GPIOB,
-    .init = {
+	.regs = I2C1,
+	.remap = GPIO_AF_I2C1,
+	.init = {
+		.I2C_Mode                = I2C_Mode_I2C,
+		.I2C_OwnAddress1         = 0,
+		.I2C_Ack                 = I2C_Ack_Enable,
+		.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit,
+		.I2C_DutyCycle           = I2C_DutyCycle_2,
+		.I2C_ClockSpeed          = 400000,	/* bits/s */
+	},
+	.transfer_timeout_ms = 50,
+	.scl = {
+		.gpio = GPIOB,
+		.init = {
 			.GPIO_Pin = GPIO_Pin_6,
-            .GPIO_Mode  = GPIO_Mode_AF,
-            .GPIO_Speed = GPIO_Speed_50MHz,
-            .GPIO_OType = GPIO_OType_OD,
-            .GPIO_PuPd  = GPIO_PuPd_NOPULL,
-    },
-	.pin_source = GPIO_PinSource6,
-  },
-  .sda = {
-    .gpio = GPIOB,
-    .init = {
+			.GPIO_Mode  = GPIO_Mode_AF,
+			.GPIO_Speed = GPIO_Speed_50MHz,
+			.GPIO_OType = GPIO_OType_OD,
+			.GPIO_PuPd  = GPIO_PuPd_NOPULL,
+		},
+		.pin_source = GPIO_PinSource6,
+	},
+	.sda = {
+		.gpio = GPIOB,
+		.init = {
 			.GPIO_Pin = GPIO_Pin_9,
-            .GPIO_Mode  = GPIO_Mode_AF,
-            .GPIO_Speed = GPIO_Speed_50MHz,
-            .GPIO_OType = GPIO_OType_OD,
-            .GPIO_PuPd  = GPIO_PuPd_NOPULL,
-    },
-	.pin_source = GPIO_PinSource9,
-  },
-  .event = {
-    .flags   = 0,		/* FIXME: check this */
-    .init = {
+			.GPIO_Mode  = GPIO_Mode_AF,
+			.GPIO_Speed = GPIO_Speed_50MHz,
+			.GPIO_OType = GPIO_OType_OD,
+			.GPIO_PuPd  = GPIO_PuPd_NOPULL,
+		},
+		.pin_source = GPIO_PinSource9,
+	},
+	.event = {
+		.flags   = 0,		/* FIXME: check this */
+		.init = {
 			.NVIC_IRQChannel = I2C1_EV_IRQn,
 			.NVIC_IRQChannelPreemptionPriority = PIOS_IRQ_PRIO_HIGHEST,
 			.NVIC_IRQChannelSubPriority = 0,
 			.NVIC_IRQChannelCmd = ENABLE,
-    },
-  },
-  .error = {
-    .flags   = 0,		/* FIXME: check this */
-    .init = {
+		},
+	},
+	.error = {
+		.flags   = 0,		/* FIXME: check this */
+		.init = {
 			.NVIC_IRQChannel = I2C1_ER_IRQn,
 			.NVIC_IRQChannelPreemptionPriority = PIOS_IRQ_PRIO_HIGHEST,
 			.NVIC_IRQChannelSubPriority = 0,
 			.NVIC_IRQChannelCmd = ENABLE,
-    },
-  },
+		},
+	},
 };
 
 uint32_t pios_i2c_10dof_adapter_id;
 void PIOS_I2C_10dof_adapter_ev_irq_handler(void)
 {
-  /* Call into the generic code to handle the IRQ for this specific device */
-  PIOS_I2C_EV_IRQ_Handler(pios_i2c_10dof_adapter_id);
+	/* Call into the generic code to handle the IRQ for this specific device */
+	PIOS_I2C_EV_IRQ_Handler(pios_i2c_10dof_adapter_id);
 }
 
 void PIOS_I2C_10dof_adapter_er_irq_handler(void)
 {
-  /* Call into the generic code to handle the IRQ for this specific device */
-  PIOS_I2C_ER_IRQ_Handler(pios_i2c_10dof_adapter_id);
+	/* Call into the generic code to handle the IRQ for this specific device */
+	PIOS_I2C_ER_IRQ_Handler(pios_i2c_10dof_adapter_id);
 }
 
 #endif /* PIOS_INCLUDE_I2C */
@@ -638,7 +639,7 @@ static const struct pios_usart_cfg pios_usart1_sbus_cfg = {
 			.NVIC_IRQChannelPreemptionPriority = PIOS_IRQ_PRIO_MID,
 			.NVIC_IRQChannelSubPriority        = 0,
 			.NVIC_IRQChannelCmd                = ENABLE,
-		  },
+		},
 	},
 	.rx = {
 		.gpio = GPIOB,
@@ -1777,7 +1778,7 @@ struct pios_internal_adc_cfg pios_adc_cfg = {
 	},
 	.half_flag = DMA_IT_HTIF4,
 	.full_flag = DMA_IT_TCIF4,
-	
+
 };
 
 void PIOS_ADC_DMA_irq_handler(void)

@@ -5,7 +5,7 @@
  * @addtogroup CopterControlBL CopterControl bootloader
  * @{
  *
- * @file       op_dfu.c 
+ * @file       op_dfu.c
  * @author     The OpenPilot Team, http://www.openpilot.org Copyright (C) 2010.
  * @author     Tau Labs, http://taulabs.org, Copyright (C) 2012-2013
  * @brief      This file contains the DFU commands handling code
@@ -77,7 +77,8 @@ extern uint8_t JumpToApp;
 void sendData(uint8_t * buf, uint16_t size);
 uint32_t CalcFirmCRC(void);
 
-void DataDownload(DownloadAction action) {
+void DataDownload(DownloadAction action)
+{
 	if ((DeviceState == downloading)) {
 
 		uint8_t packetSize;
@@ -98,7 +99,7 @@ void DataDownload(DownloadAction action) {
 			partoffset = (downPacketCurrent * 14 * 4) + (x * 4);
 			offset = baseOfAdressType(downType) + partoffset;
 			if (!flash_read(SendBuffer + (6 + x * 4), offset,
-					currentProgrammingDestination)) {
+			                currentProgrammingDestination)) {
 				DeviceState = Last_operation_failed;
 			}
 		}
@@ -110,7 +111,8 @@ void DataDownload(DownloadAction action) {
 		sendData(SendBuffer + 1, 63);
 	}
 }
-void processComand(uint8_t *xReceive_Buffer) {
+void processComand(uint8_t *xReceive_Buffer)
+{
 
 	Command = xReceive_Buffer[COMMAND];
 #ifdef DEBUG_SSP
@@ -142,14 +144,14 @@ void processComand(uint8_t *xReceive_Buffer) {
 	switch (Command) {
 	case EnterDFU:
 		if (((DeviceState == BLidle) && (Data0 < numberOfDevices))
-				|| (DeviceState == DFUidle)) {
+		    || (DeviceState == DFUidle)) {
 			if (Data0 > 0)
 				OPDfuIni(true);
 			DeviceState = DFUidle;
 			currentProgrammingDestination = devicesTable[Data0].programmingType;
 			currentDeviceCanRead = devicesTable[Data0].readWriteFlags & 0x01;
 			currentDeviceCanWrite = devicesTable[Data0].readWriteFlags >> 1
-					& 0x01;
+			                        & 0x01;
 			currentDevice = devicesTable[Data0];
 			uint8_t result = 0;
 			switch (currentProgrammingDestination) {
@@ -182,7 +184,7 @@ void processComand(uint8_t *xReceive_Buffer) {
 				SizeOfLastPacket = Data1;
 
 				if (isBiggerThanAvailable(TransferType, (SizeOfTransfer - 1)
-						* 14 * 4 + SizeOfLastPacket * 4) == true) {
+				                          * 14 * 4 + SizeOfLastPacket * 4) == true) {
 					DeviceState = outsideDevCapabilities;
 					Aditionals = (uint32_t) Command;
 				} else {
@@ -213,8 +215,7 @@ void processComand(uint8_t *xReceive_Buffer) {
 					Aditionals = Count;
 				} else if (Count == Next_Packet - 1) {
 					uint8_t numberOfWords = 14;
-					if (Count == SizeOfTransfer - 1)//is this the last packet?
-					{
+					if (Count == SizeOfTransfer - 1) { //is this the last packet?
 						numberOfWords = SizeOfLastPacket;
 					}
 					uint8_t result = 0;
@@ -227,12 +228,12 @@ void processComand(uint8_t *xReceive_Buffer) {
 							Data += xReceive_Buffer[DATA + 2 + offset] << 8;
 							Data += xReceive_Buffer[DATA + 3 + offset];
 							aux = baseOfAdressType(TransferType) + (uint32_t)(
-									Count * 14 * 4 + x * 4);
+							          Count * 14 * 4 + x * 4);
 							result = 0;
 							for (int retry = 0; retry < MAX_WRI_RETRYS; ++retry) {
 								if (result == 0) {
 									result = (FLASH_ProgramWord(aux, Data)
-											== FLASH_COMPLETE) ? 1 : 0;
+									          == FLASH_COMPLETE) ? 1 : 0;
 								}
 							}
 						}
@@ -274,7 +275,7 @@ void processComand(uint8_t *xReceive_Buffer) {
 			uint16_t WRFlags = 0;
 			for (int x = 0; x < numberOfDevices; ++x) {
 				WRFlags = ((devicesTable[x].readWriteFlags << (x * 2))
-						| WRFlags);
+				           | WRFlags);
 			}
 			Buffer[8] = WRFlags >> 8;
 			Buffer[9] = WRFlags;
@@ -341,7 +342,7 @@ void processComand(uint8_t *xReceive_Buffer) {
 			downPacketTotal = Count;
 			downSizeOfLastPacket = Data1;
 			if (isBiggerThanAvailable(downType, (downPacketTotal - 1) * 14
-					+ downSizeOfLastPacket) == 1) {
+			                          + downSizeOfLastPacket) == 1) {
 				DeviceState = outsideDevCapabilities;
 				Aditionals = (uint32_t) Command;
 
@@ -389,7 +390,8 @@ void processComand(uint8_t *xReceive_Buffer) {
 	}
 	return;
 }
-void OPDfuIni(uint8_t discover) {
+void OPDfuIni(uint8_t discover)
+{
 	const struct pios_board_info * bdinfo = &pios_board_info_blob;
 	Device dev;
 
@@ -408,7 +410,8 @@ void OPDfuIni(uint8_t discover) {
 		//TODO check other devices trough spi or whatever
 	}
 }
-uint32_t baseOfAdressType(DFUTransfer type) {
+uint32_t baseOfAdressType(DFUTransfer type)
+{
 	switch (type) {
 	case FW:
 		return currentDevice.startOfUserCode;
@@ -421,7 +424,8 @@ uint32_t baseOfAdressType(DFUTransfer type) {
 		return 0;
 	}
 }
-uint8_t isBiggerThanAvailable(DFUTransfer type, uint32_t size) {
+uint8_t isBiggerThanAvailable(DFUTransfer type, uint32_t size)
+{
 	switch (type) {
 	case FW:
 		return (size > currentDevice.sizeOfCode) ? 1 : 0;
@@ -434,7 +438,8 @@ uint8_t isBiggerThanAvailable(DFUTransfer type, uint32_t size) {
 	}
 }
 
-uint32_t CalcFirmCRC() {
+uint32_t CalcFirmCRC()
+{
 	switch (currentProgrammingDestination) {
 	case Self_flash:
 		return PIOS_BL_HELPER_CRC_Memory_Calc();
@@ -448,11 +453,13 @@ uint32_t CalcFirmCRC() {
 	}
 
 }
-void sendData(uint8_t * buf, uint16_t size) {
+void sendData(uint8_t * buf, uint16_t size)
+{
 	PIOS_COM_MSG_Send(PIOS_COM_TELEM_USB, buf, size);
 }
 
-bool flash_read(uint8_t * buffer, uint32_t adr, DFUProgType type) {
+bool flash_read(uint8_t * buffer, uint32_t adr, DFUProgType type)
+{
 	switch (type) {
 	case Remote_flash_via_spi:
 		return false; // We should not get this for the PipX

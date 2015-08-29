@@ -67,9 +67,9 @@ typedef struct {
  */
 struct PeriodicObjectListStruct {
 	EventCallbackInfo evInfo; /** Event callback information */
-    uint16_t updatePeriodMs; /** Update period in ms or 0 if no periodic updates are needed */
-    int32_t timeToNextUpdateMs; /** Time delay to the next update */
-    struct PeriodicObjectListStruct* next; /** Needed by linked list library (utlist.h) */
+	uint16_t updatePeriodMs; /** Update period in ms or 0 if no periodic updates are needed */
+	int32_t timeToNextUpdateMs; /** Time delay to the next update */
+	struct PeriodicObjectListStruct* next; /** Needed by linked list library (utlist.h) */
 };
 typedef struct PeriodicObjectListStruct PeriodicObjectList;
 
@@ -217,20 +217,18 @@ static int32_t eventPeriodicCreate(UAVObjEvent* ev, UAVObjEventCallback cb, stru
 	// Get lock
 	PIOS_Recursive_Mutex_Lock(mutex, PIOS_MUTEX_TIMEOUT_MAX);
 	// Check that the object is not already connected
-	LL_FOREACH(objList, objEntry)
-	{
+	LL_FOREACH(objList, objEntry) {
 		if (objEntry->evInfo.cb == cb &&
-			objEntry->evInfo.queue == queue &&
-			objEntry->evInfo.ev.obj == ev->obj &&
-			objEntry->evInfo.ev.instId == ev->instId &&
-			objEntry->evInfo.ev.event == ev->event)
-		{
+		    objEntry->evInfo.queue == queue &&
+		    objEntry->evInfo.ev.obj == ev->obj &&
+		    objEntry->evInfo.ev.instId == ev->instId &&
+		    objEntry->evInfo.ev.event == ev->event) {
 			// Already registered, do nothing
 			PIOS_Recursive_Mutex_Unlock(mutex);
 			return -1;
 		}
 	}
-    // Create handle
+	// Create handle
 	objEntry = (PeriodicObjectList*)PIOS_malloc(sizeof(PeriodicObjectList));
 	if (objEntry == NULL) return -1;
 	objEntry->evInfo.ev.obj = ev->obj;
@@ -238,13 +236,13 @@ static int32_t eventPeriodicCreate(UAVObjEvent* ev, UAVObjEventCallback cb, stru
 	objEntry->evInfo.ev.event = ev->event;
 	objEntry->evInfo.cb = cb;
 	objEntry->evInfo.queue = queue;
-    objEntry->updatePeriodMs = periodMs;
-    objEntry->timeToNextUpdateMs = randomizePeriod(periodMs); // avoid bunching of updates
-    // Add to list
-    LL_APPEND(objList, objEntry);
+	objEntry->updatePeriodMs = periodMs;
+	objEntry->timeToNextUpdateMs = randomizePeriod(periodMs); // avoid bunching of updates
+	// Add to list
+	LL_APPEND(objList, objEntry);
 	// Release lock
 	PIOS_Recursive_Mutex_Unlock(mutex);
-    return 0;
+	return 0;
 }
 
 /**
@@ -261,14 +259,12 @@ static int32_t eventPeriodicUpdate(UAVObjEvent* ev, UAVObjEventCallback cb, stru
 	// Get lock
 	PIOS_Recursive_Mutex_Lock(mutex, PIOS_MUTEX_TIMEOUT_MAX);
 	// Find object
-	LL_FOREACH(objList, objEntry)
-	{
+	LL_FOREACH(objList, objEntry) {
 		if (objEntry->evInfo.cb == cb &&
-			objEntry->evInfo.queue == queue &&
-			objEntry->evInfo.ev.obj == ev->obj &&
-			objEntry->evInfo.ev.instId == ev->instId &&
-			objEntry->evInfo.ev.event == ev->event)
-		{
+		    objEntry->evInfo.queue == queue &&
+		    objEntry->evInfo.ev.obj == ev->obj &&
+		    objEntry->evInfo.ev.instId == ev->instId &&
+		    objEntry->evInfo.ev.event == ev->event) {
 			// Object found, update period
 			objEntry->updatePeriodMs = periodMs;
 			objEntry->timeToNextUpdateMs = randomizePeriod(periodMs); // avoid bunching of updates
@@ -277,9 +273,9 @@ static int32_t eventPeriodicUpdate(UAVObjEvent* ev, UAVObjEventCallback cb, stru
 			return 0;
 		}
 	}
-    // If this point is reached the object was not found
+	// If this point is reached the object was not found
 	PIOS_Recursive_Mutex_Unlock(mutex);
-    return -1;
+	return -1;
 }
 
 /**
@@ -298,28 +294,23 @@ static void eventTask()
 	timeToNextUpdateMs = PIOS_Thread_Systime();
 
 	// Loop forever
-	while (1)
-	{
+	while (1) {
 		// Calculate delay time
 		delayMs = timeToNextUpdateMs - PIOS_Thread_Systime();
-		if (delayMs < 0)
-		{
+		if (delayMs < 0) {
 			delayMs = 0;
 		}
 
 		// Wait for queue message
-		if (PIOS_Queue_Receive(queue, &evInfo, delayMs) == true)
-		{
+		if (PIOS_Queue_Receive(queue, &evInfo, delayMs) == true) {
 			// Invoke callback, if one
-			if (evInfo.cb != 0)
-			{
+			if (evInfo.cb != 0) {
 				evInfo.cb(&evInfo.ev); // the function is expected to copy the event information
 			}
 		}
 
 		// Process periodic updates
-		if (PIOS_Thread_Systime() >= timeToNextUpdateMs)
-		{
+		if (PIOS_Thread_Systime() >= timeToNextUpdateMs) {
 			timeToNextUpdateMs = processPeriodicUpdates();
 		}
 	}
@@ -333,54 +324,47 @@ static int32_t processPeriodicUpdates()
 {
 	PeriodicObjectList* objEntry;
 	int32_t timeNow;
-    int32_t timeToNextUpdate;
-    int32_t offset;
+	int32_t timeToNextUpdate;
+	int32_t offset;
 
 	// Get lock
 	PIOS_Recursive_Mutex_Lock(mutex, PIOS_MUTEX_TIMEOUT_MAX);
 
-    // Iterate through each object and update its timer, if zero then transmit object.
-    // Also calculate smallest delay to next update.
-    timeToNextUpdate = PIOS_Thread_Systime() + MAX_UPDATE_PERIOD_MS;
-    LL_FOREACH(objList, objEntry)
-    {
-        // If object is configured for periodic updates
-        if (objEntry->updatePeriodMs > 0)
-        {
-            // Check if time for the next update
-        	timeNow = PIOS_Thread_Systime();
-            if (objEntry->timeToNextUpdateMs <= timeNow)
-            {
-                // Reset timer
-            	offset = ( timeNow - objEntry->timeToNextUpdateMs ) % objEntry->updatePeriodMs;
-            	objEntry->timeToNextUpdateMs = timeNow + objEntry->updatePeriodMs - offset;
-    			// Invoke callback, if one
-    			if ( objEntry->evInfo.cb != 0)
-    			{
-    				objEntry->evInfo.cb(&objEntry->evInfo.ev); // the function is expected to copy the event information
-    			}
-    			// Push event to queue, if one
-    			if ( objEntry->evInfo.queue != 0)
-    			{
-    				if (PIOS_Queue_Send(objEntry->evInfo.queue, &objEntry->evInfo.ev, 0) != true ) // do not block if queue is full
-    				{
+	// Iterate through each object and update its timer, if zero then transmit object.
+	// Also calculate smallest delay to next update.
+	timeToNextUpdate = PIOS_Thread_Systime() + MAX_UPDATE_PERIOD_MS;
+	LL_FOREACH(objList, objEntry) {
+		// If object is configured for periodic updates
+		if (objEntry->updatePeriodMs > 0) {
+			// Check if time for the next update
+			timeNow = PIOS_Thread_Systime();
+			if (objEntry->timeToNextUpdateMs <= timeNow) {
+				// Reset timer
+				offset = ( timeNow - objEntry->timeToNextUpdateMs ) % objEntry->updatePeriodMs;
+				objEntry->timeToNextUpdateMs = timeNow + objEntry->updatePeriodMs - offset;
+				// Invoke callback, if one
+				if ( objEntry->evInfo.cb != 0) {
+					objEntry->evInfo.cb(&objEntry->evInfo.ev); // the function is expected to copy the event information
+				}
+				// Push event to queue, if one
+				if ( objEntry->evInfo.queue != 0) {
+					if (PIOS_Queue_Send(objEntry->evInfo.queue, &objEntry->evInfo.ev, 0) != true ) { // do not block if queue is full
 						if (objEntry->evInfo.ev.obj != NULL)
 							stats.lastErrorID = UAVObjGetID(objEntry->evInfo.ev.obj);
-    					++stats.eventErrors;
-    				}
-    			}
-            }
-            // Update minimum delay
-            if (objEntry->timeToNextUpdateMs < timeToNextUpdate)
-            {
-            	timeToNextUpdate = objEntry->timeToNextUpdateMs;
-            }
-        }
-    }
+						++stats.eventErrors;
+					}
+				}
+			}
+			// Update minimum delay
+			if (objEntry->timeToNextUpdateMs < timeToNextUpdate) {
+				timeToNextUpdate = objEntry->timeToNextUpdateMs;
+			}
+		}
+	}
 
-    // Done
-    PIOS_Recursive_Mutex_Unlock(mutex);
-    return timeToNextUpdate;
+	// Done
+	PIOS_Recursive_Mutex_Unlock(mutex);
+	return timeToNextUpdate;
 }
 
 /**

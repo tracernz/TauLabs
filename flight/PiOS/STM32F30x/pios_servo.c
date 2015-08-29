@@ -68,22 +68,22 @@ int32_t PIOS_Servo_Init(const struct pios_servo_cfg * cfg)
 
 		/* Set up for output compare function */
 		switch(chan->timer_chan) {
-			case TIM_Channel_1:
-				TIM_OC1Init(chan->timer, (TIM_OCInitTypeDef*)&cfg->tim_oc_init);
-				TIM_OC1PreloadConfig(chan->timer, TIM_OCPreload_Enable);
-				break;
-			case TIM_Channel_2:
-				TIM_OC2Init(chan->timer, (TIM_OCInitTypeDef*)&cfg->tim_oc_init);
-				TIM_OC2PreloadConfig(chan->timer, TIM_OCPreload_Enable);
-				break;
-			case TIM_Channel_3:
-				TIM_OC3Init(chan->timer, (TIM_OCInitTypeDef*)&cfg->tim_oc_init);
-				TIM_OC3PreloadConfig(chan->timer, TIM_OCPreload_Enable);
-				break;
-			case TIM_Channel_4:
-				TIM_OC4Init(chan->timer, (TIM_OCInitTypeDef*)&cfg->tim_oc_init);
-				TIM_OC4PreloadConfig(chan->timer, TIM_OCPreload_Enable);
-				break;
+		case TIM_Channel_1:
+			TIM_OC1Init(chan->timer, (TIM_OCInitTypeDef*)&cfg->tim_oc_init);
+			TIM_OC1PreloadConfig(chan->timer, TIM_OCPreload_Enable);
+			break;
+		case TIM_Channel_2:
+			TIM_OC2Init(chan->timer, (TIM_OCInitTypeDef*)&cfg->tim_oc_init);
+			TIM_OC2PreloadConfig(chan->timer, TIM_OCPreload_Enable);
+			break;
+		case TIM_Channel_3:
+			TIM_OC3Init(chan->timer, (TIM_OCInitTypeDef*)&cfg->tim_oc_init);
+			TIM_OC3PreloadConfig(chan->timer, TIM_OCPreload_Enable);
+			break;
+		case TIM_Channel_4:
+			TIM_OC4Init(chan->timer, (TIM_OCInitTypeDef*)&cfg->tim_oc_init);
+			TIM_OC4PreloadConfig(chan->timer, TIM_OCPreload_Enable);
+			break;
 		}
 
 		TIM_ARRPreloadConfig(chan->timer, ENABLE);
@@ -114,7 +114,7 @@ int32_t PIOS_Servo_Init(const struct pios_servo_cfg * cfg)
  * the period is set to the maximal value. Otherwise the prescalar will be
  * determined by the PWM mode to set the resolution, and the period will be
  * calculated based on the speed. The information required to convert from us
- * to compare value is cached for each channel (not timer) to facilitate 
+ * to compare value is cached for each channel (not timer) to facilitate
  * PIOS_Servo_Set and PIOS_SERVO_HPWM_Set.
  * @param speeds array of rates in Hz
  * @param pwm_mode mode of the timer (1us to 1/12us)
@@ -176,7 +176,7 @@ void PIOS_Servo_SetMode(const uint16_t * speeds, const enum pwm_mode *pwm_mode, 
 			}
 
 			// Configure this timer appropriately.
-			TIM_TimeBaseInit(chan->timer, &TIM_TimeBaseStructure);	
+			TIM_TimeBaseInit(chan->timer, &TIM_TimeBaseStructure);
 
 			/* Configure frequency scaler for all channels that use the same timer */
 			for (uint8_t j=0; (j < servo_cfg->num_channels); j++) {
@@ -231,18 +231,18 @@ void PIOS_Servo_Set(uint8_t servo, float position)
 
 	/* Update the position */
 	switch(chan->timer_chan) {
-		case TIM_Channel_1:
-			TIM_SetCompare1(chan->timer, position);
-			break;
-		case TIM_Channel_2:
-			TIM_SetCompare2(chan->timer, position);
-			break;
-		case TIM_Channel_3:
-			TIM_SetCompare3(chan->timer, position);
-			break;
-		case TIM_Channel_4:
-			TIM_SetCompare4(chan->timer, position);
-			break;
+	case TIM_Channel_1:
+		TIM_SetCompare1(chan->timer, position);
+		break;
+	case TIM_Channel_2:
+		TIM_SetCompare2(chan->timer, position);
+		break;
+	case TIM_Channel_3:
+		TIM_SetCompare3(chan->timer, position);
+		break;
+	case TIM_Channel_4:
+		TIM_SetCompare4(chan->timer, position);
+		break;
 	}
 }
 #else
@@ -266,18 +266,18 @@ void PIOS_Servo_Set(uint8_t servo, uint16_t position)
 
 	/* Update the position */
 	switch(chan->timer_chan) {
-		case TIM_Channel_1:
-			TIM_SetCompare1(chan->timer, position);
-			break;
-		case TIM_Channel_2:
-			TIM_SetCompare2(chan->timer, position);
-			break;
-		case TIM_Channel_3:
-			TIM_SetCompare3(chan->timer, position);
-			break;
-		case TIM_Channel_4:
-			TIM_SetCompare4(chan->timer, position);
-			break;
+	case TIM_Channel_1:
+		TIM_SetCompare1(chan->timer, position);
+		break;
+	case TIM_Channel_2:
+		TIM_SetCompare2(chan->timer, position);
+		break;
+	case TIM_Channel_3:
+		TIM_SetCompare3(chan->timer, position);
+		break;
+	case TIM_Channel_4:
+		TIM_SetCompare4(chan->timer, position);
+		break;
 	}
 }
 #endif /* PIOS_INCLUDE_HPWM */

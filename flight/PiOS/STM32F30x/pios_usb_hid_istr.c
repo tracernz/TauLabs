@@ -32,10 +32,12 @@ __IO uint8_t bIntPackSOF = 0;	/* SOFs received between 2 consecutive packets */
 /* Private functions ---------------------------------------------------------*/
 /* function pointers to non-control endpoints service routines */
 void (*pEpInt_IN[7]) (void) = {
-EP1_IN_Callback, EP2_IN_Callback, EP3_IN_Callback, EP4_IN_Callback, EP5_IN_Callback, EP6_IN_Callback, EP7_IN_Callback,};
+	EP1_IN_Callback, EP2_IN_Callback, EP3_IN_Callback, EP4_IN_Callback, EP5_IN_Callback, EP6_IN_Callback, EP7_IN_Callback,
+};
 
 void (*pEpInt_OUT[7]) (void) = {
-EP1_OUT_Callback, EP2_OUT_Callback, EP3_OUT_Callback, EP4_OUT_Callback, EP5_OUT_Callback, EP6_OUT_Callback, EP7_OUT_Callback,};
+	EP1_OUT_Callback, EP2_OUT_Callback, EP3_OUT_Callback, EP4_OUT_Callback, EP5_OUT_Callback, EP6_OUT_Callback, EP7_OUT_Callback,
+};
 
 #ifndef STM32F10X_CL
 
@@ -64,7 +66,7 @@ void USB_LP_CAN1_RX0_IRQHandler(void)	//USB_Istr(void)
 #endif
 	}
 #endif
-  /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+	/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 #if (IMR_MSK & ISTR_RESET)
 	if (wIstr & ISTR_RESET & wInterrupt_Mask) {
 		_SetISTR((uint16_t) CLR_RESET);
@@ -74,7 +76,7 @@ void USB_LP_CAN1_RX0_IRQHandler(void)	//USB_Istr(void)
 #endif
 	}
 #endif
-  /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+	/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 #if (IMR_MSK & ISTR_DOVR)
 	if (wIstr & ISTR_DOVR & wInterrupt_Mask) {
 		_SetISTR((uint16_t) CLR_DOVR);
@@ -83,7 +85,7 @@ void USB_LP_CAN1_RX0_IRQHandler(void)	//USB_Istr(void)
 #endif
 	}
 #endif
-  /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+	/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 #if (IMR_MSK & ISTR_ERR)
 	if (wIstr & ISTR_ERR & wInterrupt_Mask) {
 		_SetISTR((uint16_t) CLR_ERR);
@@ -92,7 +94,7 @@ void USB_LP_CAN1_RX0_IRQHandler(void)	//USB_Istr(void)
 #endif
 	}
 #endif
-  /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+	/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 #if (IMR_MSK & ISTR_WKUP)
 	if (wIstr & ISTR_WKUP & wInterrupt_Mask) {
 		_SetISTR((uint16_t) CLR_WKUP);
@@ -102,7 +104,7 @@ void USB_LP_CAN1_RX0_IRQHandler(void)	//USB_Istr(void)
 #endif
 	}
 #endif
-  /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+	/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 #if (IMR_MSK & ISTR_SUSP)
 	if (wIstr & ISTR_SUSP & wInterrupt_Mask) {
 
@@ -120,7 +122,7 @@ void USB_LP_CAN1_RX0_IRQHandler(void)	//USB_Istr(void)
 #endif
 	}
 #endif
-  /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+	/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 #if (IMR_MSK & ISTR_SOF)
 	if (wIstr & ISTR_SOF & wInterrupt_Mask) {
 		_SetISTR((uint16_t) CLR_SOF);
@@ -131,7 +133,7 @@ void USB_LP_CAN1_RX0_IRQHandler(void)	//USB_Istr(void)
 #endif
 	}
 #endif
-  /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+	/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 #if (IMR_MSK & ISTR_ESOF)
 	if (wIstr & ISTR_ESOF & wInterrupt_Mask) {
 		_SetISTR((uint16_t) CLR_ESOF);
@@ -167,14 +169,14 @@ u32 STM32_PCD_OTG_ISR_Handler(void)
 	if (USBD_FS_IsDeviceMode()) {	/* ensure that we are in device mode */
 		gintr_status.d32 = OTGD_FS_ReadCoreItr();
 
-   /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+		/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 
 		/* If there is no interrupt pending exit the interrupt routine */
 		if (!gintr_status.d32) {
 			return 0;
 		}
 
-   /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+		/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 		/* Early Suspend interrupt */
 #ifdef INTR_ERLYSUSPEND
 		if (gintr_status.b.erlysuspend) {
@@ -182,7 +184,7 @@ u32 STM32_PCD_OTG_ISR_Handler(void)
 		}
 #endif /* INTR_ERLYSUSPEND */
 
-   /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+		/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 		/* End of Periodic Frame interrupt */
 #ifdef INTR_EOPFRAME
 		if (gintr_status.b.eopframe) {
@@ -190,7 +192,7 @@ u32 STM32_PCD_OTG_ISR_Handler(void)
 		}
 #endif /* INTR_EOPFRAME */
 
-   /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+		/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 		/* Non Periodic Tx FIFO Emty interrupt */
 #ifdef INTR_NPTXFEMPTY
 		if (gintr_status.b.nptxfempty) {
@@ -198,7 +200,7 @@ u32 STM32_PCD_OTG_ISR_Handler(void)
 		}
 #endif /* INTR_NPTXFEMPTY */
 
-   /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+		/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 		/* Wakeup or RemoteWakeup interrupt */
 #ifdef INTR_WKUPINTR
 		if (gintr_status.b.wkupintr) {
@@ -206,7 +208,7 @@ u32 STM32_PCD_OTG_ISR_Handler(void)
 		}
 #endif /* INTR_WKUPINTR */
 
-   /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+		/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 		/* Suspend interrupt */
 #ifdef INTR_USBSUSPEND
 		if (gintr_status.b.usbsuspend) {
@@ -215,7 +217,7 @@ u32 STM32_PCD_OTG_ISR_Handler(void)
 				Suspend();
 			} else {
 				/* if not possible then resume after xx ms */
-				Resume(RESUME_LATER);	/* This case shouldn't happen in OTG Device mode because 
+				Resume(RESUME_LATER);	/* This case shouldn't happen in OTG Device mode because
 							   there's no ESOF interrupt to increment the ResumeS.bESOFcnt in the Resume state machine */
 			}
 
@@ -223,7 +225,7 @@ u32 STM32_PCD_OTG_ISR_Handler(void)
 		}
 #endif /* INTR_USBSUSPEND */
 
-   /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+		/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 		/* Start of Frame interrupt */
 #ifdef INTR_SOFINTR
 		if (gintr_status.b.sofintr) {
@@ -234,7 +236,7 @@ u32 STM32_PCD_OTG_ISR_Handler(void)
 		}
 #endif /* INTR_SOFINTR */
 
-   /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+		/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 		/* Receive FIFO Queue Status Level interrupt */
 #ifdef INTR_RXSTSQLVL
 		if (gintr_status.b.rxstsqlvl) {
@@ -242,7 +244,7 @@ u32 STM32_PCD_OTG_ISR_Handler(void)
 		}
 #endif /* INTR_RXSTSQLVL */
 
-   /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+		/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 		/* Enumeration Done interrupt */
 #ifdef INTR_ENUMDONE
 		if (gintr_status.b.enumdone) {
@@ -250,7 +252,7 @@ u32 STM32_PCD_OTG_ISR_Handler(void)
 		}
 #endif /* INTR_ENUMDONE */
 
-   /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+		/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 		/* Reset interrutp */
 #ifdef INTR_USBRESET
 		if (gintr_status.b.usbreset) {
@@ -258,7 +260,7 @@ u32 STM32_PCD_OTG_ISR_Handler(void)
 		}
 #endif /* INTR_USBRESET */
 
-   /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+		/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 		/* IN Endpoint interrupt */
 #ifdef INTR_INEPINTR
 		if (gintr_status.b.inepint) {
@@ -266,7 +268,7 @@ u32 STM32_PCD_OTG_ISR_Handler(void)
 		}
 #endif /* INTR_INEPINTR */
 
-   /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+		/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 		/* OUT Endpoint interrupt */
 #ifdef INTR_OUTEPINTR
 		if (gintr_status.b.outepintr) {
@@ -274,7 +276,7 @@ u32 STM32_PCD_OTG_ISR_Handler(void)
 		}
 #endif /* INTR_OUTEPINTR */
 
-   /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+		/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 		/* Mode Mismatch interrupt */
 #ifdef INTR_MODEMISMATCH
 		if (gintr_status.b.modemismatch) {
@@ -282,7 +284,7 @@ u32 STM32_PCD_OTG_ISR_Handler(void)
 		}
 #endif /* INTR_MODEMISMATCH */
 
-   /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+		/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 		/* Global IN Endpoints NAK Effective interrupt */
 #ifdef INTR_GINNAKEFF
 		if (gintr_status.b.ginnakeff) {
@@ -290,7 +292,7 @@ u32 STM32_PCD_OTG_ISR_Handler(void)
 		}
 #endif /* INTR_GINNAKEFF */
 
-   /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+		/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 		/* Global OUT Endpoints NAK effective interrupt */
 #ifdef INTR_GOUTNAKEFF
 		if (gintr_status.b.goutnakeff) {
@@ -298,7 +300,7 @@ u32 STM32_PCD_OTG_ISR_Handler(void)
 		}
 #endif /* INTR_GOUTNAKEFF */
 
-   /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+		/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 		/* Isochrounous Out packet Dropped interrupt */
 #ifdef INTR_ISOOUTDROP
 		if (gintr_status.b.isooutdrop) {
@@ -306,7 +308,7 @@ u32 STM32_PCD_OTG_ISR_Handler(void)
 		}
 #endif /* INTR_ISOOUTDROP */
 
-   /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+		/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 		/* Endpoint Mismatch error interrupt */
 #ifdef INTR_EPMISMATCH
 		if (gintr_status.b.epmismatch) {
@@ -314,7 +316,7 @@ u32 STM32_PCD_OTG_ISR_Handler(void)
 		}
 #endif /* INTR_EPMISMATCH */
 
-   /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+		/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 		/* Incomplete Isochrous IN tranfer error interrupt */
 #ifdef INTR_INCOMPLISOIN
 		if (gintr_status.b.incomplisoin) {
@@ -322,7 +324,7 @@ u32 STM32_PCD_OTG_ISR_Handler(void)
 		}
 #endif /* INTR_INCOMPLISOIN */
 
-   /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+		/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 		/* Incomplete Isochrous OUT tranfer error interrupt */
 #ifdef INTR_INCOMPLISOOUT
 		if (gintr_status.b.outepintr) {

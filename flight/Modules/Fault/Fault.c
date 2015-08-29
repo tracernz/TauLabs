@@ -1,9 +1,9 @@
 /**
  ******************************************************************************
  * @addtogroup TauLabsModules Tau Labs Modules
- * @{ 
+ * @{
  * @addtogroup FaultModule Fault Module
- * @{ 
+ * @{
  *
  * @file       Fault.c
  * @author     The OpenPilot Team, http://www.openpilot.org Copyright (C) 2010.
@@ -73,13 +73,12 @@ static int32_t fault_initialize(void)
 			/* Leak all available memory */
 			while (PIOS_malloc(10)) ;
 			break;
-		case FAULTSETTINGS_ACTIVATEFAULT_INITBUSERROR:
-			{
-				/* Force a bad access */
-				uint32_t * bad_ptr = (uint32_t *)0xFFFFFFFF;
-				*bad_ptr = 0xAA55AA55;
-			}
-			break;
+		case FAULTSETTINGS_ACTIVATEFAULT_INITBUSERROR: {
+			/* Force a bad access */
+			uint32_t * bad_ptr = (uint32_t *)0xFFFFFFFF;
+			*bad_ptr = 0xAA55AA55;
+		}
+		break;
 		}
 	}
 
@@ -122,7 +121,7 @@ static void fault_task(void *parameters)
 	}
 }
 
-/** 
+/**
   * @}
   * @}
   */

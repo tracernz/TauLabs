@@ -41,7 +41,8 @@ extern const uint32_t _bu_payload_start;
 extern const uint32_t _bu_payload_end;
 extern const uint32_t _bu_payload_size;
 
-int main(void) {
+int main(void)
+{
 
 	PIOS_SYS_Init();
 	PIOS_Board_Init();
@@ -62,12 +63,12 @@ int main(void) {
 
 	/* Use the same offset into our embedded bootloader image */
 	struct pios_board_info * new_board_info_blob = (struct pios_board_info *)
-		((uintptr_t)&_bu_payload_start + board_info_blob_offset);
+	        ((uintptr_t)&_bu_payload_start + board_info_blob_offset);
 
 	/* Compare the two board info blobs to make sure they're for the same HW revision */
 	if ((pios_board_info_blob.magic != new_board_info_blob->magic) ||
-		(pios_board_info_blob.board_type != new_board_info_blob->board_type) ||
-		(pios_board_info_blob.board_rev != new_board_info_blob->board_rev)) {
+	    (pios_board_info_blob.board_type != new_board_info_blob->board_type) ||
+	    (pios_board_info_blob.board_rev != new_board_info_blob->board_rev)) {
 		error(PIOS_LED_HEARTBEAT);
 	}
 
@@ -111,10 +112,10 @@ int main(void) {
 
 	/* Flash the LED to indicate finished */
 	for (uint8_t x = 0; x < 5; ++x) {
-			PIOS_LED_On(PIOS_LED_HEARTBEAT);
-			PIOS_DELAY_WaitmS(1000);
-			PIOS_LED_Off(PIOS_LED_HEARTBEAT);
-			PIOS_DELAY_WaitmS(1000);
+		PIOS_LED_On(PIOS_LED_HEARTBEAT);
+		PIOS_DELAY_WaitmS(1000);
+		PIOS_LED_Off(PIOS_LED_HEARTBEAT);
+		PIOS_DELAY_WaitmS(1000);
 	}
 
 	while (1) {
@@ -122,7 +123,8 @@ int main(void) {
 	}
 }
 
-void error(int led) {
+void error(int led)
+{
 	for (;;) {
 		PIOS_LED_On(led);
 		PIOS_DELAY_WaitmS(500);

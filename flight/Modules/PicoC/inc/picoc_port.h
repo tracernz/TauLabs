@@ -1,14 +1,14 @@
 /**
  ******************************************************************************
   * @addtogroup TauLabsModules TauLabs Modules
- * @{ 
+ * @{
  * @addtogroup PicoC Interpreter Module
- * @{ 
+ * @{
  *
  * @file       picocmodule.h
  * @author     Tau Labs, http://taulabs.org, Copyright (C) 2014
  * @brief      c-interpreter module for autonomous user programmed tasks
- *             header file to 
+ *             header file to
  * @see        The GNU Public License (GPL) Version 3
  *
  *****************************************************************************/

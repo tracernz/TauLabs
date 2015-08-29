@@ -1,9 +1,9 @@
 /**
  ******************************************************************************
  * @addtogroup TauLabsModules Tau Labs Modules
- * @{ 
+ * @{
  * @addtogroup AirspeedModule Airspeed Module
- * @{ 
+ * @{
  *
  * @file       baro_airspeed.c
  * @author     The OpenPilot Team, http://www.openpilot.org Copyright (C) 2010.
@@ -63,7 +63,7 @@ void baro_airspeedGetAnalog(BaroAirspeedData *baroAirspeedData, uint32_t *lastSy
 	PIOS_Thread_Sleep_Until(lastSysTime, SAMPLING_DELAY_MS_MPXV);
 
 	//Ensure that the ADC pin is properly configured
-	if(airspeedADCPin <0){ //It's not, so revert to former sensor type
+	if(airspeedADCPin <0) { //It's not, so revert to former sensor type
 		baroAirspeedData->BaroConnected = BAROAIRSPEED_BAROCONNECTED_FALSE;
 
 		return;
@@ -77,13 +77,12 @@ void baro_airspeedGetAnalog(BaroAirspeedData *baroAirspeedData, uint32_t *lastSy
 		calibrationCount++; /*DO NOT MOVE FROM BEFORE sensorCalibration=... LINE, OR ELSE WILL HAVE DIVIDE BY ZERO */
 
 		uint16_t sensorCalibration;
-		if(airspeedSensorType==AIRSPEEDSETTINGS_AIRSPEEDSENSORTYPE_DIYDRONESMPXV7002){
-		sensorCalibration=PIOS_MPXV7002_Calibrate(airspeedADCPin, calibrationCount-CALIBRATION_IDLE_MS/SAMPLING_DELAY_MS_MPXV);
-		PIOS_MPXV7002_UpdateCalibration(sensorCalibration); //This makes sense for the user if the initial calibration was not good and the user does not wish to reboot.
-		}
-		else if(airspeedSensorType==AIRSPEEDSETTINGS_AIRSPEEDSENSORTYPE_DIYDRONESMPXV5004){
-		sensorCalibration=PIOS_MPXV5004_Calibrate(airspeedADCPin, calibrationCount-CALIBRATION_IDLE_MS/SAMPLING_DELAY_MS_MPXV);
-		PIOS_MPXV5004_UpdateCalibration(sensorCalibration); //This makes sense for the user if the initial calibration was not good and the user does not wish to reboot.
+		if(airspeedSensorType==AIRSPEEDSETTINGS_AIRSPEEDSENSORTYPE_DIYDRONESMPXV7002) {
+			sensorCalibration=PIOS_MPXV7002_Calibrate(airspeedADCPin, calibrationCount-CALIBRATION_IDLE_MS/SAMPLING_DELAY_MS_MPXV);
+			PIOS_MPXV7002_UpdateCalibration(sensorCalibration); //This makes sense for the user if the initial calibration was not good and the user does not wish to reboot.
+		} else if(airspeedSensorType==AIRSPEEDSETTINGS_AIRSPEEDSENSORTYPE_DIYDRONESMPXV5004) {
+			sensorCalibration=PIOS_MPXV5004_Calibrate(airspeedADCPin, calibrationCount-CALIBRATION_IDLE_MS/SAMPLING_DELAY_MS_MPXV);
+			PIOS_MPXV5004_UpdateCalibration(sensorCalibration); //This makes sense for the user if the initial calibration was not good and the user does not wish to reboot.
 		}
 
 
@@ -91,17 +90,17 @@ void baro_airspeedGetAnalog(BaroAirspeedData *baroAirspeedData, uint32_t *lastSy
 
 		//Set settings UAVO. The airspeed UAVO is set elsewhere in the function.
 		if (calibrationCount == (CALIBRATION_IDLE_MS + CALIBRATION_COUNT_MS)/SAMPLING_DELAY_MS_MPXV)
-		AirspeedSettingsZeroPointSet(&sensorCalibration);
+			AirspeedSettingsZeroPointSet(&sensorCalibration);
 
 		return;
 	}
 
 	//Get CAS
 	float calibratedAirspeed=0;
-	if(airspeedSensorType==AIRSPEEDSETTINGS_AIRSPEEDSENSORTYPE_DIYDRONESMPXV7002){
+	if(airspeedSensorType==AIRSPEEDSETTINGS_AIRSPEEDSENSORTYPE_DIYDRONESMPXV7002) {
 		calibratedAirspeed = PIOS_MPXV7002_ReadAirspeed(airspeedADCPin);
 		if (calibratedAirspeed < 0) //This only occurs when there's a bad ADC reading.
-		return;
+			return;
 
 		//Get sensor value, just for telemetry purposes.
 		//This is a silly waste of resources, and should probably be removed at some point in the future.
@@ -111,11 +110,10 @@ void baro_airspeedGetAnalog(BaroAirspeedData *baroAirspeedData, uint32_t *lastSy
 		//not. This is something that will have to change on the ADC side of things.
 		baroAirspeedData->SensorValue=PIOS_MPXV7002_Measure(airspeedADCPin);
 
-	}
-	else if(airspeedSensorType==AIRSPEEDSETTINGS_AIRSPEEDSENSORTYPE_DIYDRONESMPXV5004){
+	} else if(airspeedSensorType==AIRSPEEDSETTINGS_AIRSPEEDSENSORTYPE_DIYDRONESMPXV5004) {
 		calibratedAirspeed = PIOS_MPXV5004_ReadAirspeed(airspeedADCPin);
 		if (calibratedAirspeed < 0) //This only occurs when there's a bad ADC reading.
-		return;
+			return;
 
 		//Get sensor value, just for telemetry purposes.
 		//This is a silly waste of resources, and should probably be removed at some point in the future.
