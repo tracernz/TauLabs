@@ -30,10 +30,9 @@
 
 #include "openpilot.h"
 #include "physical_constants.h"
-#include "modulesettings.h"
-#include "flightbatterysettings.h"
-#include "flightbatterystate.h"
-#include "gpsposition.h"
+#include "pios_thread.h"
+#include "pios_sensors.h"
+
 #include "manualcontrolcommand.h"
 #include "attitudeactual.h"
 #include "airspeedactual.h"
@@ -43,15 +42,13 @@
 #include "systemstats.h"
 #include "homelocation.h"
 #include "baroaltitude.h"
-#include "pios_thread.h"
-#include "pios_sensors.h"
-
 #include "baroaltitude.h"
 #include "flightbatterysettings.h"
 #include "flightbatterystate.h"
 #include "gpsposition.h"
 #include "modulesettings.h"
 #include "firmwareiapobj.h"
+#include "systemsettings.h"
 
 #if defined(PIOS_INCLUDE_MSP_BRIDGE)
 
@@ -85,6 +82,34 @@
 
 #define  MSP_UID        160 // Unique device ID
 #define  MSP_BUILDINFO  69  // Firmware build date
+
+typedef enum MultiType {
+	MULTITYPE_TRI = 1,
+	MULTITYPE_QUADP = 2,
+	MULTITYPE_QUADX = 3,
+	MULTITYPE_BI = 4,
+	MULTITYPE_GIMBAL = 5,
+	MULTITYPE_Y6 = 6,
+	MULTITYPE_HEX6 = 7,
+	MULTITYPE_FLYING_WING = 8,
+	MULTITYPE_Y4 = 9,
+	MULTITYPE_HEX6X = 10,
+	MULTITYPE_OCTOX8 = 11,          // Java GUI is same for the next 3 configs
+	MULTITYPE_OCTOFLATP = 12,       // MultiWinGui shows this differently
+	MULTITYPE_OCTOFLATX = 13,       // MultiWinGui shows this differently
+	MULTITYPE_AIRPLANE = 14,        // airplane / singlecopter / dualcopter (not yet properly supported)
+	MULTITYPE_HELI_120_CCPM = 15,
+	MULTITYPE_HELI_90_DEG = 16,
+	MULTITYPE_VTAIL4 = 17,
+	MULTITYPE_HEX6H = 18,
+	MULTITYPE_PPM_TO_SERVO = 19,    // PPM -> servo relay
+	MULTITYPE_DUALCOPTER = 20,
+	MULTITYPE_SINGLECOPTER = 21,
+	MULTITYPE_ATAIL4 = 22,
+	MULTITYPE_CUSTOM = 23,          // no current GUI displays this
+	MULTITYPE_CUSTOM_PLANE = 24,
+	MULTITYPE_LAST = 25
+} MultiType;
 
 typedef enum {
 	MSP_BOX_ARM,
@@ -222,7 +247,10 @@ static void _msp_send_attitude(struct msp_bridge *m)
 
 	data.att.x = attActual.Roll * 10;
 	data.att.y = attActual.Pitch * -10;
-	data.att.h = 0 * 10;
+	if(PIOS_SENSORS_IsRegistered(PIOS_SENSOR_MAG))
+		data.att.h = attActual.Yaw * 10;
+	else
+		data.att.h = 0;
 
 	msp_send(m, MSP_ATTITUDE, data.buf, sizeof(data));
 }
@@ -306,6 +334,9 @@ static void _msp_send_analog(struct msp_bridge *m)
 
 static void _msp_send_ident(struct msp_bridge *m)
 {
+	SystemSettingsData settings;
+	SystemSettingsGet(&settings);
+
 	union {
 		uint8_t buf[0];
 		struct {
@@ -317,9 +348,42 @@ static void _msp_send_ident(struct msp_bridge *m)
 	} data;
 
 	data.ident.version = 231; // same as baseflight
-	data.ident.mixer = 3; // quad-x TODO: do actual type
 	data.ident.msp_version = 4; // same as baseflight
 	data.ident.capabilities = 1 << 31; // 32-bit
+
+	switch(settings.AirframeType) {
+	case SYSTEMSETTINGS_AIRFRAMETYPE_FIXEDWING:
+		data.ident.mixer = MULTITYPE_AIRPLANE;
+		break;
+	case SYSTEMSETTINGS_AIRFRAMETYPE_FIXEDWINGELEVON:
+		data.ident.mixer = MULTITYPE_FLYING_WING;
+		break;
+	case SYSTEMSETTINGS_AIRFRAMETYPE_FIXEDWINGVTAIL:
+	case SYSTEMSETTINGS_AIRFRAMETYPE_VTOL:
+		data.ident.mixer = MULTITYPE_CUSTOM_PLANE;
+		break;
+	case SYSTEMSETTINGS_AIRFRAMETYPE_HELICP:
+		data.ident.mixer = MULTITYPE_HELI_120_CCPM;
+		break;
+	case SYSTEMSETTINGS_AIRFRAMETYPE_QUADX:
+		data.ident.mixer = MULTITYPE_QUADX;
+		break;
+	case SYSTEMSETTINGS_AIRFRAMETYPE_QUADP:
+		data.ident.mixer = MULTITYPE_QUADP;
+		break;
+	case SYSTEMSETTINGS_AIRFRAMETYPE_HEXA:
+		data.ident.mixer = MULTITYPE_HEX6;
+		break;
+	case SYSTEMSETTINGS_AIRFRAMETYPE_OCTO:
+		data.ident.mixer = MULTITYPE_OCTOX8;
+		break;
+	case SYSTEMSETTINGS_AIRFRAMETYPE_TRI:
+		data.ident.mixer = MULTITYPE_TRI;
+		break;
+	default:
+		data.ident.mixer = MULTITYPE_CUSTOM;
+		break;
+	}
 
 	msp_send(m, MSP_IDENT, data.buf, sizeof(data));
 }
