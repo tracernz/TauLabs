@@ -644,6 +644,21 @@ void PIOS_HAL_ConfigureCDC(HwSharedUSB_VCPPortOptions port_type,
 		}
 #endif  /* PIOS_INCLUDE_PICOC */
 		break;
+	case HWSHARED_USB_VCPPORT_MSP:
+#if defined(PIOS_INCLUDE_MSP_BRIDGE)
+		{
+			uint8_t * rx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_MSP_RX_BUF_LEN);
+			uint8_t * tx_buffer = (uint8_t *) PIOS_malloc(PIOS_COM_MSP_TX_BUF_LEN);
+			PIOS_Assert(rx_buffer);
+			PIOS_Assert(tx_buffer);
+			if (PIOS_COM_Init(&pios_com_msp_id, &pios_usb_cdc_com_driver, pios_usb_cdc_id,
+						rx_buffer, PIOS_COM_MSP_RX_BUF_LEN,
+						tx_buffer, PIOS_COM_MSP_TX_BUF_LEN)) {
+				PIOS_Assert(0);
+			}
+		}
+#endif /* PIOS_INCLUDE_MSP_BRIDGE */
+		break;
 	}
 }
 #endif
