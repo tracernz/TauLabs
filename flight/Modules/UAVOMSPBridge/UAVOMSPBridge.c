@@ -51,6 +51,7 @@
 #include "flightbatterystate.h"
 #include "gpsposition.h"
 #include "modulesettings.h"
+#include "firmwareiapobj.h"
 
 #if defined(PIOS_INCLUDE_MSP_BRIDGE)
 
@@ -81,6 +82,9 @@
 #define  MSP_BOXIDS     119 // get the permanent IDs associated to BOXes
 #define  MSP_NAV_STATUS 121 // Returns navigation status
 #define  MSP_CELLS      130 // FrSky SPort Telemtry
+
+#define  MSP_UID        160 // Unique device ID
+#define  MSP_BUILDINFO  69  // Firmware build date
 
 typedef enum {
 	MSP_BOX_ARM,
@@ -272,7 +276,6 @@ static void _msp_send_analog(struct msp_bridge *m)
 			uint16_t current;
 		} __attribute__((packed)) status;
 	} data;
-	data.status.powerMeterSum = 0;
 
 	FlightBatterySettingsData batSettings = {};
 	FlightBatteryStateData batState = {};
@@ -287,8 +290,10 @@ static void _msp_send_analog(struct msp_bridge *m)
 	if (batSettings.VoltagePin != FLIGHTBATTERYSETTINGS_VOLTAGEPIN_NONE)
 		data.status.vbat = (uint8_t)lroundf(batState.Voltage * 10);
 
-	if (batSettings.CurrentPin != FLIGHTBATTERYSETTINGS_CURRENTPIN_NONE)
+	if (batSettings.CurrentPin != FLIGHTBATTERYSETTINGS_CURRENTPIN_NONE) {
 		data.status.current = lroundf(batState.Current * 10);
+		data.status.powerMeterSum = lroundf(batState.ConsumedEnergy);
+	}
 
 	ManualControlCommandData manualState;
 	ManualControlCommandGet(&manualState);
@@ -301,7 +306,22 @@ static void _msp_send_analog(struct msp_bridge *m)
 
 static void _msp_send_ident(struct msp_bridge *m)
 {
-	// TODO
+	union {
+		uint8_t buf[0];
+		struct {
+			uint8_t version;
+			uint8_t mixer;
+			uint8_t msp_version;
+			uint32_t capabilities;
+		} __attribute__((packed)) ident;
+	} data;
+
+	data.ident.version = 231; // same as baseflight
+	data.ident.mixer = 3; // quad-x TODO: do actual type
+	data.ident.msp_version = 4; // same as baseflight
+	data.ident.capabilities = 1 << 31; // 32-bit
+
+	msp_send(m, MSP_IDENT, data.buf, sizeof(data));
 }
 
 static void _msp_send_raw_gps(struct msp_bridge *m)
@@ -383,6 +403,27 @@ static void _msp_send_boxids(struct msp_bridge *m) {
 	msp_send(m, MSP_BOXIDS, boxes, len);
 }
 
+static void _msp_send_uid(struct msp_bridge *m) {
+	FirmwareIAPObjData firmware_iap;
+	FirmwareIAPObjGet(&firmware_iap);
+	
+	msp_send(m, MSP_UID, firmware_iap.CPUSerial, sizeof(firmware_iap.CPUSerial));
+}
+
+static void _msp_send_buildinfo(struct msp_bridge *m) {
+	union {
+		uint8_t buf[0];
+		struct {
+			char date[11]; // string in format: MMM DD YYYY
+			uint32_t reserved[2];
+		} __attribute__((packed)) info;
+	} data;
+
+	memset(data.buf, 0, sizeof(data));
+
+	msp_send(m, MSP_BUILDINFO, data.buf, sizeof(data));
+}
+
 static msp_state msp_state_checksum(struct msp_bridge *m, uint8_t b)
 {
 	if ((m->_checksum ^ b) != 0) {
@@ -417,6 +458,12 @@ static msp_state msp_state_checksum(struct msp_bridge *m, uint8_t b)
 		break;
 	case MSP_BOXIDS:
 		_msp_send_boxids(m);
+		break;
+	case MSP_UID:
+		_msp_send_uid(m);
+		break;
+	case MSP_BUILDINFO:
+		_msp_send_buildinfo(m);
 		break;
 	}
 	return MSP_IDLE;
