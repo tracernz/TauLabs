@@ -1,0 +1,42 @@
+{
+	"manifest_version": 2,
+
+	"name": "__MSG_extName__",
+	"description": "__MSG_extDescription__",
+	"version": "0.1",
+	"author": "Tau Labs",
+	
+	"default_locale": "en",
+
+	"app": {
+		"background": {
+			"scripts": ["main.js"]
+		}
+	},
+	
+	"icons": {
+		"16": "images/icon_16x16.png",
+		"32": "images/icon_32x32.png",
+		"128": "images/icon_128x128.png",
+		"256": "images/icon_256x256.png",
+		"512": "images/icon_512x512.png"
+	},
+
+	"permissions": [
+		"serial",
+		"fileSystem",
+		"usb",
+		{"usbDevices": [
+			{"vendorId": 1155, "productId": 57105}, // 0483:df11 = STM32 DFU
+			{"vendorId": 8352, "productId": 16732}, // 20a0:415c = PipXtreme
+			{"vendorId": 8352, "productId": 16731}, // 20a0:415b = CopterControl/CC3D
+			{"vendorId": 8352, "productId": 16734}, // 20a0:415e = Revolution/RevoMini
+			{"vendorId": 8352, "productId": 16848}, // 20a0:41d0 = Freedom/Sparky/AeroCore
+			{"vendorId": 8352, "productId": 16789}, // 20a0:4195 = FlyingF3/DiscoveryF3/FlyingF4/DiscoveryF4/CoreF4
+			{"vendorId": 8352, "productId": 16949}, // 20a0:4235 = Colibri
+			{"vendorId": 8352, "productId": 17028}, // 20a0:4284 = AeroQuad32
+			{"vendorId": 8352, "productId": 16962}, // 20a0:4242 = BrainFPV
+			{"vendorId": 4058, "productId": 256}    // 0fda:0100 = Quanton
+		]}
+	]
+}

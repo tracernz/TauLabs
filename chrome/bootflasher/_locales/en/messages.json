@@ -1,0 +1,8 @@
+{
+	"extName": {
+		"message": "Tau Labs Bootflasher"
+	},
+	"extDescription": {
+		"message": "Tools for flashing bootloaders to Tau Labs flight controller boards."
+	}
+}
