@@ -1,9 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="BootFlasher">
 	<head>
+		<link rel="stylesheet" type="text/css" href="window.css">
+
 		<!-- Libraries -->
 		<script type="text/javascript" src="./libraries/jquery.js"></script>
 		<script type="text/javascript" src="./libraries/angular.js"></script>
+
+		<script type="text/javascript" src="./i18n.js"></script>
 
 		<!-- Modules etc. -->
 		<script type="text/javascript" src="./modules/board_manager/board_manager.js"></script>
@@ -14,12 +18,27 @@
 		
 
 		<!-- Angular Modules -->
-		<script type="text/javascript" src="./app/BootFlasher.js"></script>
+		<script type="text/javascript" src="./ngapp/BootFlasher.js"></script>
+		<script type="text/javascript" src="./ngapp/BoardSelectController.js"></script>
 
 		<script type="text/javascript" src="./test.js"></script>
 	</head>
 	<body>
-		<div>Hello, world!</div>
-		<a id="lol" href="#">LOL</a>
+		<!--div id="header">
+			<img src="./images/icon_128x128.png" alt="Tau Labs" style="width: 64px; height: 64px;" />
+			Bootflasher
+		</div-->
+		<div id="content">
+			<div ng-controller="BoardSelectController">
+				<p i18n="pleaseSelectBoard"></p>
+				<div>
+				    <select name="selectBoard" id="selectBoard"
+				    	ng-options="board.name for board in boards | orderBy:'name' track by board.shortName"
+				    	ng-model="selectedOption"></select>
+				    <button name="buttonContinue" id="buttonContinue" i18n="continue"
+				    	ng-click="continue()" ng-disabled="!selectedOption.shortName"></button>
+				</div>
+			</div>
+		</div>
 	</body>
 </html>

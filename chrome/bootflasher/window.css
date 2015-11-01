@@ -1,0 +1,45 @@
+body {
+	background: #272727;
+	color: white;
+	font-size: 2em;
+	text-align: center;
+}
+
+button, select {
+	border-width: 3px;
+	border-style: solid;
+	border-radius: 5px;
+	padding: 10px;
+	font-size: 1em;
+	margin: 10px;
+}
+
+button:disabled {
+	border-color: #626262;
+	background: linear-gradient(to bottom right, #939393, #313131);
+	color: #b4b4b4;
+}
+
+button:enabled {
+	border-color: #4ca807;
+	background: linear-gradient(to bottom right, #8cd20f, #3a8005);
+	color: #204500;
+}
+
+button:enabled:hover {
+	border-color: #3a8105;
+}
+
+button:enabled:active {
+	background: linear-gradient(to top right, #8cd20f, #3a8005);
+}
+
+select {
+	color: white;
+	border-color: #626262;
+	background: linear-gradient(to bottom right, #939393, #313131);
+}
+
+select option {
+	background: #313131;
+}

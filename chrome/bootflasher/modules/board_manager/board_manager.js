@@ -36,3 +36,15 @@ BoardManager.prototype.getBoards = function(filter) {
 
 	return result;
 };
+
+// Returns all boards found NOT matching filter
+BoardManager.prototype.excludeBoards = function(filter) {
+	var result = [];
+
+	for(var i = 0; i < this.boards.length; i++) {
+		if(!this.boards[i].matchesFilter(filter))
+			result.push(this.boards[i]);
+	}
+
+	return result;
+};

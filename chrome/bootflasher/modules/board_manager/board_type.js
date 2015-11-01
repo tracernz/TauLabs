@@ -19,3 +19,11 @@ BoardType.prototype.matchesFilter = function(filter) {
 		return true;
 	});
 };
+
+BoardType.prototype.hasTauBootloader = function() {
+	return this.hasOwnProperty("bootloaderBase");
+}
+
+BoardType.prototype.hasFlashEeprom = function() {
+	return this.hasOwnProperty("eepromBase");
+}

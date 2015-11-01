@@ -1,0 +1,10 @@
+<div ng-controller="BoardSelectController">
+	<p i18n="pleaseSelectBoard"></p>
+	<div>
+	    <select name="selectBoard" id="selectBoard"
+	    	ng-options="board.name for board in boards | orderBy:'name' track by board.shortName"
+	    	ng-model="selectedOption"></select>
+	    <button name="buttonContinue" id="buttonContinue" i18n="continue"
+	    	ng-click="continue()" ng-disabled="!selectedOption.shortName"></button>
+	</div>
+</div>
