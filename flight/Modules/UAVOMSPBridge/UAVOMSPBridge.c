@@ -678,6 +678,10 @@ static int32_t uavoMSPBridgeInitialize(void)
 
 	module_enabled = false;
 
+	// fallback to telemetry
+	if(!PIOS_COM_TELEM_RF)
+		PIOS_COM_TELEM_RF = pios_com_msp_id;
+
 	return -1;
 }
 MODULE_INITCALL(uavoMSPBridgeInitialize, uavoMSPBridgeStart)
