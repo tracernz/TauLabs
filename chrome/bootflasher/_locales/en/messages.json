@@ -24,5 +24,12 @@
 	},
 	"operationEraseEeprom": {
 		"message": "Erase Data &amp; Settings"
+	},
+
+	"flashingFirmware": {
+		"message": "Flashing firmware..."
+	},
+	"flashingBootloader": {
+		"message": "Flashing bootloader..."
 	}
 }

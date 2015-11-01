@@ -27,3 +27,15 @@ BoardType.prototype.hasTauBootloader = function() {
 BoardType.prototype.hasFlashEeprom = function() {
 	return this.flashLayout.hasOwnProperty("eepromBase");
 }
+
+BoardType.prototype.hasUsbDfu = function() {
+	switch(this.arch) {
+		case "stm32f3":
+		case "stm32f4":
+			return true;
+			break;
+		default:
+			return false;
+			break;
+	}
+}

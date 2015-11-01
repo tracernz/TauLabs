@@ -1,3 +1,5 @@
+"use strict;"
+
 angular.module('BootFlasher')
  .controller('OperationSelectController', ['$scope', '$location', 'selectedBoard', function($scope, $location, selectedBoard) {
  	$scope.$on('$viewContentLoaded', function() {
@@ -7,7 +9,10 @@ angular.module('BootFlasher')
     $scope.selectedBoard = selectedBoard;
 
     $scope.flashBootloader = function() {
-    	$location.path("/flashBootloader");
+    	if($scope.selectedBoard.hasUsbDfu())
+    		$location.path("/flashBootloader");
+    	else
+    		$location.path("/serialInstructions");
     };
 
     $scope.flashFirmware = function() {
