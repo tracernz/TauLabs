@@ -7,9 +7,22 @@
 	},
 
 	"pleaseSelectBoard": {
-		"message": "Which board would you like to flash?"
+		"message": "Which board would you like to use?"
+	},
+	"pleaseSelectOperation": {
+		"message": "What do you want to do?"
 	},
 	"continue": {
 		"message": "Continue"
+	},
+
+	"operationBootloader": {
+		"message": "Reflash Bootloader"
+	},
+	"operationFirmware": {
+		"message": "Flash Firmware"
+	},
+	"operationEraseEeprom": {
+		"message": "Erase Data &amp; Settings"
 	}
 }

@@ -1,0 +1,9 @@
+<div>
+	<p i18n="pleaseSelectOperation"></p>
+	<button name="buttonBootloader" id="buttonBootloader" i18n="operationBootloader"
+	    	ng-click="flashBootloader()" ng-show="selectedBoard.hasTauBootloader()"></button>
+	<button name="buttonFirmware" id="buttonFirmware" i18n="operationFirmware"
+	    	ng-click="flashFirmware()" ng-show="!selectedBoard.hasTauBootloader()"></button>
+	<button name="eraseEeprom" id="eraseEeprom" i18n="operationEraseEeprom"
+	    	ng-click="eraseEeprom()" ng-show="selectedBoard.hasFlashEeprom()"></button>
+</div>

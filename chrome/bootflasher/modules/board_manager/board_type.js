@@ -21,9 +21,9 @@ BoardType.prototype.matchesFilter = function(filter) {
 };
 
 BoardType.prototype.hasTauBootloader = function() {
-	return this.hasOwnProperty("bootloaderBase");
+	return this.flashLayout.hasOwnProperty("bootloaderBase");
 }
 
 BoardType.prototype.hasFlashEeprom = function() {
-	return this.hasOwnProperty("eepromBase");
+	return this.flashLayout.hasOwnProperty("eepromBase");
 }
