@@ -123,7 +123,7 @@ void VehicleConfig::setComboCurrentIndex(QComboBox* box, int index)
   Helper function:
   sets the text of labels within supplied uiowner
  */
-void VehicleConfig::setLabelText(QWidget* owner, QString boxName, QVector<QString> &labels)
+void VehicleConfig::setLabelText(QWidget* owner, QString boxName, QStringList &labels)
 {
     // set the desired labels
     for (int i = 0; i < labels.length(); i++) {

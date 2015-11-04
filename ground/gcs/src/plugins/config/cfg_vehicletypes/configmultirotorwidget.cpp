@@ -83,6 +83,9 @@ void ConfigMultiRotorWidget::setupUI(SystemSettings::AirframeTypeOptions frameTy
         }
     }
 
+    // Set the labels for motor channel boxes
+    QStringList motorLabels = getMotorStrings(frameType);
+    setLabelText(uiowner, CHANNELLABELNAME, motorLabels);
 
     switch(frameType){
     case SystemSettings::AIRFRAMETYPE_TRI:
@@ -90,12 +93,6 @@ void ConfigMultiRotorWidget::setupUI(SystemSettings::AirframeTypeOptions frameTy
 
         //Enable all necessary motor channel boxes...
         enableComboBoxes(uiowner, CHANNELBOXNAME, 3, true);
-
-        {
-            // Set the labels for motor channel boxes
-            QVector<QString> labels({"NW", "NE", "S"});
-            setLabelText(uiowner, CHANNELLABELNAME, labels);
-        }
 
         m_aircraft->mrRollMixLevel->setValue(100);
         m_aircraft->mrPitchMixLevel->setValue(100);
@@ -109,12 +106,6 @@ void ConfigMultiRotorWidget::setupUI(SystemSettings::AirframeTypeOptions frameTy
         //Enable all necessary motor channel boxes...
         enableComboBoxes(uiowner, CHANNELBOXNAME, 4, true);
 
-        {
-            // Set the labels for motor channel boxes
-            QVector<QString> labels({"NW", "NE", "SE", "SW"});
-            setLabelText(uiowner, CHANNELLABELNAME, labels);
-        }
-
         // init mixer levels
         m_aircraft->mrRollMixLevel->setValue(50);
         m_aircraft->mrPitchMixLevel->setValue(50);
@@ -126,12 +117,6 @@ void ConfigMultiRotorWidget::setupUI(SystemSettings::AirframeTypeOptions frameTy
         //Enable all necessary motor channel boxes...
         enableComboBoxes(uiowner, CHANNELBOXNAME, 4, true);
 
-        {
-            // Set the labels for motor channel boxes
-            QVector<QString> labels({"N", "E", "S", "W"});
-            setLabelText(uiowner, CHANNELLABELNAME, labels);
-        }
-
         m_aircraft->mrRollMixLevel->setValue(100);
         m_aircraft->mrPitchMixLevel->setValue(100);
         setYawMixLevel(50);
@@ -141,12 +126,6 @@ void ConfigMultiRotorWidget::setupUI(SystemSettings::AirframeTypeOptions frameTy
 
         //Enable all necessary motor channel boxes...
         enableComboBoxes(uiowner, CHANNELBOXNAME, 6, true);
-
-        {
-            // Set the labels for motor channel boxes
-            QVector<QString> labels({"1", "2", "3", "4", "5", "6"});
-            setLabelText(uiowner, CHANNELLABELNAME, labels);
-        }
 
         m_aircraft->mrRollMixLevel->setValue(50);
         m_aircraft->mrPitchMixLevel->setValue(33);
@@ -158,12 +137,6 @@ void ConfigMultiRotorWidget::setupUI(SystemSettings::AirframeTypeOptions frameTy
         //Enable all necessary motor channel boxes...
         enableComboBoxes(uiowner, CHANNELBOXNAME, 6, true);
 
-        {
-            // Set the labels for motor channel boxes
-            QVector<QString> labels({"1", "2", "3", "4", "5", "6"});
-            setLabelText(uiowner, CHANNELLABELNAME, labels);
-        }
-
         m_aircraft->mrRollMixLevel->setValue(33);
         m_aircraft->mrPitchMixLevel->setValue(50);
         setYawMixLevel(33);
@@ -173,12 +146,6 @@ void ConfigMultiRotorWidget::setupUI(SystemSettings::AirframeTypeOptions frameTy
 
         //Enable all necessary motor channel boxes...
         enableComboBoxes(uiowner, CHANNELBOXNAME, 6, true);
-
-        {
-            // Set the labels for motor channel boxes
-            QVector<QString> labels({"1", "2", "3", "4", "5", "6"});
-            setLabelText(uiowner, CHANNELLABELNAME, labels);
-        }
 
         m_aircraft->mrRollMixLevel->setValue(100);
         m_aircraft->mrPitchMixLevel->setValue(50);
@@ -190,12 +157,6 @@ void ConfigMultiRotorWidget::setupUI(SystemSettings::AirframeTypeOptions frameTy
         //Enable all necessary motor channel boxes
         enableComboBoxes(uiowner, CHANNELBOXNAME, 8, true);
 
-        {
-            // Set the labels for motor channel boxes
-            QVector<QString> labels({"1", "2", "3", "4", "5", "6", "7", "8"});
-            setLabelText(uiowner, CHANNELLABELNAME, labels);
-        }
-
         m_aircraft->mrRollMixLevel->setValue(33);
         m_aircraft->mrPitchMixLevel->setValue(33);
         setYawMixLevel(25);
@@ -204,12 +165,6 @@ void ConfigMultiRotorWidget::setupUI(SystemSettings::AirframeTypeOptions frameTy
         setComboCurrentIndex( m_aircraft->multirotorFrameType, m_aircraft->multirotorFrameType->findData(SystemSettings::AIRFRAMETYPE_OCTOV));
         //Enable all necessary motor channel boxes
         enableComboBoxes(uiowner, CHANNELBOXNAME, 8, true);
-
-        {
-            // Set the labels for motor channel boxes
-            QVector<QString> labels({"1", "2", "3", "4", "5", "6", "7", "8"});
-            setLabelText(uiowner, CHANNELLABELNAME, labels);
-        }
 
         m_aircraft->mrRollMixLevel->setValue(25);
         m_aircraft->mrPitchMixLevel->setValue(25);
@@ -221,12 +176,6 @@ void ConfigMultiRotorWidget::setupUI(SystemSettings::AirframeTypeOptions frameTy
         //Enable all necessary motor channel boxes
         enableComboBoxes(uiowner, CHANNELBOXNAME, 8, true);
 
-        {
-            // Set the labels for motor channel boxes
-            QVector<QString> labels({"1", "2", "3", "4", "5", "6", "7", "8"});
-            setLabelText(uiowner, CHANNELLABELNAME, labels);
-        }
-
         m_aircraft->mrRollMixLevel->setValue(100);
         m_aircraft->mrPitchMixLevel->setValue(100);
         setYawMixLevel(50);
@@ -236,12 +185,6 @@ void ConfigMultiRotorWidget::setupUI(SystemSettings::AirframeTypeOptions frameTy
 
         //Enable all necessary motor channel boxes
         enableComboBoxes(uiowner, CHANNELBOXNAME, 8, true);
-
-        {
-            // Set the labels for motor channel boxes
-            QVector<QString> labels({"1", "2", "3", "4", "5", "6", "7", "8"});
-            setLabelText(uiowner, CHANNELLABELNAME, labels);
-        }
 
         m_aircraft->mrRollMixLevel->setValue(50);
         m_aircraft->mrPitchMixLevel->setValue(50);
@@ -391,7 +334,58 @@ void ConfigMultiRotorWidget::setYawMixLevel(int value)
 
 }
 
+QStringList ConfigMultiRotorWidget::getMotorStrings(SystemSettings::AirframeTypeOptions type, const QString &prefix) {
+    QStringList strings;
 
+    switch(type) {
+    case SystemSettings::AIRFRAMETYPE_QUADP:
+        strings << "N" << "E" << "S"<< "W";
+        break;
+    case SystemSettings::AIRFRAMETYPE_QUADX:
+        strings << "NW" << "NE" << "SE" << "SW";
+        break;
+    case SystemSettings::AIRFRAMETYPE_HEXA:
+        strings << "N" << "NE" << "SE" << "S" << "SW" << "NW";
+        break;
+    case SystemSettings::AIRFRAMETYPE_HEXAX:
+        strings << "NE" << "E" << "SE" << "SW" << "W" << "NW";
+        break;
+    case SystemSettings::AIRFRAMETYPE_HEXACOAX:
+        strings << "NW" << "W" << "NE" << "E" << "S" << "SE";
+        break;
+    case SystemSettings::AIRFRAMETYPE_OCTO:
+        strings << "N" << "NE" << "E" << "SE" << "S" << "SW" << "W" << "NW";
+        break;
+    case SystemSettings::AIRFRAMETYPE_OCTOV:
+        strings << "N" << "NE" << "E" << "SE" << "S" << "SW" << "W" << "NW";
+        break;
+    case SystemSettings::AIRFRAMETYPE_OCTOCOAXP:
+        strings << "N" << "NE" << "E" << "SE" << "S" << "SW" << "W" << "NW";
+        break;
+    case SystemSettings::AIRFRAMETYPE_OCTOCOAXX:
+        strings << "NW" << "N" << "NE" << "E" << "SE" << "S" << "SW" << "W";
+        break;
+    case SystemSettings::AIRFRAMETYPE_TRI:
+        strings << "NW" << "NE" << "S";
+        break;
+    default:
+        strings << "1" << "2" << "3" << "4" << "5" << "6" << "7" << "8";
+        break;
+    }
+
+    if(!prefix.length())
+        return strings;
+
+    for (int i = 0; i < strings.length(); i++) {
+        strings[i].prepend(prefix);
+    }
+
+    return strings;
+}
+
+QStringList ConfigMultiRotorWidget::getMotorStrings(SystemSettings::AirframeTypeOptions type) {
+    return getMotorStrings(type, QString(""));
+}
 
 
 /**

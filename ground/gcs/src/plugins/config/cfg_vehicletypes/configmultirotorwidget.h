@@ -74,6 +74,9 @@ private:
 
     void drawAirframe(SystemSettings::AirframeTypeOptions multiRotorType);
 
+    QStringList getMotorStrings(SystemSettings::AirframeTypeOptions type, const QString &prefix);
+    QStringList getMotorStrings(SystemSettings::AirframeTypeOptions type);
+
 private slots:
     virtual void setupUI(SystemSettings::AirframeTypeOptions airframeType);
     void refreshAirframeWidgetsValues(SystemSettings::AirframeTypeOptions frameType);
