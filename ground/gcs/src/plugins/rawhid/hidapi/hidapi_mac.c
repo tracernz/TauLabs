@@ -687,11 +687,11 @@ hid_device * HID_API_EXPORT hid_open_path(const char *path)
 	hid_device *dev = NULL;
 	CFIndex num_devices;
 
-	dev = new_hid_device();
-
 	/* Set up the HID Manager if it hasn't been done */
 	if (hid_init() < 0)
 		return NULL;
+
+	dev = new_hid_device();
 
 	/* give the IOHIDManager a chance to update itself */
 	process_pending_events();
