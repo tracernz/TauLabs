@@ -1,0 +1,554 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>EscWidget</class>
+ <widget class="QWidget" name="EscWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>581</width>
+    <height>504</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <item>
+      <widget class="QComboBox" name="comboBox_Ports">
+       <property name="minimumSize">
+        <size>
+         <width>200</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Set the PC port the modem is connected too</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="connectButton">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
+       <property name="toolTip">
+        <string>Connect to the modem (when normal telemetry is not used)</string>
+       </property>
+       <property name="text">
+        <string> Connect </string>
+       </property>
+       <property name="checkable">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>Configuration</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>Configurations:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="comboConfigurations"/>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QGroupBox" name="groupBox">
+           <property name="title">
+            <string>Settings</string>
+           </property>
+           <layout class="QFormLayout" name="formLayout">
+            <property name="fieldGrowthPolicy">
+             <enum>QFormLayout::FieldsStayAtSizeHint</enum>
+            </property>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_19">
+              <property name="text">
+               <string>Rising Kp</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QSpinBox" name="spinRisingKp">
+              <property name="suffix">
+               <string> %/rpm</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_2">
+              <property name="text">
+               <string>Falling Kp</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QSpinBox" name="spinFallingKp">
+              <property name="suffix">
+               <string> %/rpm</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="label_3">
+              <property name="text">
+               <string>Commutation Phase</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1">
+             <widget class="QSpinBox" name="spinPhase">
+              <property name="suffix">
+               <string> deg</string>
+              </property>
+              <property name="minimum">
+               <number>-10</number>
+              </property>
+              <property name="maximum">
+               <number>30</number>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="0">
+             <widget class="QLabel" name="label_9">
+              <property name="text">
+               <string>Soft Current Limit</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="1">
+             <widget class="QSpinBox" name="spinSortCurrentLimit">
+              <property name="suffix">
+               <string> mA</string>
+              </property>
+              <property name="maximum">
+               <number>40000</number>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="0">
+             <widget class="QLabel" name="label_10">
+              <property name="text">
+               <string>Hard Current Limit</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="1">
+             <widget class="QSpinBox" name="spinHardCurrentLimit">
+              <property name="suffix">
+               <string> mA</string>
+              </property>
+              <property name="maximum">
+               <number>40000</number>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_11">
+              <property name="text">
+               <string>Closed loop</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QCheckBox" name="closedLoopCheck">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="1">
+             <widget class="QSpinBox" name="spinKv">
+              <property name="suffix">
+               <string> rpm/V</string>
+              </property>
+              <property name="minimum">
+               <number>250</number>
+              </property>
+              <property name="maximum">
+               <number>2000</number>
+              </property>
+              <property name="value">
+               <number>750</number>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="0">
+             <widget class="QLabel" name="label_12">
+              <property name="text">
+               <string>Kv</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_16">
+              <property name="text">
+               <string>Revere Direction</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QCheckBox" name="reverseCheck">
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="groupBox_2">
+           <property name="title">
+            <string>Status</string>
+           </property>
+           <layout class="QFormLayout" name="formLayout_2">
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_4">
+              <property name="text">
+               <string>RPM</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_5">
+              <property name="text">
+               <string>SetPoint</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLCDNumber" name="rpm">
+              <property name="smallDecimalPoint">
+               <bool>false</bool>
+              </property>
+              <property name="mode">
+               <enum>QLCDNumber::Dec</enum>
+              </property>
+              <property name="segmentStyle">
+               <enum>QLCDNumber::Flat</enum>
+              </property>
+              <property name="intValue" stdset="0">
+               <number>0</number>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLCDNumber" name="setPoint">
+              <property name="segmentStyle">
+               <enum>QLCDNumber::Flat</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_6">
+              <property name="text">
+               <string>Duty Cycle</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QLCDNumber" name="dutyCycle">
+              <property name="segmentStyle">
+               <enum>QLCDNumber::Flat</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_13">
+              <property name="text">
+               <string>Battery (mV)</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="label_14">
+              <property name="text">
+               <string>Current (mA)</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QLCDNumber" name="battery">
+              <property name="segmentStyle">
+               <enum>QLCDNumber::Flat</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1">
+             <widget class="QLCDNumber" name="current">
+              <property name="segmentStyle">
+               <enum>QLCDNumber::Flat</enum>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_2">
+      <attribute name="title">
+       <string>Firmware</string>
+      </attribute>
+      <widget class="QPushButton" name="buttonRescue">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>90</y>
+         <width>111</width>
+         <height>32</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Rescue</string>
+       </property>
+      </widget>
+      <widget class="QWidget" name="horizontalLayoutWidget_3">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>30</y>
+         <width>527</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_5">
+        <item>
+         <widget class="QLabel" name="label_7">
+          <property name="text">
+           <string>Current Version:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_8">
+          <property name="text">
+           <string>Version</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_4">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QPushButton" name="buttonQuery">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>120</y>
+         <width>111</width>
+         <height>32</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Query</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="buttonUpgrade">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>60</y>
+         <width>114</width>
+         <height>32</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Upgrade</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_15">
+       <property name="geometry">
+        <rect>
+         <x>130</x>
+         <y>60</y>
+         <width>361</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>To use rescue mode short the SBL pad before powering</string>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <spacer name="horizontalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="cchwHelp">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../coreplugin/core.qrc">
+         <normaloff>:/core/images/helpicon.svg</normaloff>:/core/images/helpicon.svg</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="flat">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="saveSettingsToRAM">
+       <property name="toolTip">
+        <string>Send to OpenPilot but don't write in SD.
+Beware of not locking yourself out!</string>
+       </property>
+       <property name="autoFillBackground">
+        <bool>true</bool>
+       </property>
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
+       <property name="text">
+        <string>Apply</string>
+       </property>
+       <property name="checkable">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="saveSettingsToFlash">
+       <property name="toolTip">
+        <string>Applies and Saves all settings to SD.
+Beware of not locking yourself out!</string>
+       </property>
+       <property name="autoFillBackground">
+        <bool>false</bool>
+       </property>
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
+       <property name="text">
+        <string>Save</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="../coreplugin/core.qrc"/>
+ </resources>
+ <connections/>
+</ui>

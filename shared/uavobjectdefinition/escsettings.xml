@@ -1,0 +1,35 @@
+<xml>
+    <object name="EscSettings" singleinstance="true" settings="true">
+        <description>Configuration settings for OP-ESC</description>
+	<field name="RisingKp" units="%/rpm" type="int16" elements="1" defaultvalue="40"/>
+	<field name="FallingKp" units="%/rpm" type="int16" elements="1" defaultvalue="80"/>
+	<field name="Ki" units="%/rpm/s" type="int16" elements="1" defaultvalue="5"/>
+	<field name="Kv" units="rpm/V" type="int16" elements="1" defaultvalue="850"/>
+	<field name="Kff2" units="%/rpm/s" type="int16" elements="1" defaultvalue="0"/>
+	<field name="ILim" units="%" type="int16" elements="1" defaultvalue="1000"/>
+	<field name="MaxError" units="rpm" type="uint16" elements="1" defaultvalue="250"/>
+	<field name="MaxDcChange" units="/32178" type="int16" elements="1" defaultvalue="50"/>
+	<field name="MaxDc" units="/32178" type="int16" elements="1" defaultvalue="28000"/>
+	<field name="MinDc" units="/32178" type="int16" elements="1" defaultvalue="0"/>
+	<field name="InitialStartupSpeed" units="rpm" type="uint16" elements="1" defaultvalue="100"/>
+	<field name="FinalStartupSpeed" units="rpm" type="uint16" elements="1" defaultvalue="400"/>
+	<field name="StartupCurrentTarget" units="mA" type="uint16" elements="1" defaultvalue="400"/>
+	<field name="SoftCurrentLimit" units="mA" type="uint16" elements="1" defaultvalue="1000"/>
+	<field name="HardCurrentLimit" units="mA" type="uint16" elements="1" defaultvalue="2000"/>
+	<field name="CommutationPhase" units="deg" type="int16" elements="1" defaultvalue="7"/>
+	<field name="CommutationOffset" units="us" type="int16" elements="1" defaultvalue="50"/>
+	<field name="PwmMin" units="us" type="uint16" elements="1" defaultvalue="1050"/>
+	<field name="PwmMax" units="us" type="uint16" elements="1" defaultvalue="2000"/>
+	<field name="RpmMin" units="us" type="uint16" elements="1" defaultvalue="500"/>
+	<field name="RpmMax" units="us" type="uint16" elements="1" defaultvalue="10000"/>
+	<field name="PwmFreq" units="hz" type="uint16" elements="1" defaultvalue="40000"/>
+	<field name="Braking" units="" type="enum" elements="1"	options="Off,On" defaultvalue="Off"/>
+	<field name="Direction" units="" type="enum" elements="1" options="Forward,Reverse" defaultvalue="Forward"/>
+	<field name="Mode" units="" type="enum" elements="1" options="Closed,Open" defaultvalue="Closed"/>
+
+	<access gcs="readwrite" flight="readwrite"/>
+	<telemetrygcs acked="true" updatemode="onchange" period="0"/>
+	<telemetryflight acked="true" updatemode="onchange" period="0"/>
+	<logging updatemode="manual" period="0"/>
+    </object>
+</xml>
